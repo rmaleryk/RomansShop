@@ -5,11 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RomansShop.DataAccess\RomansShop.DataAccess.csproj" />
+    <ProjectReference Include="..\RomansShop.Domain\RomansShop.Domain.csproj" />
+    <ProjectReference Include="..\RomansShop.Services\RomansShop.Services.csproj" />
   </ItemGroup>
 
 </Project>
