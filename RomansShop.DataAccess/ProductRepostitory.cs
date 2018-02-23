@@ -50,7 +50,7 @@ namespace RomansShop.DataAccess
 
         public IEnumerable<Product> GetProducts()
         {
-            return _shopDbContext.Products.ToList<Product>();
+            return _shopDbContext.Products.ToList();
         }
 
         public void UpdateProduct(Product product)

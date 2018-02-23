@@ -14,5 +14,12 @@ namespace RomansShop.DataAccess
         {
 
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ConfigureProduct();
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
