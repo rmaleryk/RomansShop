@@ -56,11 +56,6 @@ namespace RomansShop.DataAccess
 
         public void UpdateProduct(Product product)
         {
-            var prod = _shopDbContext.Products.AsNoTracking().FirstOrDefault(p => p.Id == product.Id);
-
-            if (prod == null)
-                return;
-
             _shopDbContext.Products.Update(product);
             _shopDbContext.SaveChanges();
         }

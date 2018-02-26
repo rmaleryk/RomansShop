@@ -19,29 +19,6 @@ namespace RomansShop.Services
             _productRepository = productRepository;
         }
 
-        public Product AddProduct(Product product)
-        {
-            return _productRepository.AddProduct(product);
-        }
 
-        public void DeleteProduct(int ProductId)
-        {
-            _productRepository.DeleteProduct(ProductId);
-        }
-
-        public Product GetProduct(int ProductId)
-        {
-            return _productRepository.GetProduct(ProductId);
-        }
-
-        public IEnumerable<Product> GetProducts()
-        {
-            return _productRepository.GetProducts();
-        }
-
-        public void UpdateProduct(Product product)
-        {
-            _productRepository.UpdateProduct(product);
-        }
     }
 }

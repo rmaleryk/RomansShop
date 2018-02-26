@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RomansShop.Domain;
+using RomansShop.Domain.Extensibility;
 using RomansShop.Services.Extensibility;
 
 namespace RomansShop.WebApi.Controllers
@@ -12,10 +13,12 @@ namespace RomansShop.WebApi.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductService _productService;
+        private readonly IProductRepository _productRepository;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductService productService, IProductRepository productRepository)
         {
             _productService = productService;
+            _productRepository = productRepository;
         }
 
         /// <summary>
@@ -25,7 +28,7 @@ namespace RomansShop.WebApi.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var products = _productService.GetProducts();
+            var products = _productRepository.GetProducts();
             return new ObjectResult(products);
         }
 
@@ -36,7 +39,7 @@ namespace RomansShop.WebApi.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var product = _productService.GetProduct(id);
+            var product = _productRepository.GetProduct(id);
 
             if (product == null)
                 return NotFound();
@@ -51,10 +54,10 @@ namespace RomansShop.WebApi.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]Product product)
         {
-            if (product == null || !ModelState.IsValid)
+            if (product == null)
                 return BadRequest();
 
-            var prod = _productService.AddProduct(product);
+            var prod = _productRepository.AddProduct(product);
             return new ObjectResult(prod);
         }
 
@@ -65,15 +68,15 @@ namespace RomansShop.WebApi.Controllers
         [HttpPut]
         public IActionResult Put([FromBody]Product product)
         {
-            if (product == null || !ModelState.IsValid)
+            if (product == null)
                 return BadRequest();
 
-            var prod = _productService.GetProduct(product.Id);
+            var prod = _productRepository.GetProduct(product.Id);
 
             if (prod == null)
                 return NotFound();
 
-            _productService.UpdateProduct(product);
+            _productRepository.UpdateProduct(product);
 
             return Ok();
         }
@@ -85,12 +88,12 @@ namespace RomansShop.WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var product = _productService.GetProduct(id);
+            var product = _productRepository.GetProduct(id);
 
             if (product == null)
                 return NotFound();
 
-            _productService.DeleteProduct(id);
+            _productRepository.DeleteProduct(id);
 
             return Ok();
         }
