@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -9,9 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using RomansShop.DataAccess;
+using RomansShop.DataAccess.Database;
 
 namespace RomansShop.WebApi
 {
@@ -33,11 +28,11 @@ namespace RomansShop.WebApi
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             // Add Autofac
-            var containerBuilder = new ContainerBuilder();
+            ContainerBuilder containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule<DataAccessModule>();
             containerBuilder.RegisterModule<ServicesModule>();
             containerBuilder.Populate(services);
-            var container = containerBuilder.Build();
+            IContainer container = containerBuilder.Build();
             return new AutofacServiceProvider(container);
         }
 
@@ -51,6 +46,5 @@ namespace RomansShop.WebApi
 
             app.UseMvc();
         }
-
     }
 }

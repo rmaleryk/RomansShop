@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Autofac;
-using RomansShop.DataAccess;
-using RomansShop.Domain.Extensibility;
+﻿using Autofac;
+using RomansShop.DataAccess.Repositories;
+using RomansShop.Domain.Extensibility.Repositories;
 
 namespace RomansShop.WebApi
 {
@@ -12,7 +8,7 @@ namespace RomansShop.WebApi
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ProductRepostitory>().As<IProductRepository>();
+            builder.RegisterType<ProductRepository>().As<IProductRepository>();
         }
     }
 }

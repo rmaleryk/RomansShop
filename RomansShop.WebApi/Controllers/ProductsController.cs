@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RomansShop.Domain;
-using RomansShop.Domain.Extensibility;
+using RomansShop.Domain.Extensibility.Repositories;
 using RomansShop.Services.Extensibility;
 
 namespace RomansShop.WebApi.Controllers
@@ -28,8 +26,8 @@ namespace RomansShop.WebApi.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var products = _productRepository.GetProducts();
-            return new ObjectResult(products);
+            IEnumerable<Product> products = _productRepository.GetAll();
+            return Ok(products);
         }
 
         /// <summary>
@@ -37,14 +35,16 @@ namespace RomansShop.WebApi.Controllers
         /// </summary>
         /// <returns>Product</returns>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult Get(Guid id)
         {
-            var product = _productRepository.GetProduct(id);
+            Product product = _productRepository.GetById(id);
 
             if (product == null)
-                return NotFound();
+            {
+                return NotFound("Product not found.");
+            }
 
-            return new ObjectResult(product);
+            return Ok(product);
         }
 
         /// <summary>
@@ -55,10 +55,12 @@ namespace RomansShop.WebApi.Controllers
         public IActionResult Post([FromBody]Product product)
         {
             if (product == null)
-                return BadRequest();
+            {
+                return BadRequest("Product can't be null.");
+            }
 
-            var prod = _productRepository.AddProduct(product);
-            return new ObjectResult(prod);
+            Product prod = _productRepository.Add(product);
+            return CreatedAtAction("Post", prod);
         }
 
         /// <summary>
@@ -69,31 +71,37 @@ namespace RomansShop.WebApi.Controllers
         public IActionResult Put([FromBody]Product product)
         {
             if (product == null)
-                return BadRequest();
+            {
+                return BadRequest("Product can't be null.");
+            }
 
-            var prod = _productRepository.GetProduct(product.Id);
+            Product prod = _productRepository.GetById(product.Id);
 
             if (prod == null)
-                return NotFound();
+            {
+                return NotFound("Product not found.");
+            }
 
-            _productRepository.UpdateProduct(product);
+            prod = _productRepository.Update(product);
 
-            return Ok();
+            return Ok(prod);
         }
 
         /// <summary>
         ///     Delete Product by Id
         /// </summary>
         /// <returns>List of Products</returns>
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpDelete]
+        public IActionResult Delete([FromBody]Product product)
         {
-            var product = _productRepository.GetProduct(id);
+            Product prod = _productRepository.GetById(product.Id);
 
             if (product == null)
-                return NotFound();
+            {
+                return NotFound("Product not found.");
+            }
 
-            _productRepository.DeleteProduct(id);
+            _productRepository.Delete(product);
 
             return Ok();
         }

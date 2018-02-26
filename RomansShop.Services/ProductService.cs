@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using RomansShop.Domain;
-using RomansShop.Domain.Extensibility;
+﻿using RomansShop.Domain.Extensibility.Repositories;
 using RomansShop.Services.Extensibility;
 
 namespace RomansShop.Services
@@ -18,7 +14,5 @@ namespace RomansShop.Services
         {
             _productRepository = productRepository;
         }
-
-
     }
 }
