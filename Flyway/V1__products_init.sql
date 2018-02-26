@@ -1,5 +1,5 @@
 CREATE TABLE "products" (
-    "id" int NOT NULL PRIMARY KEY UNIQUE,
+    "id" BIGSERIAL NOT NULL PRIMARY KEY,
     "name" varchar(30) NOT NULL,
     "description" TEXT NULL,
     "price" int NOT NULL

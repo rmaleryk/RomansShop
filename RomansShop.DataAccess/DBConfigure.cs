@@ -21,7 +21,6 @@ namespace RomansShop.DataAccess
                 .Property(product => product.Name)
                 .HasColumnName("name");
 
-
             modelBuilder.Entity<Product>()
                 .Property(product => product.Description)
                 .HasColumnName("description");

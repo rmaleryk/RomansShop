@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using RomansShop.Domain;
 using RomansShop.Domain.Extensibility;
 
@@ -43,7 +44,7 @@ namespace RomansShop.DataAccess
 
         public Product GetProduct(int ProductId)
         {
-            var product = _shopDbContext.Products.FirstOrDefault(p => p.Id == ProductId);
+            var product = _shopDbContext.Products.AsNoTracking().FirstOrDefault(p => p.Id == ProductId);
 
             return product;
         }
@@ -55,12 +56,12 @@ namespace RomansShop.DataAccess
 
         public void UpdateProduct(Product product)
         {
-            var prod = _shopDbContext.Products.FirstOrDefault(p => p.Id == product.Id);
+            var prod = _shopDbContext.Products.AsNoTracking().FirstOrDefault(p => p.Id == product.Id);
 
             if (prod == null)
                 return;
 
-            _shopDbContext.Update(product);
+            _shopDbContext.Products.Update(product);
             _shopDbContext.SaveChanges();
         }
     }

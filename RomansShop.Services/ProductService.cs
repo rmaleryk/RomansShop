@@ -41,7 +41,7 @@ namespace RomansShop.Services
 
         public void UpdateProduct(Product product)
         {
-            UpdateProduct(product);
+            _productRepository.UpdateProduct(product);
         }
     }
 }
