@@ -32,10 +32,10 @@ namespace RomansShop.WebApi
             services.AddDbContext<ShopDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
-            // TODO Разбить по пакетам
             // Add Autofac
             var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterModule<DefaultModule>();
+            containerBuilder.RegisterModule<DataAccessModule>();
+            containerBuilder.RegisterModule<ServicesModule>();
             containerBuilder.Populate(services);
             var container = containerBuilder.Build();
             return new AutofacServiceProvider(container);
