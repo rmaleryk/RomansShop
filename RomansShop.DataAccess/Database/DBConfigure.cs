@@ -26,6 +26,10 @@ namespace RomansShop.DataAccess.Database
                 .HasColumnName("price");
 
             modelBuilder.Entity<Product>()
+                .Property(product => product.Quantity)
+                .HasColumnName("quantity");
+
+            modelBuilder.Entity<Product>()
                 .HasKey(product => product.Id);
         }
     }
