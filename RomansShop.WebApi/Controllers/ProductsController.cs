@@ -94,9 +94,14 @@ namespace RomansShop.WebApi.Controllers
         [HttpDelete]
         public IActionResult Delete([FromBody]Product product)
         {
+            if (product == null)
+            {
+                return BadRequest("Product can't be null.");
+            }
+
             Product prod = _productRepository.GetById(product.Id);
 
-            if (product == null)
+            if (prod == null)
             {
                 return NotFound("Product not found.");
             }

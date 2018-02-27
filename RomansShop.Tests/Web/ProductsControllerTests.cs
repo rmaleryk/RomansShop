@@ -198,10 +198,25 @@ namespace RomansShop.Tests
             ProductsController controller = new ProductsController(mockService.Object, mockRepository.Object);
 
             // Act
-            IActionResult product = controller.Delete(new Product());
+            IActionResult product = controller.Delete(GetTestProducts().ElementAt(0));
 
             // Assert
             Assert.IsType<NotFoundObjectResult>(product);
+        }
+
+        [Fact]
+        public void Delete_ReturnsBadRequestResult_WithNullProduct()
+        {
+            // Arrange
+            Mock<IProductService> mockService = new Mock<IProductService>();
+            Mock<IProductRepository> mockRepository = new Mock<IProductRepository>();
+            ProductsController controller = new ProductsController(mockService.Object, mockRepository.Object);
+
+            // Act
+            IActionResult product = controller.Delete(null);
+
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(product);
         }
 
         #endregion
