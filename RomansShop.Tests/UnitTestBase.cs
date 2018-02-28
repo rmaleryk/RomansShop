@@ -1,7 +1,7 @@
 ﻿using System;
 using Moq;
 
-namespace RomansShop.Tests.Web
+namespace RomansShop.Tests
 {
     public abstract class UnitTestBase : IDisposable
     {
