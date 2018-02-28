@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RomansShop.Domain;
@@ -9,67 +10,109 @@ using RomansShop.Services.Extensibility;
 using RomansShop.WebApi.Controllers;
 using Xunit;
 
-namespace RomansShop.Tests
+namespace RomansShop.Tests.Web
 {
-    public class ProductsControllerTests
+    public class ProductsControllerTests : UnitTestBase
     {
+        private Mock<IProductService> _mockService { get; set; }
+        private Mock<IProductRepository> _mockRepository { get; set; }
+        private Mock<IMapper> _mockMapper { get; set; }
+        private ProductsController _controller { get; set; }
+
+
         public ProductsControllerTests()
-        { }
+        {
+            _mockService = MockRepository.Create<IProductService>();
+            _mockRepository = MockRepository.Create<IProductRepository>();
+            _mockMapper = MockRepository.Create<IMapper>();
+
+            _controller = new ProductsController(_mockService.Object, _mockRepository.Object, _mockMapper.Object);
+        }
 
         #region GET Method Tests
-
-        [Fact]
-        public void Get_ReturnsAnObjectResult_WithAProductList()
-        {
-            // Arrange
-            Mock<IProductService> mockService = new Mock<IProductService>();
-            Mock<IProductRepository> mockRepository = new Mock<IProductRepository>();
-            mockRepository.Setup(repo => repo.GetAll()).Returns(GetTestProducts());
-            ProductsController controller = new ProductsController(mockService.Object, mockRepository.Object);
-
-            // Act
-            IActionResult productsRes = controller.Get();
-
-            // Assert
-            OkObjectResult objResult = Assert.IsType<OkObjectResult>(productsRes);
-            IEnumerable<Product> products = Assert.IsAssignableFrom<IEnumerable<Product>>(objResult.Value);
-            Assert.Equal(GetTestProducts().Count(), products.Count());
-        }
         
         [Fact]
-        public void GetById_ReturnsAnObjectResult_WithAProduct()
+        public void Get_ReturnsStatusCodeOk()
         {
-            Product expectedProduct = GetTestProducts().ElementAt(0);
-
             // Arrange
-            Mock<IProductService> mockService = new Mock<IProductService>();
-            Mock<IProductRepository> mockRepository = new Mock<IProductRepository>();
-            mockRepository.Setup(repo => repo.GetById(It.IsAny<Guid>())).Returns(expectedProduct);
-            ProductsController controller = new ProductsController(mockService.Object, mockRepository.Object);
+            IEnumerable<Product> products = new List<Product>();
+            IEnumerable<ProductResponse> productsResponse = new List<ProductResponse>();
+
+            _mockRepository.Setup(repo => repo.GetAll()).Returns(products);
+            _mockMapper.Setup(mapper => mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(products)).Returns(productsResponse);
 
             // Act
-            IActionResult productRes = controller.Get(It.IsAny<Guid>());
+            IActionResult actionResult = _controller.Get();
 
             // Assert
-            OkObjectResult objResult = Assert.IsType<OkObjectResult>(productRes);
-            Product actualProduct = Assert.IsType<Product>(objResult.Value);
-            Assert.Equal(expectedProduct.Id, actualProduct.Id);
+            OkObjectResult actual = actionResult as OkObjectResult;
+            Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
         [Fact]
-        public void GetById_ReturnsNotFound_WithNonExistId()
+        public void Get_ReturnsProductResponseList()
         {
             // Arrange
-            Mock<IProductService> mockService = new Mock<IProductService>();
-            Mock<IProductRepository> mockRepository = new Mock<IProductRepository>();
-            mockRepository.Setup(repo => repo.GetById(It.IsAny<Guid>())).Returns(() => null);
-            ProductsController controller = new ProductsController(mockService.Object, mockRepository.Object);
+            IEnumerable<Product> products = new List<Product>();
+            IEnumerable<ProductResponse> productsResponse = new List<ProductResponse>();
+
+            _mockRepository.Setup(repo => repo.GetAll()).Returns(products);
+            _mockMapper.Setup(mapper => mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(products)).Returns(productsResponse);
 
             // Act
-            IActionResult product = controller.Get(It.IsAny<Guid>());
+            IActionResult actionResult = _controller.Get();
 
             // Assert
-            Assert.IsType<NotFoundObjectResult>(product);
+            ObjectResult actual = actionResult as ObjectResult;
+            Assert.IsAssignableFrom<IEnumerable<ProductResponse>>(actual.Value);
+        }
+
+        [Fact]
+        public void GetById_ReturnsStatusCodeOk()
+        {
+            // Arrange
+            Product product = new Product();
+            ProductResponse productResponse = new ProductResponse();
+            _mockRepository.Setup(repo => repo.GetById(product.Id)).Returns(product);
+            _mockMapper.Setup(mapper => mapper.Map<Product, ProductResponse>(product)).Returns(productResponse);
+
+            // Act
+            IActionResult actionResult = _controller.Get(product.Id);
+
+            // Assert
+            OkObjectResult actual = actionResult as OkObjectResult;
+            Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
+        }
+
+        [Fact]
+        public void GetById_ReturnsProductResponse()
+        {
+            // Arrange
+            Product product = new Product();
+            ProductResponse productResponse = new ProductResponse();
+            _mockRepository.Setup(repo => repo.GetById(product.Id)).Returns(product);
+            _mockMapper.Setup(mapper => mapper.Map<Product, ProductResponse>(product)).Returns(productResponse);
+
+            // Act
+            IActionResult actionResult = _controller.Get(product.Id);
+
+            // Assert
+            ObjectResult actual = actionResult as ObjectResult;
+            Assert.IsAssignableFrom<ProductResponse>(actual.Value);
+        }
+
+        [Fact]
+        public void GetById_ReturnsStatusNotFound()
+        {
+            // Arrange
+            _mockRepository.Setup(repo => repo.GetById(It.IsAny<Guid>())).Returns(() => null);
+
+            // Act
+            IActionResult actionResult = _controller.Get(It.IsAny<Guid>());
+
+            // Assert
+            NotFoundObjectResult actual = actionResult as NotFoundObjectResult;
+            Assert.Equal(StatusCodes.Status404NotFound, actual.StatusCode);
         }
 
         #endregion
@@ -77,37 +120,56 @@ namespace RomansShop.Tests
         #region POST Method Tests
 
         [Fact]
-        public void Post_ReturnsAnObjectResult_WithAddedProduct()
+        public void Post_ReturnsStatusCodeCreated()
         {
             // Arrange
-            Mock<IProductService> mockService = new Mock<IProductService>();
-            Mock<IProductRepository> mockRepository = new Mock<IProductRepository>();
-            mockRepository.Setup(repo => repo.Add(It.IsNotNull<Product>())).Returns(new Product() { Id = new Guid() });
-            ProductsController controller = new ProductsController(mockService.Object, mockRepository.Object);
+            Product product = new Product();
+            CreateProductRequest createProductRequest = new CreateProductRequest();
+            ProductResponse productResponse = new ProductResponse();
+
+            _mockRepository.Setup(repo => repo.Add(product)).Returns(product);
+            _mockMapper.Setup(mapper => mapper.Map<CreateProductRequest, Product>(createProductRequest)).Returns(product);
+            _mockMapper.Setup(mapper => mapper.Map<Product, ProductResponse>(product)).Returns(productResponse);
 
             // Act
-            IActionResult productRes = controller.Post(new Product());
+            IActionResult actionResult = _controller.Post(createProductRequest);
 
             // Assert
-            CreatedAtActionResult objResult = Assert.IsType<CreatedAtActionResult>(productRes);
-            Product product = Assert.IsType<Product>(objResult.Value);
-            Assert.Equal(new Guid(), product.Id); // TODO: GUID creation once
+            CreatedAtActionResult actual = actionResult as CreatedAtActionResult;
+            Assert.Equal(StatusCodes.Status201Created, actual.StatusCode);
         }
 
         [Fact]
-        public void Post_ReturnsBadRequestResult_ForNullProduct()
+        public void Post_ReturnsProductResponse()
         {
             // Arrange
-            Mock<IProductService> mockService = new Mock<IProductService>();
-            Mock<IProductRepository> mockRepository = new Mock<IProductRepository>();
-            mockRepository.Setup(repo => repo.Add(null as Product)).Returns(() => null);
-            ProductsController controller = new ProductsController(mockService.Object, mockRepository.Object);
+            Product product = new Product();
+            CreateProductRequest createProductRequest = new CreateProductRequest();
+            ProductResponse productResponse = new ProductResponse();
+
+            _mockRepository.Setup(repo => repo.Add(product)).Returns(product);
+            _mockMapper.Setup(mapper => mapper.Map<CreateProductRequest, Product>(createProductRequest)).Returns(product);
+            _mockMapper.Setup(mapper => mapper.Map<Product, ProductResponse>(product)).Returns(productResponse);
 
             // Act
-            IActionResult product = controller.Post(null as Product);
+            IActionResult actionResult = _controller.Post(createProductRequest);
 
             // Assert
-            Assert.IsType<BadRequestObjectResult>(product);
+            ObjectResult actual = actionResult as ObjectResult;
+            Assert.IsAssignableFrom<ProductResponse>(actual.Value);
+        }
+
+        [Fact]
+        public void Post_ReturnsStatusCodeBadRequest_ForNullProduct()
+        {
+            // Arrange
+
+            // Act
+            IActionResult actionResult = _controller.Post(null);
+
+            // Assert
+            BadRequestObjectResult actual = actionResult as BadRequestObjectResult;
+            Assert.Equal(StatusCodes.Status400BadRequest, actual.StatusCode);
         }
 
         #endregion
@@ -115,56 +177,74 @@ namespace RomansShop.Tests
         #region PUT Method Tests
 
         [Fact]
-        public void Put_ReturnsOkResult_WithAttachedProduct()
+        public void Put_ReturnsStatusCodeOk()
         {
-            Product expectedProduct = GetTestProducts().ElementAt(0);
-
             // Arrange
-            Mock<IProductService> mockService = new Mock<IProductService>();
-            Mock<IProductRepository> mockRepository = new Mock<IProductRepository>();
-            mockRepository.Setup(repo => repo.GetById(It.IsAny<Guid>())).Returns(expectedProduct);
-            mockRepository.Setup(repo => repo.Update(expectedProduct)).Returns(expectedProduct);
-            ProductsController controller = new ProductsController(mockService.Object, mockRepository.Object);
+            Product product = new Product();
+            EditProductRequest editProductRequest = new EditProductRequest();
+            ProductResponse productResponse = new ProductResponse();
+
+            _mockRepository.Setup(repo => repo.GetById(product.Id)).Returns(product);
+            _mockRepository.Setup(repo => repo.Update(product)).Returns(product);
+
+            _mockMapper.Setup(mapper => mapper.Map<EditProductRequest, Product>(editProductRequest)).Returns(product);
+            _mockMapper.Setup(mapper => mapper.Map<Product, ProductResponse>(product)).Returns(productResponse);
 
             // Act
-            IActionResult product = controller.Put(expectedProduct);
+            IActionResult actionResult = _controller.Put(editProductRequest);
 
             // Assert
-            mockRepository.Verify(repo => repo.Update(It.IsNotNull<Product>()), Times.Once());
-            OkObjectResult objResult = Assert.IsType<OkObjectResult>(product);
-            Product actualProduct = Assert.IsType<Product>(objResult.Value);
-            Assert.Equal(expectedProduct.Id, actualProduct.Id);
+            OkObjectResult actual = actionResult as OkObjectResult;
+            Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
         [Fact]
-        public void Put_ReturnsBadRequestResult_WithNullProduct()
+        public void Put_ReturnsUpdatedProductResponse()
         {
             // Arrange
-            Mock<IProductService> mockService = new Mock<IProductService>();
-            Mock<IProductRepository> mockRepository = new Mock<IProductRepository>();
-            ProductsController controller = new ProductsController(mockService.Object, mockRepository.Object);
+            Product product = new Product();
+            EditProductRequest editProductRequest = new EditProductRequest();
+            ProductResponse productResponse = new ProductResponse();
+
+            _mockRepository.Setup(repo => repo.GetById(product.Id)).Returns(product);
+            _mockRepository.Setup(repo => repo.Update(product)).Returns(product);
+
+            _mockMapper.Setup(mapper => mapper.Map<EditProductRequest, Product>(editProductRequest)).Returns(product);
+            _mockMapper.Setup(mapper => mapper.Map<Product, ProductResponse>(product)).Returns(productResponse);
 
             // Act
-            IActionResult product = controller.Put(null);
+            IActionResult actionResult = _controller.Put(editProductRequest);
 
             // Assert
-            Assert.IsType<BadRequestObjectResult>(product);
+            ObjectResult actual = actionResult as ObjectResult;
+            Assert.IsAssignableFrom<ProductResponse>(actual.Value);
         }
 
         [Fact]
-        public void Put_ReturnsNotFoundResult_WithNonExistProduct()
+        public void Put_ReturnsStatusCodeBadRequest_ForNullProduct()
         {
             // Arrange
-            Mock<IProductService> mockService = new Mock<IProductService>();
-            Mock<IProductRepository> mockRepository = new Mock<IProductRepository>();
-            mockRepository.Setup(repo => repo.GetById(It.IsAny<Guid>())).Returns(() => null);
-            ProductsController controller = new ProductsController(mockService.Object, mockRepository.Object);
 
             // Act
-            IActionResult product = controller.Put(new Product());
+            IActionResult actionResult = _controller.Put(null);
 
             // Assert
-            Assert.IsType<NotFoundObjectResult>(product);
+            BadRequestObjectResult actual = actionResult as BadRequestObjectResult;
+            Assert.Equal(StatusCodes.Status400BadRequest, actual.StatusCode);
+        }
+
+        [Fact]
+        public void Put_ReturnsStatusCodeNotFound_ForNonExistProduct()
+        {
+            // Arrange
+            _mockRepository.Setup(repo => repo.GetById(It.IsAny<Guid>())).Returns(() => null);
+
+            // Act
+            IActionResult actionResult = _controller.Put(new EditProductRequest());
+
+            // Assert
+            NotFoundObjectResult actual = actionResult as NotFoundObjectResult;
+            Assert.Equal(StatusCodes.Status404NotFound, actual.StatusCode);
         }
 
         #endregion
@@ -172,67 +252,34 @@ namespace RomansShop.Tests
         #region DELETE Method Tests
 
         [Fact]
-        public void Delete_ReturnsOkResult_WithId()
+        public void Delete_ReturnsStatusCodeOk()
         {
             // Arrange
-            Mock<IProductService> mockService = new Mock<IProductService>();
-            Mock<IProductRepository> mockRepository = new Mock<IProductRepository>();
-            mockRepository.Setup(repo => repo.GetById(new Guid())).Returns(new Product());
-            ProductsController controller = new ProductsController(mockService.Object, mockRepository.Object);
+            Product deletedProduct = new Product();
+            _mockRepository.Setup(repo => repo.GetById(deletedProduct.Id)).Returns(deletedProduct);
+            _mockRepository.Setup(repo => repo.Delete(deletedProduct));
 
             // Act
-            IActionResult product = controller.Delete(new Product());
+            IActionResult actionResult = _controller.Delete(deletedProduct.Id);
 
             // Assert
-            mockRepository.Verify(service => service.Delete(It.IsAny<Product>()), Times.Once());
-            Assert.IsType<OkResult>(product);
+            OkObjectResult actual = actionResult as OkObjectResult;
+            Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
         [Fact]
-        public void Delete_ReturnsNotFoundResult_WithNonExistId()
+        public void Delete_ReturnsStatusCodeNotFound_WithNonExistId()
         {
             // Arrange
-            Mock<IProductService> mockService = new Mock<IProductService>();
-            Mock<IProductRepository> mockRepository = new Mock<IProductRepository>();
-            mockRepository.Setup(repo => repo.GetById(It.IsAny<Guid>())).Returns(() => null);
-            ProductsController controller = new ProductsController(mockService.Object, mockRepository.Object);
+            EditProductRequest deletedProduct = new EditProductRequest();
+            _mockRepository.Setup(repo => repo.GetById(deletedProduct.Id)).Returns(() => null);
 
             // Act
-            IActionResult product = controller.Delete(GetTestProducts().ElementAt(0));
+            IActionResult actionResult = _controller.Delete(deletedProduct.Id);
 
             // Assert
-            Assert.IsType<NotFoundObjectResult>(product);
-        }
-
-        [Fact]
-        public void Delete_ReturnsBadRequestResult_WithNullProduct()
-        {
-            // Arrange
-            Mock<IProductService> mockService = new Mock<IProductService>();
-            Mock<IProductRepository> mockRepository = new Mock<IProductRepository>();
-            ProductsController controller = new ProductsController(mockService.Object, mockRepository.Object);
-
-            // Act
-            IActionResult product = controller.Delete(null);
-
-            // Assert
-            Assert.IsType<BadRequestObjectResult>(product);
-        }
-
-        #endregion
-
-
-        #region Utills
-
-        private IEnumerable<Product> GetTestProducts()
-        {
-            var products = new List<Product>()
-            {
-                new Product() { Id = new Guid(), Name = "Soap", Price = 10 },
-                new Product() { Id = new Guid(), Name = "Bread", Price = 5 }
-            };
-
-            return products;
+            NotFoundObjectResult actual = actionResult as NotFoundObjectResult;
+            Assert.Equal(StatusCodes.Status404NotFound, actual.StatusCode);
         }
 
         #endregion
