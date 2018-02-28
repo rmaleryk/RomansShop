@@ -30,9 +30,9 @@ namespace RomansShop.WebApi.Controllers
         public IActionResult Get()
         {
             IEnumerable<Product> products = _productRepository.GetAll();
-            IEnumerable<ProductResponse> response = _mapper.Map<IEnumerable<ProductResponse>>(products);
+            IEnumerable<ProductResponse> productResponse = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(products);
 
-            return Ok(response);
+            return Ok(productResponse);
         }
 
         /// <summary>
@@ -49,9 +49,9 @@ namespace RomansShop.WebApi.Controllers
                 return NotFound("Product not found.");
             }
 
-            ProductResponse response = _mapper.Map<ProductResponse>(product);
+            ProductResponse productResponse = _mapper.Map<Product, ProductResponse>(product);
 
-            return Ok(response);
+            return Ok(productResponse);
         }
 
         /// <summary>
@@ -59,19 +59,19 @@ namespace RomansShop.WebApi.Controllers
         /// </summary>
         /// <returns>Added Product</returns>
         [HttpPost]
-        public IActionResult Post([FromBody]CreateProductRequest product)
+        public IActionResult Post([FromBody]CreateProductRequest createProductRequest)
         {
-            if (product == null || !ModelState.IsValid)
+            if (createProductRequest == null || !ModelState.IsValid)
             {
                 return BadRequest("Product is not valid.");
             }
 
-            Product entity = _mapper.Map<Product>(product);
-            entity = _productRepository.Add(entity);
+            Product product = _mapper.Map<CreateProductRequest, Product>(createProductRequest);
+            product = _productRepository.Add(product);
 
-            ProductResponse response = _mapper.Map<ProductResponse>(entity);
+            ProductResponse productResponse = _mapper.Map<Product, ProductResponse>(product);
 
-            return CreatedAtAction("Post", response);
+            return CreatedAtAction("Post", productResponse); // TODO: Redirect to getById
         }
 
         /// <summary>
@@ -79,51 +79,45 @@ namespace RomansShop.WebApi.Controllers
         /// </summary>
         /// <returns>List of Products</returns>
         [HttpPut]
-        public IActionResult Put([FromBody]EditProductRequest product)
+        public IActionResult Put([FromBody]EditProductRequest editProductRequest)
         {
-            if (product == null || !ModelState.IsValid)
+            if (editProductRequest == null || !ModelState.IsValid)
             {
                 return BadRequest("Product is not valid.");
             }
 
-            Product entity = _productRepository.GetById(product.Id);
+            Product product = _productRepository.GetById(editProductRequest.Id);
 
-            if (entity == null)
+            if (product == null)
             {
                 return NotFound("Product not found.");
             }
 
-            entity = _mapper.Map<Product>(product);
-            entity = _productRepository.Update(entity);
+            product = _mapper.Map<EditProductRequest, Product>(editProductRequest);
+            product = _productRepository.Update(product);
 
-            ProductResponse response = _mapper.Map<ProductResponse>(entity);
+            ProductResponse productResponse = _mapper.Map<Product, ProductResponse>(product);
 
-            return Ok(response);
+            return Ok(productResponse);
         }
 
         /// <summary>
         ///     Delete Product by Id
         /// </summary>
         /// <returns>List of Products</returns>
-        [HttpDelete]
-        public IActionResult Delete([FromBody]EditProductRequest product)
+        [HttpDelete("{id}")]
+        public IActionResult Delete(Guid id)
         {
-            if (product == null || !ModelState.IsValid)
-            {
-                return BadRequest("Product is not valid.");
-            }
+            Product product = _productRepository.GetById(id);
 
-            Product entity = _productRepository.GetById(product.Id);
-
-            if (entity == null)
+            if (product == null)
             {
                 return NotFound("Product not found.");
             }
 
-            entity = _mapper.Map<Product>(product);
-            _productRepository.Delete(entity);
+            _productRepository.Delete(product);
 
-            return Ok();
+            return Ok("Product was deleted.");
         }
     }
 }
