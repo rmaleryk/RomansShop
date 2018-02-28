@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RomansShop.Domain;
-using RomansShop.Domain.Extensibility;
+using RomansShop.Domain.Extensibility.Repositories;
 using RomansShop.Services.Extensibility;
 
 namespace RomansShop.WebApi.Controllers
@@ -14,11 +13,13 @@ namespace RomansShop.WebApi.Controllers
     {
         private readonly IProductService _productService;
         private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
 
-        public ProductsController(IProductService productService, IProductRepository productRepository)
+        public ProductsController(IProductService productService, IProductRepository productRepository, IMapper mapper)
         {
             _productService = productService;
             _productRepository = productRepository;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -28,8 +29,10 @@ namespace RomansShop.WebApi.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var products = _productRepository.GetProducts();
-            return new ObjectResult(products);
+            IEnumerable<Product> products = _productRepository.GetAll();
+            IEnumerable<ProductResponse> productResponse = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(products);
+
+            return Ok(productResponse);
         }
 
         /// <summary>
@@ -37,14 +40,18 @@ namespace RomansShop.WebApi.Controllers
         /// </summary>
         /// <returns>Product</returns>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult Get(Guid id)
         {
-            var product = _productRepository.GetProduct(id);
+            Product product = _productRepository.GetById(id);
 
             if (product == null)
-                return NotFound();
+            {
+                return NotFound("Product not found.");
+            }
 
-            return new ObjectResult(product);
+            ProductResponse productResponse = _mapper.Map<Product, ProductResponse>(product);
+
+            return Ok(productResponse);
         }
 
         /// <summary>
@@ -52,13 +59,19 @@ namespace RomansShop.WebApi.Controllers
         /// </summary>
         /// <returns>Added Product</returns>
         [HttpPost]
-        public IActionResult Post([FromBody]Product product)
+        public IActionResult Post([FromBody]CreateProductRequest createProductRequest)
         {
-            if (product == null)
-                return BadRequest();
+            if (createProductRequest == null || !ModelState.IsValid)
+            {
+                return BadRequest("Product is not valid.");
+            }
 
-            var prod = _productRepository.AddProduct(product);
-            return new ObjectResult(prod);
+            Product product = _mapper.Map<CreateProductRequest, Product>(createProductRequest);
+            product = _productRepository.Add(product);
+
+            ProductResponse productResponse = _mapper.Map<Product, ProductResponse>(product);
+
+            return CreatedAtAction("Get", new { id = productResponse.Id }, productResponse);
         }
 
         /// <summary>
@@ -66,19 +79,26 @@ namespace RomansShop.WebApi.Controllers
         /// </summary>
         /// <returns>List of Products</returns>
         [HttpPut]
-        public IActionResult Put([FromBody]Product product)
+        public IActionResult Put([FromBody]EditProductRequest editProductRequest)
         {
+            if (editProductRequest == null || !ModelState.IsValid)
+            {
+                return BadRequest("Product is not valid.");
+            }
+
+            Product product = _productRepository.GetById(editProductRequest.Id);
+
             if (product == null)
-                return BadRequest();
+            {
+                return NotFound("Product not found.");
+            }
 
-            var prod = _productRepository.GetProduct(product.Id);
+            product = _mapper.Map<EditProductRequest, Product>(editProductRequest);
+            product = _productRepository.Update(product);
 
-            if (prod == null)
-                return NotFound();
+            ProductResponse productResponse = _mapper.Map<Product, ProductResponse>(product);
 
-            _productRepository.UpdateProduct(product);
-
-            return Ok();
+            return Ok(productResponse);
         }
 
         /// <summary>
@@ -86,16 +106,18 @@ namespace RomansShop.WebApi.Controllers
         /// </summary>
         /// <returns>List of Products</returns>
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(Guid id)
         {
-            var product = _productRepository.GetProduct(id);
+            Product product = _productRepository.GetById(id);
 
             if (product == null)
-                return NotFound();
+            {
+                return NotFound("Product not found.");
+            }
 
-            _productRepository.DeleteProduct(id);
+            _productRepository.Delete(product);
 
-            return Ok();
+            return Ok("Product was deleted.");
         }
     }
 }

@@ -3,9 +3,9 @@
 namespace RomansShop.Domain
 {
     /// <summary>
-    ///     Product Entity
+    ///     DTO for product response
     /// </summary>
-    public class Product
+    public class ProductResponse
     {
         public Guid Id { get; set; }
 
@@ -15,6 +15,5 @@ namespace RomansShop.Domain
 
         public decimal Price { get; set; }
 
-        public long Quantity { get; set; }
     }
 }
