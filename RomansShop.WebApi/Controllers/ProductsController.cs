@@ -71,7 +71,7 @@ namespace RomansShop.WebApi.Controllers
 
             ProductResponse productResponse = _mapper.Map<Product, ProductResponse>(product);
 
-            return CreatedAtAction("Post", productResponse); // TODO: Redirect to getById
+            return CreatedAtAction("Get", new { id = productResponse.Id }, productResponse);
         }
 
         /// <summary>
