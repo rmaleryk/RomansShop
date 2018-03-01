@@ -17,5 +17,7 @@ namespace RomansShop.Domain.Extensibility.Repositories
         Product Update(Product product);
 
         void Delete(Product product);
+
+        IEnumerable<Product> GetByCategoryId(Guid categoryId);
     }
 }

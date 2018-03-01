@@ -119,5 +119,22 @@ namespace RomansShop.WebApi.Controllers
 
             return Ok("Product was deleted.");
         }
+
+        /// <summary>
+        ///     Get Products By CategoryId
+        /// </summary>
+        /// <returns>List of Products</returns>
+        [HttpGet("[action]/{categoryId}")]
+        public IActionResult GetByCategoryId(Guid categoryId)
+        {
+            IEnumerable<Product> products = _productService.GetByCategoryId(categoryId);
+
+            if (products == null)
+                return BadRequest("Category is not valid");
+
+            IEnumerable<ProductResponse> productResponse = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(products);
+
+            return Ok(productResponse);
+        }
     }
 }

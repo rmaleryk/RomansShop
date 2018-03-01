@@ -283,5 +283,63 @@ namespace RomansShop.Tests.Web
         }
 
         #endregion
+
+        #region GetByCategoryId Tests
+
+        [Fact]
+        public void GetByCategoryId_ReturnsStatusCodeOk()
+        {
+            // Arrange
+            Guid categoryId = Guid.NewGuid();
+            IEnumerable<Product> products = new List<Product>();
+            IEnumerable<ProductResponse> productsResponse = new List<ProductResponse>();
+
+            _mockService.Setup(serv => serv.GetByCategoryId(categoryId)).Returns(products);
+            _mockMapper.Setup(mapper => mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(products)).Returns(productsResponse);
+
+            // Act
+            IActionResult actionResult = _controller.GetByCategoryId(categoryId);
+
+            // Assert
+            OkObjectResult actual = actionResult as OkObjectResult;
+            Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
+        }
+
+        [Fact]
+        public void GetByCategoryId_ReturnsProductResponseList()
+        {
+            // Arrange
+            Guid categoryId = Guid.NewGuid();
+            IEnumerable<Product> products = new List<Product>();
+            IEnumerable<ProductResponse> productsResponse = new List<ProductResponse>();
+
+            _mockService.Setup(serv => serv.GetByCategoryId(categoryId)).Returns(products);
+            _mockMapper.Setup(mapper => mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(products)).Returns(productsResponse);
+
+            // Act
+            IActionResult actionResult = _controller.GetByCategoryId(categoryId);
+
+            // Assert
+            ObjectResult actual = actionResult as ObjectResult;
+            Assert.IsAssignableFrom<IEnumerable<ProductResponse>>(actual.Value);
+        }
+
+        [Fact]
+        public void GetByCategoryId_ReturnsStatusCodeBadRequest_ForNonExistCategoryId()
+        {
+            // Arrange
+            Guid categoryId = Guid.NewGuid();
+
+            _mockService.Setup(serv => serv.GetByCategoryId(categoryId)).Returns(() => null);
+
+            // Act
+            IActionResult actionResult = _controller.GetByCategoryId(categoryId);
+
+            // Assert
+            BadRequestObjectResult actual = actionResult as BadRequestObjectResult;
+            Assert.Equal(StatusCodes.Status400BadRequest, actual.StatusCode);
+        }
+
+        #endregion
     }
 }

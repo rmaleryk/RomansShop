@@ -53,5 +53,10 @@ namespace RomansShop.DataAccess.Repositories
             _shopDbContext.Products.Remove(product);
             _shopDbContext.SaveChanges();
         }
+
+        public IEnumerable<Product> GetByCategoryId(Guid categoryId)
+        {
+            return _shopDbContext.Products.Where(prod => prod.CategoryId == categoryId);
+        }
     }
 }
