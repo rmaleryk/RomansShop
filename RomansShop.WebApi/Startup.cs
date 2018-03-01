@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RomansShop.DataAccess.Database;
+using RomansShop.WebApi.Filters;
 
 namespace RomansShop.WebApi
 {
@@ -34,7 +35,11 @@ namespace RomansShop.WebApi
             services.AddAutoMapper();
             services.AddCors();
 
-            services.AddMvc().AddJsonOptions(options =>
+            services.AddMvc(options =>
+            {
+                options.Filters.Add<GlobalExceptionFilter>();
+
+            }).AddJsonOptions(options =>
             {
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
@@ -50,8 +55,7 @@ namespace RomansShop.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            app.UseCors(builder =>
-                builder.WithOrigins("http://localhost"));
+            app.UseCors(builder => builder.WithOrigins("http://localhost"));
 
             if (env.IsDevelopment())
             {
@@ -60,7 +64,7 @@ namespace RomansShop.WebApi
 
             loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-            
+
             app.UseMvc();
         }
     }
