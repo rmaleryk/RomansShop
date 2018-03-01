@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace RomansShop.Domain
 {
@@ -18,5 +19,7 @@ namespace RomansShop.Domain
         public decimal? Price { get; set; }
 
         public long? Quantity { get; set; }
+
+        public Guid CategoryId { get; set; }
     }
 }

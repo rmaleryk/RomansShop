@@ -10,6 +10,10 @@ namespace RomansShop.WebApi
             CreateMap<Product, ProductResponse>();
             CreateMap<CreateProductRequest, Product>();
             CreateMap<EditProductRequest, Product>();
+
+            CreateMap<Category, CategoryResponse>();
+            CreateMap<CreateCategoryRequest, Category>();
+            CreateMap<EditCategoryRequest, Category>();
         }
     }
 }

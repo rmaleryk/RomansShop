@@ -9,6 +9,7 @@ namespace RomansShop.WebApi
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<ProductService>().As<IProductService>();
+            builder.RegisterType<CategoryService>().As<ICategoryService>();
         }
     }
 }
