@@ -36,6 +36,24 @@ namespace RomansShop.WebApi.Controllers
         }
 
         /// <summary>
+        ///     Get Page of products
+        /// </summary>
+        /// <returns>List of Products</returns>
+        [HttpGet("page")]
+        public IActionResult GetPage([FromQuery]int startIndex, [FromQuery]int endIndex)
+        {
+            if (startIndex <= 0 || endIndex <= 0 || startIndex > endIndex)
+            {
+                return BadRequest("The start or end index is incorrect.");
+            }
+
+            IEnumerable<Product> productsPage = _productRepository.GetPage(startIndex, endIndex);
+            IEnumerable<ProductResponse> productResponse = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(productsPage);
+
+            return Ok(productResponse);
+        }
+
+        /// <summary>
         ///     Get Product by Id
         /// </summary>
         /// <returns>Product</returns>

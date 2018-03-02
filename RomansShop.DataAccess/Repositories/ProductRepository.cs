@@ -58,5 +58,16 @@ namespace RomansShop.DataAccess.Repositories
         {
             return _shopDbContext.Products.Where(prod => prod.CategoryId == categoryId);
         }
+
+        public IEnumerable<Product> GetPage(int startIndex, int endIndex)
+        {
+            // TODO: Warning "uses a row limiting operation (Skip/Take) without OrderBy which may lead to unpredictable results".
+            // 1) Add the date of addition in the DB and sort by it.
+            // 2) Don't worry!
+
+            return _shopDbContext.Products
+                        .Skip(startIndex - 1)
+                        .Take(endIndex - (startIndex - 1));
+        }
     }
 }

@@ -19,5 +19,7 @@ namespace RomansShop.Domain.Extensibility.Repositories
         void Delete(Product product);
 
         IEnumerable<Product> GetByCategoryId(Guid categoryId);
+
+        IEnumerable<Product> GetPage(int startIndex, int endIndex);
     }
 }

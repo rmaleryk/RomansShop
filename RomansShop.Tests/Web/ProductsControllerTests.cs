@@ -19,7 +19,6 @@ namespace RomansShop.Tests.Web
         private Mock<IMapper> _mockMapper { get; set; }
         private ProductsController _controller { get; set; }
 
-
         public ProductsControllerTests()
         {
             _mockService = MockRepository.Create<IProductService>();
@@ -113,6 +112,56 @@ namespace RomansShop.Tests.Web
             // Assert
             NotFoundObjectResult actual = actionResult as NotFoundObjectResult;
             Assert.Equal(StatusCodes.Status404NotFound, actual.StatusCode);
+        }
+
+        [Fact]
+        public void GetPage_ReturnsProductResponse_ForCorrectStartEndIndexes()
+        {
+            // Arrange
+            IEnumerable<Product> products = new List<Product>();
+            IEnumerable<ProductResponse> productsResponse = new List<ProductResponse>();
+            int startIndex = 1;
+            int endIndex = 5;
+
+            _mockRepository.Setup(repo => repo.GetPage(startIndex, endIndex)).Returns(products);
+            _mockMapper.Setup(mapper => mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(products)).Returns(productsResponse);
+
+            // Act
+            IActionResult actionResult = _controller.GetPage(startIndex, endIndex);
+
+            // Assert
+            ObjectResult actual = actionResult as ObjectResult;
+            Assert.IsAssignableFrom<IEnumerable<ProductResponse>>(actual.Value);
+        }
+
+        [Fact]
+        public void GetPage_ReturnsStatusBadRequest_ForNegativeOrZeroStartEndIndexes()
+        {
+            // Arrange
+            int startIndex = -1;
+            int endIndex = 0;
+
+            // Act
+            IActionResult actionResult = _controller.GetPage(startIndex, endIndex);
+
+            // Assert
+            BadRequestObjectResult actual = actionResult as BadRequestObjectResult;
+            Assert.Equal(StatusCodes.Status400BadRequest, actual.StatusCode);
+        }
+
+        [Fact]
+        public void GetPage_ReturnsStatusBadRequest_ForEndIndexLessThanStartIndex()
+        {
+            // Arrange
+            int startIndex = 5;
+            int endIndex = 2;
+
+            // Act
+            IActionResult actionResult = _controller.GetPage(startIndex, endIndex);
+
+            // Assert
+            BadRequestObjectResult actual = actionResult as BadRequestObjectResult;
+            Assert.Equal(StatusCodes.Status400BadRequest, actual.StatusCode);
         }
 
         #endregion
