@@ -115,6 +115,11 @@ namespace RomansShop.WebApi.Controllers
                 return NotFound("Category not found.");
             }
 
+            if(!_categoryService.IsEmpty(id))
+            {
+                return BadRequest("Category is not empty.");
+            }
+
             _categoryRepository.Delete(category);
 
             return Ok("Category was deleted.");
