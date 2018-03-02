@@ -14,6 +14,8 @@ namespace RomansShop.Domain.Extensibility.Repositories
 
         Category GetById(Guid categoryId);
 
+        Category GetByName(string categoryName);
+
         Category Update(Category category);
 
         void Delete(Category category);

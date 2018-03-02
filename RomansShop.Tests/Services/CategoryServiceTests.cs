@@ -26,7 +26,7 @@ namespace RomansShop.Tests.Services
         #region IsExist Tests
 
         [Fact]
-        public void IsExist_ReturnsTrue_ForExistsCategory()
+        public void IsExist_ReturnsTrue_ForExistsCategoryId()
         {
             // Arrange
             Guid categoryId = Guid.NewGuid();
@@ -42,7 +42,7 @@ namespace RomansShop.Tests.Services
         }
 
         [Fact]
-        public void IsExist_ReturnsFalse_ForNonExistsCategory()
+        public void IsExist_ReturnsFalse_ForNonExistsCategoryId()
         {
             // Arrange
             Guid categoryId = Guid.NewGuid();
@@ -56,11 +56,42 @@ namespace RomansShop.Tests.Services
             Assert.False(actual);
         }
 
+        [Fact]
+        public void IsExist_ReturnsTrue_ForExistsCategoryName()
+        {
+            // Arrange
+            string categoryName = "testCategory";
+            Category category = new Category() { Name = categoryName };
+
+            _mockRepository.Setup(repo => repo.GetByName(categoryName)).Returns(category);
+
+            // Act
+            bool actual = _categoryService.IsExist(categoryName);
+
+            // Assert
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void IsExist_ReturnsFalse_ForNonExistsCategoryName()
+        {
+            // Arrange
+            string categoryName = "testCategory";
+
+            _mockRepository.Setup(repo => repo.GetByName(categoryName)).Returns(() => null);
+
+            // Act
+            bool actual = _categoryService.IsExist(categoryName);
+
+            // Assert
+            Assert.False(actual);
+        }
+
         #endregion
 
         #region isEmpty Tests
 
-         [Fact]
+        [Fact]
         public void IsEmpty_ReturnsTrue_ForEmptyCategory()
         {
             // Arrange

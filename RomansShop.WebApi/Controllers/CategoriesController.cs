@@ -66,6 +66,11 @@ namespace RomansShop.WebApi.Controllers
                 return BadRequest("Category is not valid.");
             }
 
+            if(_categoryService.IsExist(createCategoryRequest.Name))
+            {
+                return BadRequest("Category name already exist.");
+            }
+
             Category category = _mapper.Map<CreateCategoryRequest, Category>(createCategoryRequest);
             category = _categoryRepository.Add(category);
 
@@ -91,6 +96,11 @@ namespace RomansShop.WebApi.Controllers
             if (category == null)
             {
                 return NotFound("Category not found.");
+            }
+
+            if (_categoryService.IsExist(editCategoryRequest.Name))
+            {
+                return BadRequest("Category name already exist.");
             }
 
             category = _mapper.Map<EditCategoryRequest, Category>(editCategoryRequest);

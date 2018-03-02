@@ -23,6 +23,11 @@ namespace RomansShop.Services
             return _categoryRepository.GetById(id) != null;
         }
 
+        public bool IsExist(string name)
+        {
+            return _categoryRepository.GetByName(name) != null;
+        }
+
         public bool IsEmpty(Guid id)
         {
             IEnumerable<Product> products = _productRepository.GetByCategoryId(id);

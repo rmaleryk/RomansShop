@@ -6,6 +6,8 @@ namespace RomansShop.Services.Extensibility
     {
         bool IsExist(Guid id);
 
+        bool IsExist(string name);
+
         bool IsEmpty(Guid id);
     }
 }

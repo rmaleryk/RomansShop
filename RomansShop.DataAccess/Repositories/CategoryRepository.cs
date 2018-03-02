@@ -37,7 +37,12 @@ namespace RomansShop.DataAccess.Repositories
 
         public Category GetById(Guid categoryId)
         {
-            return _shopDbContext.Categories.AsNoTracking().FirstOrDefault(p => p.Id == categoryId);
+            return _shopDbContext.Categories.AsNoTracking().FirstOrDefault(cat => cat.Id == categoryId);
+        }
+
+        public Category GetByName(string categoryName)
+        {
+            return _shopDbContext.Categories.AsNoTracking().FirstOrDefault(cat => cat.Name == categoryName);
         }
 
         public Category Update(Category category)
