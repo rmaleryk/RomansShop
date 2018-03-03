@@ -142,7 +142,7 @@ namespace RomansShop.WebApi.Controllers
         ///     api/categories/{categoryId}/products
         /// </summary>
         /// <returns>List of Products</returns>
-        [HttpGet("/categories/{categoryId}/products")]
+        [HttpGet("api/categories/{categoryId}/products")]
         public IActionResult GetByCategoryId(Guid categoryId)
         {
             IEnumerable<Product> products = _productRepository.GetByCategoryId(categoryId);
