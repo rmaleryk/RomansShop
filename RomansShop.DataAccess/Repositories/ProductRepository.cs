@@ -37,7 +37,9 @@ namespace RomansShop.DataAccess.Repositories
 
         public Product GetById(Guid productId)
         {
-            return _shopDbContext.Products.AsNoTracking().FirstOrDefault(p => p.Id == productId);
+            return _shopDbContext.Products
+                .AsNoTracking()
+                .FirstOrDefault(p => p.Id == productId);
         }
 
         public Product Update(Product product)
@@ -56,18 +58,19 @@ namespace RomansShop.DataAccess.Repositories
 
         public IEnumerable<Product> GetByCategoryId(Guid categoryId)
         {
-            return _shopDbContext.Products.Where(prod => prod.CategoryId == categoryId);
+            return _shopDbContext.Products
+                .AsNoTracking()
+                .Where(prod => prod.CategoryId == categoryId)
+                .ToList();
         }
 
-        public IEnumerable<Product> GetPage(int startIndex, int endIndex)
+        public IEnumerable<Product> GetPage(int startIndex, int offset)
         {
-            // TODO: Warning "uses a row limiting operation (Skip/Take) without OrderBy which may lead to unpredictable results".
-            // 1) Add the date of addition in the DB and sort by it.
-            // 2) Don't worry!
-
             return _shopDbContext.Products
-                        .Skip(startIndex - 1)
-                        .Take(endIndex - (startIndex - 1));
+                .OrderBy(prod => prod.Name)
+                .Skip(startIndex - 1)
+                .Take(offset)
+                .ToList();
         }
     }
 }

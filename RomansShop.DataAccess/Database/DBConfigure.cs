@@ -35,12 +35,6 @@ namespace RomansShop.DataAccess.Database
 
             modelBuilder.Entity<Product>()
                 .HasKey(product => product.Id);
-
-            modelBuilder.Entity<Product>()
-                .HasOne(product => product.Category)
-                .WithMany(category => category.Products)
-                .HasForeignKey(category => category.CategoryId)
-                .HasConstraintName("FK_Product_Category");
         }
 
         public static void ConfigureCategory(this ModelBuilder modelBuilder)
