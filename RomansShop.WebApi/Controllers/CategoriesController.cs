@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using RomansShop.Core;
 using RomansShop.Domain;
 using RomansShop.Domain.Extensibility.Repositories;
 using RomansShop.Services.Extensibility;
+using RomansShop.WebApi.Filters;
 
 namespace RomansShop.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/categories")]
     public class CategoriesController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -24,8 +26,9 @@ namespace RomansShop.WebApi.Controllers
 
         /// <summary>
         ///     Get All Categories
+        ///     api/categories
         /// </summary>
-        /// <returns>List of Categorys</returns>
+        /// <returns>List of Categories</returns>
         [HttpGet]
         public IActionResult Get()
         {
@@ -37,102 +40,96 @@ namespace RomansShop.WebApi.Controllers
 
         /// <summary>
         ///     Get Category by Id
+        ///     api/categories/{id}
         /// </summary>
         /// <returns>Category</returns>
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
-            Category category = _categoryRepository.GetById(id);
+            ValidationResponse<Category> validationResponse = _categoryService.GetById(id);
 
-            if (category == null)
+            if (validationResponse.Status == ValidationStatus.NotFound)
             {
-                return NotFound("Category not found.");
+                return NotFound(validationResponse.Message);
             }
 
-            CategoryResponse categoryResponse = _mapper.Map<Category, CategoryResponse>(category);
+            CategoryResponse categoryResponse = _mapper.Map<Category, CategoryResponse>(validationResponse.ResponseData);
 
             return Ok(categoryResponse);
         }
 
         /// <summary>
         ///     Add new Category
+        ///     api/categories
         /// </summary>
         /// <returns>Added Category</returns>
         [HttpPost]
-        public IActionResult Post([FromBody]CreateCategoryRequest createCategoryRequest)
+        [ValidateModel]
+        public IActionResult Post([FromBody]CategoryRequest categoryRequest)
         {
-            if (createCategoryRequest == null || !ModelState.IsValid)
+            Category category = _mapper.Map<CategoryRequest, Category>(categoryRequest);
+            ValidationResponse<Category> validationResponse = _categoryService.Add(category);
+
+            if (validationResponse.Status == ValidationStatus.Failed)
             {
-                return BadRequest("Category is not valid.");
+                return BadRequest(validationResponse.Message);
             }
 
-            if(_categoryService.IsExist(createCategoryRequest.Name))
-            {
-                return BadRequest("Category name already exist.");
-            }
-
-            Category category = _mapper.Map<CreateCategoryRequest, Category>(createCategoryRequest);
-            category = _categoryRepository.Add(category);
-
-            CategoryResponse categoryResponse = _mapper.Map<Category, CategoryResponse>(category);
+            CategoryResponse categoryResponse = _mapper.Map<Category, CategoryResponse>(validationResponse.ResponseData);
 
             return CreatedAtAction("Get", new { id = categoryResponse.Id }, categoryResponse);
         }
 
         /// <summary>
         ///     Update Category
+        ///     api/categories/{id}
         /// </summary>
-        /// <returns>List of Categorys</returns>
-        [HttpPut]
-        public IActionResult Put([FromBody]EditCategoryRequest editCategoryRequest)
+        /// <returns>Category Object</returns>
+        [HttpPut("{id}")]
+        [ValidateModel]
+        public IActionResult Put(Guid id, [FromBody]CategoryRequest categoryRequest)
         {
-            if (editCategoryRequest == null || !ModelState.IsValid)
+            Category category = _mapper.Map<CategoryRequest, Category>(categoryRequest);
+            category.Id = id;
+
+            ValidationResponse<Category> validationResponse = _categoryService.Update(category);
+
+            if (validationResponse.Status == ValidationStatus.NotFound)
             {
-                return BadRequest("Category is not valid.");
+                return NotFound(validationResponse.Message);
             }
 
-            Category category = _categoryRepository.GetById(editCategoryRequest.Id);
-
-            if (category == null)
+            if (validationResponse.Status == ValidationStatus.Failed)
             {
-                return NotFound("Category not found.");
+                return BadRequest(validationResponse.Message);
             }
 
-            if (_categoryService.IsExist(editCategoryRequest.Name))
-            {
-                return BadRequest("Category name already exist.");
-            }
-
-            category = _mapper.Map<EditCategoryRequest, Category>(editCategoryRequest);
-            category = _categoryRepository.Update(category);
-
-            CategoryResponse categoryResponse = _mapper.Map<Category, CategoryResponse>(category);
+            CategoryResponse categoryResponse = _mapper.Map<Category, CategoryResponse>(validationResponse.ResponseData);
 
             return Ok(categoryResponse);
         }
 
         /// <summary>
         ///     Delete Category by Id
+        ///     api/categories/{id}
         /// </summary>
-        /// <returns>List of Categorys</returns>
+        /// <returns>Category Object</returns>
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            Category category = _categoryRepository.GetById(id);
+            ValidationResponse<Category> validationResponse = _categoryService.Delete(id);
 
-            if (category == null)
+            if (validationResponse.Status == ValidationStatus.NotFound)
             {
-                return NotFound("Category not found.");
+                return NotFound(validationResponse.Message);
             }
 
-            if(!_categoryService.IsEmpty(id))
+            if(validationResponse.Status == ValidationStatus.Failed)
             {
-                return BadRequest("Category is not empty.");
+                return BadRequest(validationResponse.Message);
             }
 
-            _categoryRepository.Delete(category);
-
-            return Ok("Category was deleted.");
+            return Ok(validationResponse.Message);
         }
     }
 }

@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using RomansShop.Core;
 using RomansShop.Domain;
 using RomansShop.Domain.Extensibility.Repositories;
 using RomansShop.Services.Extensibility;
+using RomansShop.WebApi.Filters;
 
 namespace RomansShop.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/products")]
     public class ProductsController : Controller
     {
         private readonly IProductService _productService;
@@ -24,6 +26,7 @@ namespace RomansShop.WebApi.Controllers
 
         /// <summary>
         ///     Get All Products
+        ///     api/products
         /// </summary>
         /// <returns>List of Products</returns>
         [HttpGet]
@@ -37,54 +40,54 @@ namespace RomansShop.WebApi.Controllers
 
         /// <summary>
         ///     Get Page of products
+        ///     api/products/page?startIndex={startIndex}&offset={offset}
         /// </summary>
         /// <returns>List of Products</returns>
         [HttpGet("page")]
-        public IActionResult GetPage([FromQuery]int startIndex, [FromQuery]int endIndex)
+        public IActionResult GetPage([FromQuery]int startIndex, [FromQuery]int offset)
         {
-            if (startIndex <= 0 || endIndex <= 0 || startIndex > endIndex)
+            ValidationResponse<IEnumerable<Product>> validationResponse = _productService.GetPage(startIndex, offset);
+
+            if(validationResponse.Status == ValidationStatus.Failed)
             {
-                return BadRequest("The start or end index is incorrect.");
+                return BadRequest(validationResponse.Message);
             }
 
-            IEnumerable<Product> productsPage = _productRepository.GetPage(startIndex, endIndex);
-            IEnumerable<ProductResponse> productResponse = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(productsPage);
+            IEnumerable<ProductResponse> productResponse = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(validationResponse.ResponseData);
 
             return Ok(productResponse);
         }
 
         /// <summary>
         ///     Get Product by Id
+        ///     api/products/{id}
         /// </summary>
         /// <returns>Product</returns>
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
-            Product product = _productRepository.GetById(id);
+            ValidationResponse<Product> validationResponse = _productService.GetById(id);
 
-            if (product == null)
+            if (validationResponse.Status == ValidationStatus.NotFound)
             {
-                return NotFound("Product not found.");
+                return NotFound(validationResponse.Message);
             }
 
-            ProductResponse productResponse = _mapper.Map<Product, ProductResponse>(product);
+            ProductResponse productResponse = _mapper.Map<Product, ProductResponse>(validationResponse.ResponseData);
 
             return Ok(productResponse);
         }
 
         /// <summary>
         ///     Add new Product
+        ///     api/products
         /// </summary>
         /// <returns>Added Product</returns>
         [HttpPost]
-        public IActionResult Post([FromBody]CreateProductRequest createProductRequest)
+        [ValidateModel]
+        public IActionResult Post([FromBody]ProductRequest createProductRequest)
         {
-            if (createProductRequest == null || !ModelState.IsValid)
-            {
-                return BadRequest("Product is not valid.");
-            }
-
-            Product product = _mapper.Map<CreateProductRequest, Product>(createProductRequest);
+            Product product = _mapper.Map<ProductRequest, Product>(createProductRequest);
             product = _productRepository.Add(product);
 
             ProductResponse productResponse = _mapper.Map<Product, ProductResponse>(product);
@@ -94,62 +97,55 @@ namespace RomansShop.WebApi.Controllers
 
         /// <summary>
         ///     Update Product
+        ///     api/products/{id}
         /// </summary>
         /// <returns>List of Products</returns>
-        [HttpPut]
-        public IActionResult Put([FromBody]EditProductRequest editProductRequest)
+        [HttpPut("{id}")]
+        [ValidateModel]
+        public IActionResult Put(Guid id, [FromBody]ProductRequest productRequest)
         {
-            if (editProductRequest == null || !ModelState.IsValid)
+            Product product = _mapper.Map<ProductRequest, Product>(productRequest);
+            product.Id = id;
+
+            ValidationResponse<Product> validationResponse = _productService.Update(product);
+
+            if(validationResponse.Status == ValidationStatus.NotFound)
             {
-                return BadRequest("Product is not valid.");
+                return NotFound(validationResponse.Message);
             }
 
-            Product product = _productRepository.GetById(editProductRequest.Id);
-
-            if (product == null)
-            {
-                return NotFound("Product not found.");
-            }
-
-            product = _mapper.Map<EditProductRequest, Product>(editProductRequest);
-            product = _productRepository.Update(product);
-
-            ProductResponse productResponse = _mapper.Map<Product, ProductResponse>(product);
+            ProductResponse productResponse = _mapper.Map<Product, ProductResponse>(validationResponse.ResponseData);
 
             return Ok(productResponse);
         }
 
         /// <summary>
         ///     Delete Product by Id
+        ///     api/products/{id}
         /// </summary>
         /// <returns>List of Products</returns>
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            Product product = _productRepository.GetById(id);
+            ValidationResponse<Product> validationResponse = _productService.Delete(id);
 
-            if (product == null)
+            if (validationResponse.Status == ValidationStatus.NotFound)
             {
-                return NotFound("Product not found.");
+                return NotFound(validationResponse.Message);
             }
 
-            _productRepository.Delete(product);
-
-            return Ok("Product was deleted.");
+            return Ok(validationResponse.Message);
         }
 
         /// <summary>
         ///     Get Products By CategoryId
+        ///     api/categories/{categoryId}/products
         /// </summary>
         /// <returns>List of Products</returns>
-        [HttpGet("[action]/{categoryId}")]
+        [HttpGet("/categories/{categoryId}/products")]
         public IActionResult GetByCategoryId(Guid categoryId)
         {
-            IEnumerable<Product> products = _productService.GetByCategoryId(categoryId);
-
-            if (products == null)
-                return BadRequest("Category is not valid");
-
+            IEnumerable<Product> products = _productRepository.GetByCategoryId(categoryId);
             IEnumerable<ProductResponse> productResponse = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(products);
 
             return Ok(productResponse);

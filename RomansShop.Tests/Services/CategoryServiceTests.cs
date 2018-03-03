@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Moq;
+using RomansShop.Core;
 using RomansShop.Domain;
 using RomansShop.Domain.Extensibility.Repositories;
 using RomansShop.Services;
@@ -23,10 +24,10 @@ namespace RomansShop.Tests.Services
             _categoryService = new CategoryService(_mockRepository.Object, _mockProductRepository.Object);
         }
 
-        #region IsExist Tests
+        #region GetById Tests
 
         [Fact]
-        public void IsExist_ReturnsTrue_ForExistsCategoryId()
+        public void GetById_ReturnsCategory_ForExistsCategoryId()
         {
             // Arrange
             Guid categoryId = Guid.NewGuid();
@@ -35,14 +36,15 @@ namespace RomansShop.Tests.Services
             _mockRepository.Setup(repo => repo.GetById(categoryId)).Returns(category);
 
             // Act
-            bool actual = _categoryService.IsExist(categoryId);
+            ValidationResponse<Category> actual = _categoryService.GetById(categoryId);
 
             // Assert
-            Assert.True(actual);
+            Assert.Equal(ValidationStatus.Ok, actual.Status);
+            Assert.NotNull(actual.ResponseData);
         }
 
         [Fact]
-        public void IsExist_ReturnsFalse_ForNonExistsCategoryId()
+        public void GetById_ReturnsNotFound_ForNonExistsCategoryId()
         {
             // Arrange
             Guid categoryId = Guid.NewGuid();
@@ -50,95 +52,159 @@ namespace RomansShop.Tests.Services
             _mockRepository.Setup(repo => repo.GetById(categoryId)).Returns(() => null);
 
             // Act
-            bool actual = _categoryService.IsExist(categoryId);
+            ValidationResponse<Category> actual = _categoryService.GetById(categoryId);
 
             // Assert
-            Assert.False(actual);
-        }
-
-        [Fact]
-        public void IsExist_ReturnsTrue_ForExistsCategoryName()
-        {
-            // Arrange
-            string categoryName = "testCategory";
-            Category category = new Category() { Name = categoryName };
-
-            _mockRepository.Setup(repo => repo.GetByName(categoryName)).Returns(category);
-
-            // Act
-            bool actual = _categoryService.IsExist(categoryName);
-
-            // Assert
-            Assert.True(actual);
-        }
-
-        [Fact]
-        public void IsExist_ReturnsFalse_ForNonExistsCategoryName()
-        {
-            // Arrange
-            string categoryName = "testCategory";
-
-            _mockRepository.Setup(repo => repo.GetByName(categoryName)).Returns(() => null);
-
-            // Act
-            bool actual = _categoryService.IsExist(categoryName);
-
-            // Assert
-            Assert.False(actual);
+            Assert.Equal(ValidationStatus.NotFound, actual.Status);
         }
 
         #endregion
 
-        #region isEmpty Tests
+        #region Add Tests
 
         [Fact]
-        public void IsEmpty_ReturnsTrue_ForEmptyCategory()
+        public void Add_ReturnsCategory_ForUniqueCategoryName()
         {
             // Arrange
-            Guid categoryId = Guid.NewGuid();
-            IEnumerable<Product> emptyProducts = new List<Product>();
+            Category category = new Category();
 
-            _mockProductRepository.Setup(serv => serv.GetByCategoryId(categoryId)).Returns(emptyProducts);
+            _mockRepository.Setup(repo => repo.GetByName(category.Name)).Returns(() => null);
+            _mockRepository.Setup(repo => repo.Add(category)).Returns(category);
 
             // Act
-            bool actual = _categoryService.IsEmpty(categoryId);
+            ValidationResponse<Category> actual = _categoryService.Add(category);
 
             // Assert
-            Assert.True(actual);
+            Assert.Equal(ValidationStatus.Ok, actual.Status);
+            Assert.NotNull(actual.ResponseData);
         }
 
         [Fact]
-        public void IsEmpty_ReturnsFalse_ForNonEmptyCategory()
+        public void Add_ReturnsFailed_ForNonUniqueCategoryName()
         {
             // Arrange
-            Guid categoryId = Guid.NewGuid();
-            IEnumerable<Product> products = new List<Product>() { new Product() };
+            Category category = new Category();
 
-            _mockProductRepository.Setup(serv => serv.GetByCategoryId(categoryId)).Returns(products);
-
-            // Act
-            bool actual = _categoryService.IsEmpty(categoryId);
-
-            // Assert
-            Assert.False(actual);
-        }
-
-        [Fact]
-        public void IsEmpty_ThrowsException_ForNonExistCategory()
-        {
-            // Arrange
-            Guid categoryId = Guid.NewGuid();
-
-            _mockProductRepository.Setup(serv => serv.GetByCategoryId(categoryId)).Returns(() => null);
+            _mockRepository.Setup(repo => repo.GetByName(category.Name)).Returns(new Category());
 
             // Act
-            Action actual = () => _categoryService.IsEmpty(categoryId);
+            ValidationResponse<Category> actual = _categoryService.Add(category);
 
             // Assert
-            Assert.Throws<Exception>(actual);
+            Assert.Equal(ValidationStatus.Failed, actual.Status);
         }
 
         #endregion
 
+        #region Update Tests
+
+        [Fact]
+        public void Update_ReturnsCategory_ForExistCategoryWithUniqueName()
+        {
+            // Arrange
+            Guid categoryId = Guid.NewGuid();
+            Category category = new Category() { Id = categoryId };
+
+            _mockRepository.Setup(repo => repo.GetById(categoryId)).Returns(category);
+            _mockRepository.Setup(repo => repo.GetByName(category.Name)).Returns(() => null);
+            _mockRepository.Setup(repo => repo.Update(category)).Returns(category);
+
+            // Act
+            ValidationResponse<Category> actual = _categoryService.Update(category);
+
+            // Assert
+            Assert.Equal(ValidationStatus.Ok, actual.Status);
+            Assert.NotNull(actual.ResponseData);
+        }
+
+        [Fact]
+        public void Update_ReturnsNotFound_ForNonExistCategory()
+        {
+            // Arrange
+            Guid categoryId = Guid.NewGuid();
+            Category category = new Category() { Id = categoryId };
+
+            _mockRepository.Setup(repo => repo.GetById(categoryId)).Returns(() => null);
+
+            // Act
+            ValidationResponse<Category> actual = _categoryService.Update(category);
+
+            // Assert
+            Assert.Equal(ValidationStatus.NotFound, actual.Status);
+        }
+
+        [Fact]
+        public void Update_ReturnsFailed_ForNonUniqueCategoryName()
+        {
+            // Arrange
+            Guid categoryId = Guid.NewGuid();
+            Category category = new Category() { Id = categoryId };
+
+            _mockRepository.Setup(repo => repo.GetById(categoryId)).Returns(category);
+            _mockRepository.Setup(repo => repo.GetByName(category.Name)).Returns(new Category());
+
+            // Act
+            ValidationResponse<Category> actual = _categoryService.Update(category);
+
+            // Assert
+            Assert.Equal(ValidationStatus.Failed, actual.Status);
+        }
+
+        #endregion
+
+        #region Delete Tests
+
+        [Fact]
+        public void Delete_ReturnsCategory_ForExistEmptyCategory()
+        {
+            // Arrange
+            Guid categoryId = Guid.NewGuid();
+            Category category = new Category() { Id = categoryId };
+
+            _mockRepository.Setup(repo => repo.GetById(categoryId)).Returns(category);
+            _mockProductRepository.Setup(repo => repo.GetByCategoryId(category.Id)).Returns(new List<Product>());
+            _mockRepository.Setup(repo => repo.Delete(category));
+
+            // Act
+            ValidationResponse<Category> actual = _categoryService.Delete(categoryId);
+
+            // Assert
+            Assert.Equal(ValidationStatus.Ok, actual.Status);
+            Assert.NotNull(actual.ResponseData);
+        }
+
+        [Fact]
+        public void Delete_ReturnsNotFound_ForNonExistCategory()
+        {
+            // Arrange
+            Guid categoryId = Guid.NewGuid();
+
+            _mockRepository.Setup(repo => repo.GetById(categoryId)).Returns(() => null);
+
+            // Act
+            ValidationResponse<Category> actual = _categoryService.Delete(categoryId);
+
+            // Assert
+            Assert.Equal(ValidationStatus.NotFound, actual.Status);
+        }
+
+        [Fact]
+        public void Delete_ReturnsFailed_ForExistNonEmptyCategory()
+        {
+            // Arrange
+            Guid categoryId = Guid.NewGuid();
+            Category category = new Category() { Id = categoryId };
+
+            _mockRepository.Setup(repo => repo.GetById(category.Id)).Returns(category);
+            _mockProductRepository.Setup(repo => repo.GetByCategoryId(category.Id)).Returns(new List<Product>() { new Product() });
+
+            // Act
+            ValidationResponse<Category> actual = _categoryService.Delete(categoryId);
+
+            // Assert
+            Assert.Equal(ValidationStatus.Failed, actual.Status);
+        }
+
+        #endregion
     }
 }

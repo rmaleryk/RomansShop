@@ -1,13 +1,17 @@
 ﻿using System;
+using RomansShop.Core;
+using RomansShop.Domain;
 
 namespace RomansShop.Services.Extensibility
 {
     public interface ICategoryService
     {
-        bool IsExist(Guid id);
+        ValidationResponse<Category> GetById(Guid id);
 
-        bool IsExist(string name);
+        ValidationResponse<Category> Add(Category category);
 
-        bool IsEmpty(Guid id);
+        ValidationResponse<Category> Update(Category category);
+
+        ValidationResponse<Category> Delete(Guid id);
     }
 }
