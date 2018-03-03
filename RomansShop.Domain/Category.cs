@@ -1,19 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace RomansShop.Domain
 {
     /// <summary>
-    ///     DTO for product response
+    ///     Product Category Entity
     /// </summary>
-    public class ProductResponse
+    public class Category
     {
         public Guid Id { get; set; }
 
         public string Name { get; set; }
-
-        public string Description { get; set; }
-
-        public decimal Price { get; set; }
-
     }
 }

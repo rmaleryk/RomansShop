@@ -30,7 +30,27 @@ namespace RomansShop.DataAccess.Database
                 .HasColumnName("quantity");
 
             modelBuilder.Entity<Product>()
+                .Property(product => product.CategoryId)
+                .HasColumnName("categoryid");
+
+            modelBuilder.Entity<Product>()
                 .HasKey(product => product.Id);
+        }
+
+        public static void ConfigureCategory(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Category>().ToTable("categories");
+
+            modelBuilder.Entity<Category>()
+                .Property(category => category.Id)
+                .HasColumnName("id");
+
+            modelBuilder.Entity<Category>()
+                .Property(category => category.Name)
+                .HasColumnName("name");
+
+            modelBuilder.Entity<Category>()
+                .HasKey(category => category.Id);
         }
     }
 }

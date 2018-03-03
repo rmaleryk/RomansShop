@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RomansShop.WebApi", "RomansShop.WebApi\RomansShop.WebApi.csproj", "{23AFE9A5-531E-4283-B93C-7B63130503B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RomansShop.WebApi", "RomansShop.WebApi\RomansShop.WebApi.csproj", "{23AFE9A5-531E-4283-B93C-7B63130503B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RomansShop.DataAccess", "RomansShop.DataAccess\RomansShop.DataAccess.csproj", "{476CD416-2A39-48A6-893E-F6F88C5EED5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RomansShop.DataAccess", "RomansShop.DataAccess\RomansShop.DataAccess.csproj", "{476CD416-2A39-48A6-893E-F6F88C5EED5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RomansShop.Domain", "RomansShop.Domain\RomansShop.Domain.csproj", "{9990A2C9-B80A-4CC6-A57A-7A318D9F303E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RomansShop.Domain", "RomansShop.Domain\RomansShop.Domain.csproj", "{9990A2C9-B80A-4CC6-A57A-7A318D9F303E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RomansShop.Services", "RomansShop.Services\RomansShop.Services.csproj", "{4033C0B4-D8E7-4067-BECC-21BA9389CA09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RomansShop.Services", "RomansShop.Services\RomansShop.Services.csproj", "{4033C0B4-D8E7-4067-BECC-21BA9389CA09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RomansShop.Tests", "RomansShop.Tests\RomansShop.Tests.csproj", "{C7BE7CB0-5457-4746-A702-E90342B49C5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RomansShop.Tests", "RomansShop.Tests\RomansShop.Tests.csproj", "{C7BE7CB0-5457-4746-A702-E90342B49C5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RomansShop.Core", "RomansShop.Core\RomansShop.Core.csproj", "{9BC59913-B28B-4D36-9B64-0753878B4E6A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{C7BE7CB0-5457-4746-A702-E90342B49C5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7BE7CB0-5457-4746-A702-E90342B49C5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7BE7CB0-5457-4746-A702-E90342B49C5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BC59913-B28B-4D36-9B64-0753878B4E6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BC59913-B28B-4D36-9B64-0753878B4E6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BC59913-B28B-4D36-9B64-0753878B4E6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BC59913-B28B-4D36-9B64-0753878B4E6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

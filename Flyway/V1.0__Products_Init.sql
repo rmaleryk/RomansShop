@@ -3,7 +3,7 @@ CREATE TABLE "products" (
     "name" varchar(30) NOT NULL,
     "description" TEXT NULL,
     "price" int NOT NULL,
-	"quantity" bigint NOT NULL DEFAULT 0
+	"quantity" bigint NOT NULL
 )
 WITH (
   OIDS=FALSE

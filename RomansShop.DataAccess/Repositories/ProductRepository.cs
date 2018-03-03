@@ -37,7 +37,9 @@ namespace RomansShop.DataAccess.Repositories
 
         public Product GetById(Guid productId)
         {
-            return _shopDbContext.Products.AsNoTracking().FirstOrDefault(p => p.Id == productId);
+            return _shopDbContext.Products
+                .AsNoTracking()
+                .FirstOrDefault(p => p.Id == productId);
         }
 
         public Product Update(Product product)
@@ -52,6 +54,23 @@ namespace RomansShop.DataAccess.Repositories
         {
             _shopDbContext.Products.Remove(product);
             _shopDbContext.SaveChanges();
+        }
+
+        public IEnumerable<Product> GetByCategoryId(Guid categoryId)
+        {
+            return _shopDbContext.Products
+                .AsNoTracking()
+                .Where(prod => prod.CategoryId == categoryId)
+                .ToList();
+        }
+
+        public IEnumerable<Product> GetPage(int startIndex, int offset)
+        {
+            return _shopDbContext.Products
+                .OrderBy(prod => prod.Name)
+                .Skip(startIndex - 1)
+                .Take(offset)
+                .ToList();
         }
     }
 }

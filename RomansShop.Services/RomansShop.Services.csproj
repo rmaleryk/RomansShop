@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RomansShop.Core\RomansShop.Core.csproj" />
     <ProjectReference Include="..\RomansShop.Domain\RomansShop.Domain.csproj" />
   </ItemGroup>
 
