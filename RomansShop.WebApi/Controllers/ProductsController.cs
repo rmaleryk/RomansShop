@@ -34,7 +34,8 @@ namespace RomansShop.WebApi.Controllers
         public IActionResult Get()
         {
             IEnumerable<Product> products = _productRepository.GetAll();
-            IEnumerable<ProductResponseModel> productResponse = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponseModel>>(products);
+            IEnumerable<ProductResponseModel> productResponse = 
+                _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponseModel>>(products);
 
             return Ok(productResponse);
         }
@@ -47,14 +48,15 @@ namespace RomansShop.WebApi.Controllers
         [HttpGet("page")]
         public IActionResult GetRange([FromQuery]int startIndex, [FromQuery]int offset)
         {
-            ValidationResponse<IEnumerable<Product>> validationResponse = _productService.GetRange(startIndex, offset);
-
-            if(validationResponse.Status == ValidationStatus.Failed)
+            if (startIndex <= 0 || offset <= 0)
             {
-                return BadRequest(validationResponse.Message);
+                return BadRequest($"The start index ({startIndex}) or offset ({offset}) is incorrect.");
             }
 
-            IEnumerable<ProductResponseModel> productResponse = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponseModel>>(validationResponse.ResponseData);
+            ValidationResponse<IEnumerable<Product>> validationResponse = _productService.GetRange(startIndex, offset);
+
+            IEnumerable<ProductResponseModel> productResponse = 
+                _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponseModel>>(validationResponse.ResponseData);
 
             return Ok(productResponse);
         }
@@ -74,7 +76,8 @@ namespace RomansShop.WebApi.Controllers
                 return NotFound(validationResponse.Message);
             }
 
-            ProductResponseModel productResponse = _mapper.Map<Product, ProductResponseModel>(validationResponse.ResponseData);
+            ProductResponseModel productResponse = 
+                _mapper.Map<Product, ProductResponseModel>(validationResponse.ResponseData);
 
             return Ok(productResponse);
         }
@@ -115,7 +118,8 @@ namespace RomansShop.WebApi.Controllers
                 return NotFound(validationResponse.Message);
             }
 
-            ProductResponseModel productResponse = _mapper.Map<Product, ProductResponseModel>(validationResponse.ResponseData);
+            ProductResponseModel productResponse = 
+                _mapper.Map<Product, ProductResponseModel>(validationResponse.ResponseData);
 
             return Ok(productResponse);
         }
@@ -147,7 +151,8 @@ namespace RomansShop.WebApi.Controllers
         public IActionResult GetByCategoryId(Guid categoryId)
         {
             IEnumerable<Product> products = _productRepository.GetByCategoryId(categoryId);
-            IEnumerable<ProductResponseModel> productResponse = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponseModel>>(products);
+            IEnumerable<ProductResponseModel> productResponse = 
+                _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponseModel>>(products);
 
             return Ok(productResponse);
         }

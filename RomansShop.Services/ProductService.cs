@@ -7,9 +7,6 @@ using RomansShop.Services.Extensibility;
 
 namespace RomansShop.Services
 {
-    /// <summary>
-    ///     Product Service
-    /// </summary>
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
@@ -21,11 +18,6 @@ namespace RomansShop.Services
 
         public ValidationResponse<IEnumerable<Product>> GetRange(int startIndex, int offset)
         {
-            if (startIndex <= 0 || offset <= 0)
-            {
-                return new ValidationResponse<IEnumerable<Product>>(ValidationStatus.Failed, "The start index or offset is incorrect.");
-            }
-
             IEnumerable<Product> products = _productRepository.GetRange(startIndex, offset);
 
             return new ValidationResponse<IEnumerable<Product>>(products, ValidationStatus.Ok);
@@ -37,7 +29,8 @@ namespace RomansShop.Services
 
             if (product == null)
             {
-                return new ValidationResponse<Product>(ValidationStatus.NotFound, "Product not found.");
+                return new ValidationResponse<Product>(ValidationStatus.NotFound, 
+                    $"Product with id {id} not found.");
             }
 
             return new ValidationResponse<Product>(product, ValidationStatus.Ok);
@@ -49,7 +42,8 @@ namespace RomansShop.Services
 
             if (productTmp == null)
             {
-                return new ValidationResponse<Product>(ValidationStatus.NotFound, "Product not found.");
+                return new ValidationResponse<Product>(ValidationStatus.NotFound, 
+                    $"Product with id {product.Id} not found.");
             }
 
             product = _productRepository.Update(product);
@@ -63,12 +57,14 @@ namespace RomansShop.Services
 
             if (product == null)
             {
-                return new ValidationResponse<Product>(ValidationStatus.NotFound, "Product not found.");
+                return new ValidationResponse<Product>(ValidationStatus.NotFound, 
+                    $"Product with id {id} not found.");
             }
 
             _productRepository.Delete(product);
 
-            return new ValidationResponse<Product>(product, ValidationStatus.Ok, "Product was deleted.");
+            return new ValidationResponse<Product>(product, ValidationStatus.Ok, 
+                $"Product with id {id} was deleted.");
         }
     }
 }
