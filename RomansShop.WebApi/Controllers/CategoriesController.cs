@@ -25,11 +25,7 @@ namespace RomansShop.WebApi.Controllers
             _mapper = mapper;
         }
 
-        /// <summary>
-        ///     Get All Categories
-        ///     api/categories
-        /// </summary>
-        /// <returns>List of Categories</returns>
+        // api/categories
         [HttpGet]
         public IActionResult Get()
         {
@@ -39,11 +35,7 @@ namespace RomansShop.WebApi.Controllers
             return Ok(categoryResponse);
         }
 
-        /// <summary>
-        ///     Get Category by Id
-        ///     api/categories/{id}
-        /// </summary>
-        /// <returns>Category</returns>
+        // api/categories/{id}
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
@@ -59,11 +51,7 @@ namespace RomansShop.WebApi.Controllers
             return Ok(categoryResponse);
         }
 
-        /// <summary>
-        ///     Add new Category
-        ///     api/categories
-        /// </summary>
-        /// <returns>Added Category</returns>
+        // api/categories
         [HttpPost]
         [ValidateModel]
         public IActionResult Post([FromBody]CategoryRequestModel categoryRequest)
@@ -81,11 +69,7 @@ namespace RomansShop.WebApi.Controllers
             return CreatedAtAction("Get", new { id = categoryResponse.Id }, categoryResponse);
         }
 
-        /// <summary>
-        ///     Update Category
-        ///     api/categories/{id}
-        /// </summary>
-        /// <returns>Category Object</returns>
+        // api/categories/{id}
         [HttpPut("{id}")]
         [ValidateModel]
         public IActionResult Put(Guid id, [FromBody]CategoryRequestModel categoryRequest)
@@ -110,11 +94,7 @@ namespace RomansShop.WebApi.Controllers
             return Ok(categoryResponse);
         }
 
-        /// <summary>
-        ///     Delete Category by Id
-        ///     api/categories/{id}
-        /// </summary>
-        /// <returns>Category Object</returns>
+        // api/categories/{id}
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {

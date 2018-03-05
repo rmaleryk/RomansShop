@@ -25,11 +25,7 @@ namespace RomansShop.WebApi.Controllers
             _mapper = mapper;
         }
 
-        /// <summary>
-        ///     Get All Products
-        ///     api/products
-        /// </summary>
-        /// <returns>List of Products</returns>
+        // api/products
         [HttpGet]
         public IActionResult Get()
         {
@@ -40,11 +36,7 @@ namespace RomansShop.WebApi.Controllers
             return Ok(productResponse);
         }
 
-        /// <summary>
-        ///     Get Page of products
-        ///     api/products/page?startIndex={startIndex}&offset={offset}
-        /// </summary>
-        /// <returns>List of Products</returns>
+        // api/products/page?startIndex={startIndex}&offset={offset}
         [HttpGet("page")]
         public IActionResult GetRange([FromQuery]int startIndex, [FromQuery]int offset)
         {
@@ -61,11 +53,7 @@ namespace RomansShop.WebApi.Controllers
             return Ok(productResponse);
         }
 
-        /// <summary>
-        ///     Get Product by Id
-        ///     api/products/{id}
-        /// </summary>
-        /// <returns>Product</returns>
+        // api/products/{id}
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
@@ -82,11 +70,7 @@ namespace RomansShop.WebApi.Controllers
             return Ok(productResponse);
         }
 
-        /// <summary>
-        ///     Add new Product
-        ///     api/products
-        /// </summary>
-        /// <returns>Added Product</returns>
+        // api/products
         [HttpPost]
         [ValidateModel]
         public IActionResult Post([FromBody]ProductRequestModel createProductRequest)
@@ -99,11 +83,7 @@ namespace RomansShop.WebApi.Controllers
             return CreatedAtAction("Get", new { id = productResponse.Id }, productResponse);
         }
 
-        /// <summary>
-        ///     Update Product
-        ///     api/products/{id}
-        /// </summary>
-        /// <returns>List of Products</returns>
+        // api/products/{id}
         [HttpPut("{id}")]
         [ValidateModel]
         public IActionResult Put(Guid id, [FromBody]ProductRequestModel productRequest)
@@ -124,11 +104,7 @@ namespace RomansShop.WebApi.Controllers
             return Ok(productResponse);
         }
 
-        /// <summary>
-        ///     Delete Product by Id
-        ///     api/products/{id}
-        /// </summary>
-        /// <returns>List of Products</returns>
+        // api/products/{id}
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
@@ -142,11 +118,7 @@ namespace RomansShop.WebApi.Controllers
             return Ok(validationResponse.Message);
         }
 
-        /// <summary>
-        ///     Get Products By CategoryId
-        ///     api/categories/{categoryId}/products
-        /// </summary>
-        /// <returns>List of Products</returns>
+        // api/categories/{categoryId}/products
         [HttpGet("/api/categories/{categoryId}/products")]
         public IActionResult GetByCategoryId(Guid categoryId)
         {

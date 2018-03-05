@@ -3,9 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RomansShop.WebApi.ClientModels.Product
 {
-    /// <summary>
-    ///     DTO for product creation request
-    /// </summary>
     public class ProductRequestModel
     {
         [Required(ErrorMessage = "The field 'Name' is required.")]

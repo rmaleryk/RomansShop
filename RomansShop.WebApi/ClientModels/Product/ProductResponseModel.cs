@@ -2,9 +2,6 @@
 
 namespace RomansShop.WebApi.ClientModels.Product
 {
-    /// <summary>
-    ///     DTO for product response
-    /// </summary>
     public class ProductResponseModel
     {
         public Guid Id { get; set; }
