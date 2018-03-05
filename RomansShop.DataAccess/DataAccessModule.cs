@@ -2,7 +2,7 @@
 using RomansShop.DataAccess.Repositories;
 using RomansShop.Domain.Extensibility.Repositories;
 
-namespace RomansShop.WebApi
+namespace RomansShop.DataAccess
 {
     public class DataAccessModule : Module
     {

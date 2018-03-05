@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace RomansShop.Domain
+namespace RomansShop.Domain.Entities
 {
     /// <summary>
     ///     Product Category Entity

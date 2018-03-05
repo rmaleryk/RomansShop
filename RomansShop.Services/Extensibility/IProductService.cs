@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using RomansShop.Core;
-using RomansShop.Domain;
+using RomansShop.Core.Validation;
+using RomansShop.Domain.Entities;
 
 namespace RomansShop.Services.Extensibility
 {
     public interface IProductService
     {
-        ValidationResponse<IEnumerable<Product>> GetPage(int startIndex, int offset);
+        ValidationResponse<IEnumerable<Product>> GetRange(int startIndex, int offset);
 
         ValidationResponse<Product> GetById(Guid id);
 

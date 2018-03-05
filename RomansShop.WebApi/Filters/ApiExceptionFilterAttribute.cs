@@ -1,17 +1,15 @@
-﻿using System;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace RomansShop.WebApi.Filters
 {
-    public class GlobalExceptionFilter : Attribute, IExceptionFilter
+    public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {
-        public GlobalExceptionFilter()
+        public ApiExceptionFilterAttribute()
         {
         }
 
-        public void OnException(ExceptionContext context)
+        public override void OnException(ExceptionContext context)
         {
             string actionName = context.ActionDescriptor.DisplayName;
             string exceptionStack = context.Exception.StackTrace;

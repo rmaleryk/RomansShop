@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RomansShop.Domain;
+using RomansShop.Domain.Entities;
 
 namespace RomansShop.DataAccess.Database
 {
@@ -9,7 +9,8 @@ namespace RomansShop.DataAccess.Database
         public DbSet<Category> Categories { get; set; }
 
         public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options)
-        { }
+        {
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

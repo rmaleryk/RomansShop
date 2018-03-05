@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using RomansShop.Core;
-using RomansShop.Domain;
+using RomansShop.Core.Validation;
+using RomansShop.Domain.Entities;
 using RomansShop.Domain.Extensibility.Repositories;
 using RomansShop.Services.Extensibility;
 
@@ -19,20 +19,16 @@ namespace RomansShop.Services
             _productRepository = productRepository;
         }
 
-        public ValidationResponse<IEnumerable<Product>> GetPage(int startIndex, int offset)
+        public ValidationResponse<IEnumerable<Product>> GetRange(int startIndex, int offset)
         {
             if (startIndex <= 0 || offset <= 0)
             {
-                return new ValidationResponse<IEnumerable<Product>>()
-                {
-                    Status = ValidationStatus.Failed,
-                    Message = "The start index or offset is incorrect."
-                };
+                return new ValidationResponse<IEnumerable<Product>>(ValidationStatus.Failed, "The start index or offset is incorrect.");
             }
 
-            IEnumerable<Product> products = _productRepository.GetPage(startIndex, offset);
+            IEnumerable<Product> products = _productRepository.GetRange(startIndex, offset);
 
-            return new ValidationResponse<IEnumerable<Product>>() { ResponseData = products };
+            return new ValidationResponse<IEnumerable<Product>>(products, ValidationStatus.Ok);
         }
 
         public ValidationResponse<Product> GetById(Guid id)
@@ -41,14 +37,10 @@ namespace RomansShop.Services
 
             if (product == null)
             {
-                return new ValidationResponse<Product>()
-                {
-                    Status = ValidationStatus.NotFound,
-                    Message = "Product not found."
-                };
+                return new ValidationResponse<Product>(ValidationStatus.NotFound, "Product not found.");
             }
 
-            return new ValidationResponse<Product>() { ResponseData = product };
+            return new ValidationResponse<Product>(product, ValidationStatus.Ok);
         }
 
         public ValidationResponse<Product> Update(Product product)
@@ -57,16 +49,12 @@ namespace RomansShop.Services
 
             if (productTmp == null)
             {
-                return new ValidationResponse<Product>()
-                {
-                    Status = ValidationStatus.NotFound,
-                    Message = "Product not found."
-                };
+                return new ValidationResponse<Product>(ValidationStatus.NotFound, "Product not found.");
             }
 
             product = _productRepository.Update(product);
 
-            return new ValidationResponse<Product>() { ResponseData = product };
+            return new ValidationResponse<Product>(product, ValidationStatus.Ok);
         }
 
         public ValidationResponse<Product> Delete(Guid id)
@@ -75,20 +63,12 @@ namespace RomansShop.Services
 
             if (product == null)
             {
-                return new ValidationResponse<Product>()
-                {
-                    Status = ValidationStatus.NotFound,
-                    Message = "Product not found."
-                };
+                return new ValidationResponse<Product>(ValidationStatus.NotFound, "Product not found.");
             }
 
             _productRepository.Delete(product);
 
-            return new ValidationResponse<Product>()
-            {
-                ResponseData = product,
-                Message = "Product was deleted."
-            };
+            return new ValidationResponse<Product>(product, ValidationStatus.Ok, "Product was deleted.");
         }
     }
 }

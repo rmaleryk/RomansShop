@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using RomansShop.DataAccess.Database;
-using RomansShop.Domain;
+using RomansShop.Domain.Entities;
 using RomansShop.Domain.Extensibility.Repositories;
 
 namespace RomansShop.DataAccess.Repositories

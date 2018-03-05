@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using RomansShop.Core;
-using RomansShop.Domain;
+using RomansShop.Core.Validation;
+using RomansShop.Domain.Entities;
 using RomansShop.Domain.Extensibility.Repositories;
 using RomansShop.Services.Extensibility;
 
@@ -25,14 +25,10 @@ namespace RomansShop.Services
 
             if (category == null)
             {
-                return new ValidationResponse<Category>()
-                {
-                    Status = ValidationStatus.NotFound,
-                    Message = "Category not found."
-                };
+                return new ValidationResponse<Category>(ValidationStatus.NotFound, "Category not found.");
             }
 
-            return new ValidationResponse<Category>() { ResponseData = category };
+            return new ValidationResponse<Category>(category, ValidationStatus.Ok);
         }
 
         public ValidationResponse<Category> Add(Category category)
@@ -41,16 +37,12 @@ namespace RomansShop.Services
 
             if (categoryTmp != null)
             {
-                return new ValidationResponse<Category>()
-                {
-                    Status = ValidationStatus.Failed,
-                    Message = "Category name already exist."
-                };
+                return new ValidationResponse<Category>(ValidationStatus.Failed, "Category name already exist.");
             }
 
             category = _categoryRepository.Add(category);
 
-            return new ValidationResponse<Category>() { ResponseData = category };
+            return new ValidationResponse<Category>(category, ValidationStatus.Ok);
         }
 
         public ValidationResponse<Category> Update(Category category)
@@ -60,11 +52,7 @@ namespace RomansShop.Services
 
             if (categoryTmp == null)
             {
-                return new ValidationResponse<Category>()
-                {
-                    Status = ValidationStatus.NotFound,
-                    Message = "Category not found."
-                };
+                return new ValidationResponse<Category>(ValidationStatus.NotFound, "Category not found.");
             }
 
             // Check name duplication (skip the same id)
@@ -72,16 +60,12 @@ namespace RomansShop.Services
 
             if (categoryTmp != null && categoryTmp.Id != category.Id)
             {
-                return new ValidationResponse<Category>()
-                {
-                    Status = ValidationStatus.Failed,
-                    Message = "Category name already exist."
-                };
+                return new ValidationResponse<Category>(ValidationStatus.Failed, "Category name already exist.");
             }
 
             category = _categoryRepository.Update(category);
 
-            return new ValidationResponse<Category>() { ResponseData = category };
+            return new ValidationResponse<Category>(category, ValidationStatus.Ok);
         }
 
         public ValidationResponse<Category> Delete(Guid id)
@@ -91,11 +75,7 @@ namespace RomansShop.Services
 
             if (category == null)
             {
-                return new ValidationResponse<Category>()
-                {
-                    Status = ValidationStatus.NotFound,
-                    Message = "Category not found."
-                };
+                return new ValidationResponse<Category>(ValidationStatus.NotFound, "Category not found.");
             }
 
             // Check category content (only empty category is available to delete)
@@ -103,20 +83,12 @@ namespace RomansShop.Services
 
             if (products.Count() != 0)
             {
-                return new ValidationResponse<Category>()
-                {
-                    Status = ValidationStatus.Failed,
-                    Message = "Category is not empty."
-                };
+                return new ValidationResponse<Category>(ValidationStatus.Failed, "Category is not empty.");
             }
 
             _categoryRepository.Delete(category);
 
-            return new ValidationResponse<Category>()
-            {
-                ResponseData = category,
-                Message = "Category was deleted."
-            };
+            return new ValidationResponse<Category>(category, ValidationStatus.Ok, "Category was deleted.");
         }
     }
 }

@@ -8,7 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using RomansShop.DataAccess;
 using RomansShop.DataAccess.Database;
+using RomansShop.Services;
 using RomansShop.WebApi.Filters;
 
 namespace RomansShop.WebApi
@@ -37,7 +39,7 @@ namespace RomansShop.WebApi
 
             services.AddMvc(options =>
             {
-                options.Filters.Add<GlobalExceptionFilter>();
+                options.Filters.Add<ApiExceptionFilterAttribute>();
 
             }).AddJsonOptions(options =>
             {

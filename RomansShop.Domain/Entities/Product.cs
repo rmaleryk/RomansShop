@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace RomansShop.Domain
+namespace RomansShop.Domain.Entities
 {
     /// <summary>
-    ///     DTO for product response
+    ///     Product Entity
     /// </summary>
-    public class ProductResponse
+    public class Product
     {
         public Guid Id { get; set; }
 
@@ -15,7 +15,8 @@ namespace RomansShop.Domain
 
         public decimal Price { get; set; }
 
-        public Guid CategoryId { get; set; }
+        public long Quantity { get; set; }
 
+        public Guid? CategoryId { get; set; }
     }
 }

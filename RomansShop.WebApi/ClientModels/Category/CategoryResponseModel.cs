@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace RomansShop.Domain
+namespace RomansShop.WebApi.ClientModels.Category
 {
     /// <summary>
     ///     DTO for product response
     /// </summary>
-    public class CategoryResponse
+    public class CategoryResponseModel
     {
         public Guid Id { get; set; }
 

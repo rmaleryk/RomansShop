@@ -1,8 +1,7 @@
 ﻿using Autofac;
-using RomansShop.Services;
 using RomansShop.Services.Extensibility;
 
-namespace RomansShop.WebApi
+namespace RomansShop.Services
 {
     public class ServicesModule : Module
     {

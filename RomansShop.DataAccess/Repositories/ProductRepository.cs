@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using RomansShop.DataAccess.Database;
-using RomansShop.Domain;
+using RomansShop.Domain.Entities;
 using RomansShop.Domain.Extensibility.Repositories;
 
 namespace RomansShop.DataAccess.Repositories
@@ -64,7 +64,7 @@ namespace RomansShop.DataAccess.Repositories
                 .ToList();
         }
 
-        public IEnumerable<Product> GetPage(int startIndex, int offset)
+        public IEnumerable<Product> GetRange(int startIndex, int offset)
         {
             return _shopDbContext.Products
                 .OrderBy(prod => prod.Name)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using RomansShop.Domain.Entities;
 
 namespace RomansShop.Domain.Extensibility.Repositories
 {
@@ -20,6 +21,6 @@ namespace RomansShop.Domain.Extensibility.Repositories
 
         IEnumerable<Product> GetByCategoryId(Guid categoryId);
 
-        IEnumerable<Product> GetPage(int startIndex, int endIndex);
+        IEnumerable<Product> GetRange(int startIndex, int offset);
     }
 }
