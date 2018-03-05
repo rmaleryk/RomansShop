@@ -1,11 +1,9 @@
 ﻿using System;
+using RomansShop.Domain.Extensibility;
 
 namespace RomansShop.Domain.Entities
 {
-    /// <summary>
-    ///     Product Category Entity
-    /// </summary>
-    public class Category
+    public class Category : IEntity
     {
         public Guid Id { get; set; }
 

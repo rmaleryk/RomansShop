@@ -4,9 +4,6 @@ using RomansShop.Domain.Entities;
 
 namespace RomansShop.Domain.Extensibility.Repositories
 {
-    /// <summary>
-    ///     Category Repository CRUD Interface
-    /// </summary>
     public interface ICategoryRepository
     {
         Category Add(Category category);
