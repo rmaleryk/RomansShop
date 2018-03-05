@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using RomansShop.Domain.Entities;
 
 namespace RomansShop.Domain.Extensibility.Repositories
 {
-    /// <summary>
-    ///     Repository CRUD Interface
-    /// </summary>
     public interface IProductRepository
     {
         Product Add(Product product);
@@ -20,6 +18,6 @@ namespace RomansShop.Domain.Extensibility.Repositories
 
         IEnumerable<Product> GetByCategoryId(Guid categoryId);
 
-        IEnumerable<Product> GetPage(int startIndex, int endIndex);
+        IEnumerable<Product> GetRange(int startIndex, int offset);
     }
 }

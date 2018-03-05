@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using RomansShop.Core;
-using RomansShop.Domain;
+using RomansShop.Core.Validation;
+using RomansShop.Domain.Entities;
 using RomansShop.Domain.Extensibility.Repositories;
 using RomansShop.Services.Extensibility;
+using RomansShop.WebApi.ClientModels.Category;
 using RomansShop.WebApi.Filters;
 
 namespace RomansShop.WebApi.Controllers
@@ -24,25 +25,17 @@ namespace RomansShop.WebApi.Controllers
             _mapper = mapper;
         }
 
-        /// <summary>
-        ///     Get All Categories
-        ///     api/categories
-        /// </summary>
-        /// <returns>List of Categories</returns>
+        // api/categories
         [HttpGet]
         public IActionResult Get()
         {
             IEnumerable<Category> categories = _categoryRepository.GetAll();
-            IEnumerable<CategoryResponse> categoryResponse = _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryResponse>>(categories);
+            IEnumerable<CategoryResponseModel> categoryResponse = _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryResponseModel>>(categories);
 
             return Ok(categoryResponse);
         }
 
-        /// <summary>
-        ///     Get Category by Id
-        ///     api/categories/{id}
-        /// </summary>
-        /// <returns>Category</returns>
+        // api/categories/{id}
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
@@ -53,21 +46,17 @@ namespace RomansShop.WebApi.Controllers
                 return NotFound(validationResponse.Message);
             }
 
-            CategoryResponse categoryResponse = _mapper.Map<Category, CategoryResponse>(validationResponse.ResponseData);
+            CategoryResponseModel categoryResponse = _mapper.Map<Category, CategoryResponseModel>(validationResponse.ResponseData);
 
             return Ok(categoryResponse);
         }
 
-        /// <summary>
-        ///     Add new Category
-        ///     api/categories
-        /// </summary>
-        /// <returns>Added Category</returns>
+        // api/categories
         [HttpPost]
         [ValidateModel]
-        public IActionResult Post([FromBody]CategoryRequest categoryRequest)
+        public IActionResult Post([FromBody]CategoryRequestModel categoryRequest)
         {
-            Category category = _mapper.Map<CategoryRequest, Category>(categoryRequest);
+            Category category = _mapper.Map<CategoryRequestModel, Category>(categoryRequest);
             ValidationResponse<Category> validationResponse = _categoryService.Add(category);
 
             if (validationResponse.Status == ValidationStatus.Failed)
@@ -75,21 +64,17 @@ namespace RomansShop.WebApi.Controllers
                 return BadRequest(validationResponse.Message);
             }
 
-            CategoryResponse categoryResponse = _mapper.Map<Category, CategoryResponse>(validationResponse.ResponseData);
+            CategoryResponseModel categoryResponse = _mapper.Map<Category, CategoryResponseModel>(validationResponse.ResponseData);
 
             return CreatedAtAction("Get", new { id = categoryResponse.Id }, categoryResponse);
         }
 
-        /// <summary>
-        ///     Update Category
-        ///     api/categories/{id}
-        /// </summary>
-        /// <returns>Category Object</returns>
+        // api/categories/{id}
         [HttpPut("{id}")]
         [ValidateModel]
-        public IActionResult Put(Guid id, [FromBody]CategoryRequest categoryRequest)
+        public IActionResult Put(Guid id, [FromBody]CategoryRequestModel categoryRequest)
         {
-            Category category = _mapper.Map<CategoryRequest, Category>(categoryRequest);
+            Category category = _mapper.Map<CategoryRequestModel, Category>(categoryRequest);
             category.Id = id;
 
             ValidationResponse<Category> validationResponse = _categoryService.Update(category);
@@ -104,16 +89,12 @@ namespace RomansShop.WebApi.Controllers
                 return BadRequest(validationResponse.Message);
             }
 
-            CategoryResponse categoryResponse = _mapper.Map<Category, CategoryResponse>(validationResponse.ResponseData);
+            CategoryResponseModel categoryResponse = _mapper.Map<Category, CategoryResponseModel>(validationResponse.ResponseData);
 
             return Ok(categoryResponse);
         }
 
-        /// <summary>
-        ///     Delete Category by Id
-        ///     api/categories/{id}
-        /// </summary>
-        /// <returns>Category Object</returns>
+        // api/categories/{id}
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {

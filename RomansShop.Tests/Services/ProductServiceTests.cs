@@ -1,174 +1,152 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Moq;
-using RomansShop.Core;
-using RomansShop.Domain;
+using RomansShop.Core.Validation;
+using RomansShop.Domain.Entities;
 using RomansShop.Domain.Extensibility.Repositories;
 using RomansShop.Services;
-using RomansShop.Services.Extensibility;
+using RomansShop.Tests.Common;
 using Xunit;
 
 namespace RomansShop.Tests.Services
 {
     public class ProductServiceTests : UnitTestBase
     {
-        private Mock<IProductRepository> _mockRepository { get; set; }
-        private IProductService _productService { get; set; }
+        private Mock<IProductRepository> _mockRepository;
+        private ProductService _productService;
+
+        private static readonly Guid _productId = new Guid("00000000-0000-0000-0000-000000000001");
 
         public ProductServiceTests()
         {
             _mockRepository = MockRepository.Create<IProductRepository>();
-
             _productService = new ProductService(_mockRepository.Object);
         }
 
-        #region GetPage Tests
-
-        [Fact]
-        public void GetPage_ReturnsProducts_ForCorrectStartIndexAndOffset()
+        [Fact(DisplayName = "GetRange Products")]
+        public void GetRangeTest()
         {
-            // Arrange
-            IEnumerable<Product> products = new List<Product>();
+            IEnumerable<Product> products = new List<Product> { GetProduct(), GetProduct() };
             int startIndex = 1;
-            int offset = 5;
+            int offset = 2;
 
-            _mockRepository.Setup(repo => repo.GetPage(startIndex, offset)).Returns(products);
+            _mockRepository
+                .Setup(repo => repo.GetRange(startIndex, offset))
+                .Returns(products);
 
-            // Act
-            ValidationResponse<IEnumerable<Product>> actual = _productService.GetPage(startIndex, offset);
+            ValidationResponse<IEnumerable<Product>> actual = _productService.GetRange(startIndex, offset);
+            int actualCount = actual.ResponseData.Count();
 
-            // Assert
             Assert.Equal(ValidationStatus.Ok, actual.Status);
-            Assert.NotNull(actual.ResponseData);
+            Assert.Equal(products.Count(), actualCount);
         }
 
-        [Fact]
-        public void GetPage_ReturnsStatusBadRequest_ForNegativeOrZeroStartIndexOrOffset()
+        [Fact(DisplayName = "GetById Product")]
+        public void GetByIdTest()
         {
-            // Arrange
-            IEnumerable<Product> products = new List<Product>();
-            int startIndex = -1;
-            int offset = 0;
+            Product product = GetProduct();
 
-            // Act
-            ValidationResponse<IEnumerable<Product>> actual = _productService.GetPage(startIndex, offset);
+            _mockRepository
+                .Setup(repo => repo.GetById(_productId))
+                .Returns(product);
 
-            // Assert
-            Assert.Equal(ValidationStatus.Failed, actual.Status);
-        }
+            ValidationResponse<Product> actual = _productService.GetById(_productId);
+            Guid actualId = actual.ResponseData.Id;
 
-        #endregion
-
-        #region GetById Tests
-
-        [Fact]
-        public void GetById_ReturnsProduct_ForExistsProductId()
-        {
-            // Arrange
-            Guid productId = Guid.NewGuid();
-            Product product = new Product() { Id = productId };
-
-            _mockRepository.Setup(repo => repo.GetById(productId)).Returns(product);
-
-            // Act
-            ValidationResponse<Product> actual = _productService.GetById(productId);
-
-            // Assert
             Assert.Equal(ValidationStatus.Ok, actual.Status);
-            Assert.NotNull(actual.ResponseData);
+            Assert.Equal(product.Id, actualId);
         }
 
-        [Fact]
-        public void GetById_ReturnsNotFound_ForNonExistsProductId()
+        [Fact(DisplayName = "GetById Product not found")]
+        public void GetByIdProductNotFound()
         {
-            // Arrange
-            Guid productId = Guid.NewGuid();
+            string expectedMessage = $"Product with id {_productId} not found.";
 
-            _mockRepository.Setup(repo => repo.GetById(productId)).Returns(() => null);
+            _mockRepository
+                .Setup(repo => repo.GetById(_productId))
+                .Returns(() => null);
 
-            // Act
-            ValidationResponse<Product> actual = _productService.GetById(productId);
+            ValidationResponse<Product> actual = _productService.GetById(_productId);
 
-            // Assert
+            Assert.Equal(expectedMessage, actual.Message);
             Assert.Equal(ValidationStatus.NotFound, actual.Status);
         }
 
-        #endregion
-
-        #region Update Tests
-
-        [Fact]
-        public void Update_ReturnsProduct_ForExistProduct()
+        [Fact(DisplayName = "Update Product")]
+        public void UpdateTest()
         {
-            // Arrange
-            Guid productId = Guid.NewGuid();
-            Product product= new Product() { Id = productId };
+            Product product = GetProduct(); 
 
-            _mockRepository.Setup(repo => repo.GetById(productId)).Returns(product);
-            _mockRepository.Setup(repo => repo.Update(product)).Returns(product);
+            _mockRepository
+                .Setup(repo => repo.GetById(_productId))
+                .Returns(product);
 
-            // Act
+            _mockRepository
+                .Setup(repo => repo.Update(product))
+                .Returns(product);
+
+            ValidationResponse<Product> actual = _productService.Update(product);
+            string actualName = actual.ResponseData.Name;
+
+            Assert.Equal(ValidationStatus.Ok, actual.Status);
+            Assert.Equal(product.Name, actualName);
+        }
+
+        [Fact(DisplayName = "Update Product not found")]
+        public void UpdateProductNotFound()
+        {
+            Product product = GetProduct();
+            string expectedMessage = $"Product with id {_productId} not found.";
+
+            _mockRepository
+                .Setup(repo => repo.GetById(_productId))
+                .Returns(() => null);
+
             ValidationResponse<Product> actual = _productService.Update(product);
 
-            // Assert
-            Assert.Equal(ValidationStatus.Ok, actual.Status);
-            Assert.NotNull(actual.ResponseData);
-        }
-
-        [Fact]
-        public void Update_ReturnsNotFound_ForNonExistProduct()
-        {
-            // Arrange
-            Guid productId = Guid.NewGuid();
-            Product category = new Product() { Id = productId };
-
-            _mockRepository.Setup(repo => repo.GetById(productId)).Returns(() => null);
-
-            // Act
-            ValidationResponse<Product> actual = _productService.Update(category);
-
-            // Assert
+            Assert.Equal(expectedMessage, actual.Message);
             Assert.Equal(ValidationStatus.NotFound, actual.Status);
         }
 
-        #endregion
-
-        #region Delete Tests
-
-        [Fact]
-        public void Delete_ReturnsProduct_ForExistProduct()
+        [Fact(DisplayName = "Delete Product")]
+        public void DeleteTest()
         {
-            // Arrange
-            Guid productId = Guid.NewGuid();
-            Product product = new Product() { Id = productId };
+            Product product = GetProduct();
 
-            _mockRepository.Setup(repo => repo.GetById(productId)).Returns(product);
+            _mockRepository
+                .Setup(repo => repo.GetById(_productId))
+                .Returns(product);
+
             _mockRepository.Setup(repo => repo.Delete(product));
 
-            // Act
-            ValidationResponse<Product> actual = _productService.Delete(productId);
+            ValidationResponse<Product> actual = _productService.Delete(_productId);
+            Guid actualId = actual.ResponseData.Id;
 
-            // Assert
             Assert.Equal(ValidationStatus.Ok, actual.Status);
-            Assert.NotNull(actual.ResponseData);
+            Assert.Equal(product.Id, actualId);
         }
 
-        [Fact]
-        public void Delete_ReturnsNotFound_ForNonExistProduct()
+        [Fact(DisplayName = "Delete Product not found")]
+        public void DeleteProductNotFound()
         {
-            // Arrange
-            Guid categoryId = Guid.NewGuid();
+            string expectedMessage = $"Product with id {_productId} not found.";
 
-            _mockRepository.Setup(repo => repo.GetById(categoryId)).Returns(() => null);
+            _mockRepository
+                .Setup(repo => repo.GetById(_productId))
+                .Returns(() => null);
 
-            // Act
-            ValidationResponse<Product> actual = _productService.Delete(categoryId);
+            ValidationResponse<Product> actual = _productService.Delete(_productId);
 
-            // Assert
+            Assert.Equal(expectedMessage, actual.Message);
             Assert.Equal(ValidationStatus.NotFound, actual.Status);
         }
 
-        #endregion
-
+        private static Product GetProduct() =>
+            new Product
+            {
+                Id = _productId,
+                Name = "TestProduct"
+            };
     }
 }

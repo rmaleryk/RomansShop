@@ -1,6 +1,6 @@
 ﻿using System;
-using RomansShop.Core;
-using RomansShop.Domain;
+using RomansShop.Core.Validation;
+using RomansShop.Domain.Entities;
 
 namespace RomansShop.Services.Extensibility
 {

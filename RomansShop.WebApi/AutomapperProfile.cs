@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
-using RomansShop.Domain;
+using RomansShop.Domain.Entities;
+using RomansShop.WebApi.ClientModels.Category;
+using RomansShop.WebApi.ClientModels.Product;
 
 namespace RomansShop.WebApi
 {
@@ -7,11 +9,11 @@ namespace RomansShop.WebApi
     {
         public AutomapperProfile()
         {
-            CreateMap<Product, ProductResponse>();
-            CreateMap<ProductRequest, Product>();
+            CreateMap<Product, ProductResponseModel>();
+            CreateMap<ProductRequestModel, Product>();
 
-            CreateMap<Category, CategoryResponse>();
-            CreateMap<CategoryRequest, Category>();
+            CreateMap<Category, CategoryResponseModel>();
+            CreateMap<CategoryRequestModel, Category>();
         }
     }
 }

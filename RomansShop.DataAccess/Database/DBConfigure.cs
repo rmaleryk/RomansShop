@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RomansShop.Domain;
+using RomansShop.Domain.Entities;
 
 namespace RomansShop.DataAccess.Database
 {

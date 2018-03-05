@@ -1,11 +1,8 @@
 ﻿using System;
 
-namespace RomansShop.Domain
+namespace RomansShop.WebApi.ClientModels.Product
 {
-    /// <summary>
-    ///     DTO for product response
-    /// </summary>
-    public class ProductResponse
+    public class ProductResponseModel
     {
         public Guid Id { get; set; }
 

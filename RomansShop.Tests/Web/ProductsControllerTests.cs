@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using RomansShop.Core;
-using RomansShop.Domain;
+using RomansShop.Core.Validation;
+using RomansShop.Domain.Entities;
 using RomansShop.Domain.Extensibility.Repositories;
 using RomansShop.Services.Extensibility;
+using RomansShop.Tests.Common;
+using RomansShop.WebApi.ClientModels.Product;
 using RomansShop.WebApi.Controllers;
 using Xunit;
 
@@ -15,10 +18,14 @@ namespace RomansShop.Tests.Web
 {
     public class ProductsControllerTests : UnitTestBase
     {
-        private Mock<IProductService> _mockService { get; set; }
-        private Mock<IProductRepository> _mockRepository { get; set; }
-        private Mock<IMapper> _mockMapper { get; set; }
-        private ProductsController _controller { get; set; }
+        private Mock<IProductService> _mockService;
+        private Mock<IProductRepository> _mockRepository;
+        private Mock<IMapper> _mockMapper;
+        private ProductsController _controller;
+
+        private static readonly Guid _categoryId = new Guid("00000000-0000-0000-0000-000000000002");
+        private static readonly Guid _productId = new Guid("00000000-0000-0000-0000-000000000001");
+        private static readonly string _productName = "TestProduct";
 
         public ProductsControllerTests()
         {
@@ -29,336 +36,281 @@ namespace RomansShop.Tests.Web
             _controller = new ProductsController(_mockService.Object, _mockRepository.Object, _mockMapper.Object);
         }
 
-        #region GET Method Tests
-        
-        [Fact]
-        public void Get_ReturnsStatusCodeOk()
+        [Fact(DisplayName = "Get Product")]
+        public void GetTest()
         {
-            // Arrange
-            IEnumerable<Product> products = new List<Product>();
-            IEnumerable<ProductResponse> productsResponse = new List<ProductResponse>();
+            IEnumerable<Product> products = new List<Product> { GetProduct(), GetProduct() };
 
-            _mockRepository.Setup(repo => repo.GetAll()).Returns(products);
-            _mockMapper.Setup(mapper => mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(products)).Returns(productsResponse);
+            IEnumerable<ProductResponseModel> productsResponse = 
+                new List<ProductResponseModel> { GetProductResponseModel(), GetProductResponseModel() };
 
-            // Act
+            _mockRepository
+                .Setup(repo => repo.GetAll())
+                .Returns(products);
+
+            _mockMapper
+                .Setup(mapper => mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponseModel>>(products))
+                .Returns(productsResponse);
+            
             IActionResult actionResult = _controller.Get();
 
-            // Assert
-            OkObjectResult actual = actionResult as OkObjectResult;
+            OkObjectResult actual = (OkObjectResult)actionResult;
+            int actualCount = ((IEnumerable<ProductResponseModel>)actual.Value).Count();
+
+            Assert.Equal(products.Count(), actualCount);
             Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
-        [Fact]
-        public void Get_ReturnsProductResponseList()
+        [Fact(DisplayName = "GetById Product")]
+        public void GetByIdStatusTest()
         {
-            // Arrange
-            IEnumerable<Product> products = new List<Product>();
-            IEnumerable<ProductResponse> productsResponse = new List<ProductResponse>();
+            ValidationResponse<Product> validationResponse = GetOkValidationResponse();
+            ProductResponseModel productResponse = GetProductResponseModel();
 
-            _mockRepository.Setup(repo => repo.GetAll()).Returns(products);
-            _mockMapper.Setup(mapper => mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(products)).Returns(productsResponse);
+            _mockService
+                .Setup(serv => serv.GetById(_productId))
+                .Returns(validationResponse);
 
-            // Act
-            IActionResult actionResult = _controller.Get();
+            _mockMapper
+                .Setup(mapper => mapper.Map<Product, ProductResponseModel>(validationResponse.ResponseData))
+                .Returns(productResponse);
 
-            // Assert
-            ObjectResult actual = actionResult as ObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<ProductResponse>>(actual.Value);
-        }
+            IActionResult actionResult = _controller.Get(_productId);
 
-        [Fact]
-        public void GetById_ReturnsStatusCodeOk()
-        {
-            // Arrange
-            Guid productId = Guid.NewGuid();
-            ValidationResponse<Product> validationResponse = new ValidationResponse<Product>();
-            ProductResponse productResponse = new ProductResponse();
+            OkObjectResult actual = (OkObjectResult)actionResult;
+            Guid actualId = ((ProductResponseModel)actual.Value).Id;
 
-            _mockService.Setup(serv => serv.GetById(productId)).Returns(validationResponse);
-            _mockMapper.Setup(mapper => mapper.Map<Product, ProductResponse>(validationResponse.ResponseData)).Returns(productResponse);
-
-            // Act
-            IActionResult actionResult = _controller.Get(productId);
-
-            // Assert
-            OkObjectResult actual = actionResult as OkObjectResult;
+            Assert.Equal(_productId, actualId);
             Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
-        [Fact]
-        public void GetById_ReturnsProductResponse()
+        [Fact(DisplayName = "GetById Product not found")]
+        public void GetByIdProductNotFoundTest()
         {
-            // Arrange
-            Guid productId = Guid.NewGuid();
-            ValidationResponse<Product> validationResponse = new ValidationResponse<Product>();
-            ProductResponse productResponse = new ProductResponse();
+            ValidationResponse<Product> validationResponse = GetNotFoundValidationResponse();
 
-            _mockService.Setup(serv => serv.GetById(productId)).Returns(validationResponse);
-            _mockMapper.Setup(mapper => mapper.Map<Product, ProductResponse>(validationResponse.ResponseData)).Returns(productResponse);
+            _mockService
+                .Setup(serv => serv.GetById(_productId))
+                .Returns(validationResponse);
 
-            // Act
-            IActionResult actionResult = _controller.Get(productId);
+            IActionResult actionResult = _controller.Get(_productId);
 
-            // Assert
-            ObjectResult actual = actionResult as ObjectResult;
-            Assert.IsAssignableFrom<ProductResponse>(actual.Value);
-        }
-
-        [Fact]
-        public void GetById_ReturnsStatusNotFound()
-        {
-            // Arrange
-            Guid productId = Guid.NewGuid();
-            ValidationResponse<Product> validationResponse = 
-                new ValidationResponse<Product>() { Status = ValidationStatus.NotFound };
-
-            _mockService.Setup(serv => serv.GetById(productId)).Returns(validationResponse);
-
-            // Act
-            IActionResult actionResult = _controller.Get(productId);
-
-            // Assert
-            NotFoundObjectResult actual = actionResult as NotFoundObjectResult;
+            NotFoundObjectResult actual = (NotFoundObjectResult)actionResult;
             Assert.Equal(StatusCodes.Status404NotFound, actual.StatusCode);
         }
 
-        [Fact]
-        public void GetPage_ReturnsProductResponse_ForCorrectStartIndexAndOffset()
+        [Fact(DisplayName = "GetRange Products")]
+        public void GetRangeTest()
         {
-            // Arrange
-            ValidationResponse<IEnumerable<Product>> validationResponse = new ValidationResponse<IEnumerable<Product>>();
-            IEnumerable<ProductResponse> productsResponse = new List<ProductResponse>();
+            IEnumerable<Product> expectedProducts = new List<Product> { GetProduct(), GetProduct() };
+
+            ValidationResponse<IEnumerable<Product>> validationResponse = 
+                new ValidationResponse<IEnumerable<Product>>(expectedProducts, ValidationStatus.Ok);
+
+            IEnumerable<ProductResponseModel> productsResponse = 
+                new List<ProductResponseModel> { GetProductResponseModel(), GetProductResponseModel() };
+
             int startIndex = 1;
-            int offset = 5;
+            int offset = 2;
 
-            _mockService.Setup(serv => serv.GetPage(startIndex, offset)).Returns(validationResponse);
-            _mockMapper.Setup(mapper => mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(validationResponse.ResponseData)).Returns(productsResponse);
+            _mockService
+                .Setup(serv => serv.GetRange(startIndex, offset))
+                .Returns(validationResponse);
 
-            // Act
-            IActionResult actionResult = _controller.GetPage(startIndex, offset);
+            _mockMapper
+                .Setup(mapper => mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponseModel>>(validationResponse.ResponseData))
+                .Returns(productsResponse);
 
-            // Assert
-            ObjectResult actual = actionResult as ObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<ProductResponse>>(actual.Value);
+            IActionResult actionResult = _controller.GetRange(startIndex, offset);
+
+            ObjectResult actual = (ObjectResult)actionResult;
+            int actualCount = ((IEnumerable<ProductResponseModel>)actual.Value).Count();
+
+            Assert.Equal(expectedProducts.Count(), actualCount);
+            Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
-        [Fact]
-        public void GetPage_ReturnsStatusBadRequest_ForNegativeOrZeroStartIndexOrOffset()
+        [Fact(DisplayName = "GetRange Products Incorrect indexes")]
+        public void GetRangeIncorrectIndexesTest()
         {
-            // Arrange
-            ValidationResponse<IEnumerable<Product>> validationResponse 
-                = new ValidationResponse<IEnumerable<Product>>() { Status = ValidationStatus.Failed };
             int startIndex = -1;
             int offset = 0;
+            string expectedMessage = $"The start index ({startIndex}) or offset ({offset}) is incorrect.";
 
-            _mockService.Setup(serv => serv.GetPage(startIndex, offset)).Returns(validationResponse);
+            IActionResult actionResult = _controller.GetRange(startIndex, offset);
 
-            // Act
-            IActionResult actionResult = _controller.GetPage(startIndex, offset);
+            BadRequestObjectResult actual = (BadRequestObjectResult)actionResult;
 
-            // Assert
-            BadRequestObjectResult actual = actionResult as BadRequestObjectResult;
+            Assert.Equal(expectedMessage, actual.Value);
             Assert.Equal(StatusCodes.Status400BadRequest, actual.StatusCode);
         }
 
-        #endregion
-
-        #region POST Method Tests
-
-        [Fact]
-        public void Post_ReturnsStatusCodeCreated()
+        [Fact(DisplayName = "Post Product")]
+        public void PostTest()
         {
-            // Arrange
-            Product product = new Product();
-            ProductRequest createProductRequest = new ProductRequest();
-            ProductResponse productResponse = new ProductResponse();
+            Product product = GetProduct();
+            ProductRequestModel productRequest = GetProductRequestModel();
+            ProductResponseModel productResponse = GetProductResponseModel();
 
-            _mockRepository.Setup(repo => repo.Add(product)).Returns(product);
-            _mockMapper.Setup(mapper => mapper.Map<ProductRequest, Product>(createProductRequest)).Returns(product);
-            _mockMapper.Setup(mapper => mapper.Map<Product, ProductResponse>(product)).Returns(productResponse);
+            _mockRepository
+                .Setup(repo => repo.Add(product))
+                .Returns(product);
 
-            // Act
-            IActionResult actionResult = _controller.Post(createProductRequest);
+            _mockMapper
+                .Setup(mapper => mapper.Map<ProductRequestModel, Product>(productRequest))
+                .Returns(product);
 
-            // Assert
-            CreatedAtActionResult actual = actionResult as CreatedAtActionResult;
+            _mockMapper
+                .Setup(mapper => mapper.Map<Product, ProductResponseModel>(product))
+                .Returns(productResponse);
+
+            IActionResult actionResult = _controller.Post(productRequest);
+
+            CreatedAtActionResult actual = (CreatedAtActionResult)actionResult;
+            string actualName = ((ProductResponseModel)actual.Value).Name;
+
+            Assert.Equal(product.Name, actualName);
             Assert.Equal(StatusCodes.Status201Created, actual.StatusCode);
         }
 
-        [Fact]
-        public void Post_ReturnsProductResponse()
+        [Fact(DisplayName = "Put Product")]
+        public void PutTest()
         {
-            // Arrange
-            Product product = new Product();
-            ProductRequest createProductRequest = new ProductRequest();
-            ProductResponse productResponse = new ProductResponse();
+            Product product = GetProduct();
+            ProductRequestModel productRequest = GetProductRequestModel();
+            ProductResponseModel productResponse = GetProductResponseModel();
 
-            _mockRepository.Setup(repo => repo.Add(product)).Returns(product);
-            _mockMapper.Setup(mapper => mapper.Map<ProductRequest, Product>(createProductRequest)).Returns(product);
-            _mockMapper.Setup(mapper => mapper.Map<Product, ProductResponse>(product)).Returns(productResponse);
+            ValidationResponse<Product> validationResponse = 
+                new ValidationResponse<Product>(GetProduct(), ValidationStatus.Ok);
 
-            // Act
-            IActionResult actionResult = _controller.Post(createProductRequest);
+            _mockMapper
+                .Setup(mapper => mapper.Map<ProductRequestModel, Product>(productRequest))
+                .Returns(product);
 
-            // Assert
-            ObjectResult actual = actionResult as ObjectResult;
-            Assert.IsAssignableFrom<ProductResponse>(actual.Value);
-        }
+            _mockService
+                .Setup(serv => serv.Update(product))
+                .Returns(validationResponse);
 
-        #endregion
+            _mockMapper
+                .Setup(mapper => mapper.Map<Product, ProductResponseModel>(validationResponse.ResponseData))
+                .Returns(productResponse);
 
-        #region PUT Method Tests
+            IActionResult actionResult = _controller.Put(_productId, productRequest);
 
-        [Fact]
-        public void Put_ReturnsStatusCodeOk()
-        {
-            // Arrange
-            Guid updatedProductId = Guid.NewGuid();
-            Product product = new Product() { Id = updatedProductId };
+            OkObjectResult actual = (OkObjectResult)actionResult;
+            string actualName = ((ProductResponseModel)actual.Value).Name;
 
-            ValidationResponse<Product> validationResponse = new ValidationResponse<Product>();
-            ProductRequest productRequest = new ProductRequest();
-            ProductResponse productResponse = new ProductResponse();
-
-            _mockMapper.Setup(mapper => mapper.Map<ProductRequest, Product>(productRequest)).Returns(product);
-            _mockService.Setup(serv => serv.Update(product)).Returns(validationResponse);
-            _mockMapper.Setup(mapper => mapper.Map<Product, ProductResponse>(validationResponse.ResponseData)).Returns(productResponse);
-
-            // Act
-            IActionResult actionResult = _controller.Put(updatedProductId, productRequest);
-
-            // Assert
-            OkObjectResult actual = actionResult as OkObjectResult;
+            Assert.Equal(product.Name, actualName);
             Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
-        [Fact]
-        public void Put_ReturnsUpdatedProductResponse()
+        [Fact(DisplayName = "Put Product not found")]
+        public void PutProductNotFoundTest()
         {
-            // Arrange
-            Guid updatedProductId = Guid.NewGuid();
-            Product product = new Product() { Id = updatedProductId };
+            Product product = GetProduct();
+            ProductRequestModel productRequest = new ProductRequestModel();
 
-            ValidationResponse<Product> validationResponse = new ValidationResponse<Product>();
-            ProductRequest productRequest = new ProductRequest();
-            ProductResponse productResponse = new ProductResponse();
+            ValidationResponse<Product> validationResponse = GetNotFoundValidationResponse();
 
-            _mockMapper.Setup(mapper => mapper.Map<ProductRequest, Product>(productRequest)).Returns(product);
-            _mockService.Setup(serv => serv.Update(product)).Returns(validationResponse);
-            _mockMapper.Setup(mapper => mapper.Map<Product, ProductResponse>(validationResponse.ResponseData)).Returns(productResponse);
+            _mockMapper
+                .Setup(mapper => mapper.Map<ProductRequestModel, Product>(productRequest))
+                .Returns(product);
 
-            // Act
-            IActionResult actionResult = _controller.Put(updatedProductId, productRequest);
+            _mockService
+                .Setup(serv => serv.Update(product))
+                .Returns(validationResponse);
 
-            // Assert
-            ObjectResult actual = actionResult as ObjectResult;
-            Assert.IsAssignableFrom<ProductResponse>(actual.Value);
-        }
+            IActionResult actionResult = _controller.Put(_productId, productRequest);
 
-        [Fact]
-        public void Put_ReturnsStatusCodeNotFound_ForNonExistProduct()
-        {
-            // Arrange
-            Guid updatedProductId = Guid.NewGuid();
-            Product product = new Product() { Id = updatedProductId };
-
-            ProductRequest productRequest = new ProductRequest();
-            ValidationResponse<Product> validationResponse = 
-                new ValidationResponse<Product>() { Status = ValidationStatus.NotFound };
-
-            _mockMapper.Setup(mapper => mapper.Map<ProductRequest, Product>(productRequest)).Returns(product);
-            _mockService.Setup(serv => serv.Update(product)).Returns(validationResponse);
-
-            // Act
-            IActionResult actionResult = _controller.Put(updatedProductId, productRequest);
-
-            // Assert
-            NotFoundObjectResult actual = actionResult as NotFoundObjectResult;
+            NotFoundObjectResult actual = (NotFoundObjectResult)actionResult;
             Assert.Equal(StatusCodes.Status404NotFound, actual.StatusCode);
         }
 
-        #endregion
-
-        #region DELETE Method Tests
-
-        [Fact]
-        public void Delete_ReturnsStatusCodeOk()
+        [Fact(DisplayName = "Delete Product")]
+        public void DeleteTest()
         {
-            // Arrange
-            Guid deletedProductId = Guid.NewGuid();
-            ValidationResponse<Product> validationResponse = new ValidationResponse<Product>();
+            ValidationResponse<Product> validationResponse = GetOkValidationResponse();
 
-            _mockService.Setup(serv => serv.Delete(deletedProductId)).Returns(validationResponse);
+            _mockService
+                .Setup(serv => serv.Delete(_productId))
+                .Returns(validationResponse);
 
-            // Act
-            IActionResult actionResult = _controller.Delete(deletedProductId);
+            IActionResult actionResult = _controller.Delete(_productId);
 
-            // Assert
-            OkObjectResult actual = actionResult as OkObjectResult;
+            OkObjectResult actual = (OkObjectResult)actionResult;
             Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
-        [Fact]
-        public void Delete_ReturnsStatusCodeNotFound_WithNonExistId()
+        [Fact(DisplayName = "Delete Product not found")]
+        public void DeleteProductNotFoundTest()
         {
-            // Arrange
-            Guid deletedProductId = Guid.NewGuid();
-            ValidationResponse<Product> validationResponse = 
-                new ValidationResponse<Product>() { Status = ValidationStatus.NotFound };
+            ValidationResponse<Product> validationResponse = GetNotFoundValidationResponse();
 
-            _mockService.Setup(serv => serv.Delete(deletedProductId)).Returns(validationResponse);
+            _mockService
+                .Setup(serv => serv.Delete(_productId))
+                .Returns(validationResponse);
 
-            // Act
-            IActionResult actionResult = _controller.Delete(deletedProductId);
+            IActionResult actionResult = _controller.Delete(_productId);
 
-            // Assert
-            NotFoundObjectResult actual = actionResult as NotFoundObjectResult;
+            NotFoundObjectResult actual = (NotFoundObjectResult)actionResult;
             Assert.Equal(StatusCodes.Status404NotFound, actual.StatusCode);
         }
 
-        #endregion
-
-        #region GetByCategoryId Tests
-
-        [Fact]
-        public void GetByCategoryId_ReturnsStatusCodeOk()
+        [Fact(DisplayName = "GetByCategoryId Products")]
+        public void GetByCategoryIdTest()
         {
-            // Arrange
-            Guid categoryId = Guid.NewGuid();
-            IEnumerable<Product> products = new List<Product>();
-            IEnumerable<ProductResponse> productsResponse = new List<ProductResponse>();
+            IEnumerable<Product> products = new List<Product> { GetProduct(), GetProduct() };
 
-            _mockRepository.Setup(repo => repo.GetByCategoryId(categoryId)).Returns(products);
-            _mockMapper.Setup(mapper => mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(products)).Returns(productsResponse);
+            IEnumerable<ProductResponseModel> productsResponse = 
+                new List<ProductResponseModel> { GetProductResponseModel(), GetProductResponseModel() };
 
-            // Act
-            IActionResult actionResult = _controller.GetByCategoryId(categoryId);
+            _mockRepository
+                .Setup(repo => repo.GetByCategoryId(_categoryId))
+                .Returns(products);
 
-            // Assert
-            OkObjectResult actual = actionResult as OkObjectResult;
+            _mockMapper
+                .Setup(mapper => mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponseModel>>(products))
+                .Returns(productsResponse);
+
+            IActionResult actionResult = _controller.GetByCategoryId(_categoryId);
+
+            IEnumerable<ProductResponseModel> expectedProductsResponse = new List<ProductResponseModel>();
+            OkObjectResult actual = (OkObjectResult)actionResult;
+            int actualCount = ((IEnumerable<ProductResponseModel>)actual.Value).Count();
+
+            Assert.Equal(products.Count(), actualCount);
             Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
-        [Fact]
-        public void GetByCategoryId_ReturnsProductResponseList()
-        {
-            // Arrange
-            Guid categoryId = Guid.NewGuid();
-            IEnumerable<Product> products = new List<Product>();
-            IEnumerable<ProductResponse> productsResponse = new List<ProductResponse>();
+        private static Product GetProduct() => 
+            new Product
+            {
+                Id = _productId,
+                Name = _productName,
+                CategoryId = _categoryId
+            };
 
-            _mockRepository.Setup(repo => repo.GetByCategoryId(categoryId)).Returns(products);
-            _mockMapper.Setup(mapper => mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponse>>(products)).Returns(productsResponse);
+        private static ProductResponseModel GetProductResponseModel() =>
+            new ProductResponseModel
+            {
+                Id = _productId,
+                Name = _productName,
+                CategoryId = _categoryId
+            };
 
-            // Act
-            IActionResult actionResult = _controller.GetByCategoryId(categoryId);
+        private static ProductRequestModel GetProductRequestModel() =>
+            new ProductRequestModel
+            {
+                Name = _productName
+            };
 
-            // Assert
-            ObjectResult actual = actionResult as ObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<ProductResponse>>(actual.Value);
-        }
+        private ValidationResponse<Product> GetOkValidationResponse() => 
+            new ValidationResponse<Product>(GetProduct(), ValidationStatus.Ok);
 
-        #endregion
+        private ValidationResponse<Product> GetNotFoundValidationResponse() =>
+            new ValidationResponse<Product>(ValidationStatus.NotFound, "Not Found");
+
+        private ValidationResponse<Product> GetFailedValidationResponse() =>
+            new ValidationResponse<Product>(ValidationStatus.Failed, "Failed");
     }
 }
