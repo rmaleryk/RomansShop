@@ -12,6 +12,7 @@ using RomansShop.WebApi.Filters;
 namespace RomansShop.WebApi.Controllers
 {
     [Route("api/products")]
+    [TypeFilter(typeof(ValidateModelAttribute))]
     public class ProductsController : Controller
     {
         private readonly IProductService _productService;
@@ -72,7 +73,6 @@ namespace RomansShop.WebApi.Controllers
 
         // api/products
         [HttpPost]
-        [ValidateModel]
         public IActionResult Post([FromBody]ProductRequestModel createProductRequest)
         {
             Product product = _mapper.Map<ProductRequestModel, Product>(createProductRequest);
@@ -85,7 +85,6 @@ namespace RomansShop.WebApi.Controllers
 
         // api/products/{id}
         [HttpPut("{id}")]
-        [ValidateModel]
         public IActionResult Put(Guid id, [FromBody]ProductRequestModel productRequest)
         {
             Product product = _mapper.Map<ProductRequestModel, Product>(productRequest);

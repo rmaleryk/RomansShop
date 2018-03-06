@@ -5,6 +5,8 @@ using RomansShop.Core.Validation;
 using RomansShop.Domain.Entities;
 using RomansShop.Domain.Extensibility.Repositories;
 using RomansShop.Services.Extensibility;
+using ILoggerFactory = RomansShop.Core.Extensibility.ILoggerFactory;
+using ILogger = RomansShop.Core.Extensibility.ILogger;
 
 namespace RomansShop.Services
 {
@@ -12,11 +14,16 @@ namespace RomansShop.Services
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IProductRepository _productRepository;
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly ILogger _logger;
 
-        public CategoryService(ICategoryRepository categoryRepository, IProductRepository productRepository)
+        public CategoryService(ICategoryRepository categoryRepository, IProductRepository productRepository, ILoggerFactory loggerFactory)
         {
             _categoryRepository = categoryRepository;
             _productRepository = productRepository;
+            _loggerFactory = loggerFactory;
+
+            _logger = _loggerFactory.CreateLogger(GetType());
         }
 
         public ValidationResponse<Category> GetById(Guid id)
@@ -25,8 +32,10 @@ namespace RomansShop.Services
 
             if (category == null)
             {
-                return new ValidationResponse<Category>(ValidationStatus.NotFound, 
-                    $"Category with id {id} not found.");
+                string message = $"Category with id {id} not found.";
+                _logger.Info(message);
+
+                return new ValidationResponse<Category>(ValidationStatus.NotFound, message);
             }
 
             return new ValidationResponse<Category>(category, ValidationStatus.Ok);
@@ -38,8 +47,10 @@ namespace RomansShop.Services
 
             if (categoryTmp != null)
             {
-                return new ValidationResponse<Category>(ValidationStatus.Failed, 
-                    $"Category name \"{category.Name}\" already exist.");
+                string message = $"Category name \"{category.Name}\" already exist.";
+                _logger.Info(message);
+
+                return new ValidationResponse<Category>(ValidationStatus.Failed, message);
             }
 
             category = _categoryRepository.Add(category);
@@ -53,16 +64,20 @@ namespace RomansShop.Services
 
             if (categoryTmp == null)
             {
-                return new ValidationResponse<Category>(ValidationStatus.NotFound, 
-                    $"Category with id {category.Id} not found.");
+                string message = $"Category with id {category.Id} not found.";
+                _logger.Info(message);
+
+                return new ValidationResponse<Category>(ValidationStatus.NotFound, message);
             }
 
             categoryTmp = _categoryRepository.GetByName(category.Name);
 
             if (categoryTmp != null && categoryTmp.Id != category.Id)
             {
-                return new ValidationResponse<Category>(ValidationStatus.Failed, 
-                    $"Category name \"{category.Name}\" already exist.");
+                string message = $"Category name \"{category.Name}\" already exist.";
+                _logger.Info(message);
+
+                return new ValidationResponse<Category>(ValidationStatus.Failed, message);
             }
 
             category = _categoryRepository.Update(category);
@@ -76,16 +91,20 @@ namespace RomansShop.Services
 
             if (category == null)
             {
-                return new ValidationResponse<Category>(ValidationStatus.NotFound, 
-                    $"Category with id {id} not found.");
+                string message = $"Category with id {id} not found.";
+                _logger.Info(message);
+
+                return new ValidationResponse<Category>(ValidationStatus.NotFound, message);
             }
 
             IEnumerable<Product> products = _productRepository.GetByCategoryId(category.Id);
 
             if (products.Any())
             {
-                return new ValidationResponse<Category>(ValidationStatus.Failed, 
-                    $"Category with id {id} is not empty.");
+                string message = $"Category with id {id} is not empty.";
+                _logger.Info(message);
+
+                return new ValidationResponse<Category>(ValidationStatus.Failed, message);
             }
 
             _categoryRepository.Delete(category);
