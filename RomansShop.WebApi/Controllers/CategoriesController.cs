@@ -12,6 +12,7 @@ using RomansShop.WebApi.Filters;
 namespace RomansShop.WebApi.Controllers
 {
     [Route("api/categories")]
+    [TypeFilter(typeof(ValidateModelAttribute))]
     public class CategoriesController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -53,7 +54,6 @@ namespace RomansShop.WebApi.Controllers
 
         // api/categories
         [HttpPost]
-        [ValidateModel]
         public IActionResult Post([FromBody]CategoryRequestModel categoryRequest)
         {
             Category category = _mapper.Map<CategoryRequestModel, Category>(categoryRequest);
@@ -71,7 +71,6 @@ namespace RomansShop.WebApi.Controllers
 
         // api/categories/{id}
         [HttpPut("{id}")]
-        [ValidateModel]
         public IActionResult Put(Guid id, [FromBody]CategoryRequestModel categoryRequest)
         {
             Category category = _mapper.Map<CategoryRequestModel, Category>(categoryRequest);

@@ -4,16 +4,23 @@ using RomansShop.Core.Validation;
 using RomansShop.Domain.Entities;
 using RomansShop.Domain.Extensibility.Repositories;
 using RomansShop.Services.Extensibility;
+using ILoggerFactory = RomansShop.Core.Extensibility.ILoggerFactory;
+using ILogger = RomansShop.Core.Extensibility.ILogger;
 
 namespace RomansShop.Services
 {
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly ILogger _logger;
 
-        public ProductService(IProductRepository productRepository)
+        public ProductService(IProductRepository productRepository, ILoggerFactory loggerFactory)
         {
             _productRepository = productRepository;
+            _loggerFactory = loggerFactory;
+
+            _logger = _loggerFactory.CreateLogger(GetType());
         }
 
         public ValidationResponse<IEnumerable<Product>> GetRange(int startIndex, int offset)
@@ -29,8 +36,10 @@ namespace RomansShop.Services
 
             if (product == null)
             {
-                return new ValidationResponse<Product>(ValidationStatus.NotFound, 
-                    $"Product with id {id} not found.");
+                string message = $"Product with id {id} not found.";
+                _logger.Info(message);
+
+                return new ValidationResponse<Product>(ValidationStatus.NotFound, message);
             }
 
             return new ValidationResponse<Product>(product, ValidationStatus.Ok);
@@ -42,8 +51,10 @@ namespace RomansShop.Services
 
             if (productTmp == null)
             {
-                return new ValidationResponse<Product>(ValidationStatus.NotFound, 
-                    $"Product with id {product.Id} not found.");
+                string message = $"Product with id {product.Id} not found.";
+                _logger.Info(message);
+
+                return new ValidationResponse<Product>(ValidationStatus.NotFound, message);
             }
 
             product = _productRepository.Update(product);
@@ -57,8 +68,10 @@ namespace RomansShop.Services
 
             if (product == null)
             {
-                return new ValidationResponse<Product>(ValidationStatus.NotFound, 
-                    $"Product with id {id} not found.");
+                string message = $"Product with id {id} not found.";
+                _logger.Info(message);
+
+                return new ValidationResponse<Product>(ValidationStatus.NotFound, message);
             }
 
             _productRepository.Delete(product);

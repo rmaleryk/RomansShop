@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Moq;
+using ILoggerFactory = RomansShop.Core.Extensibility.ILoggerFactory;
+using ILogger = RomansShop.Core.Extensibility.ILogger;
 using RomansShop.Core.Validation;
 using RomansShop.Domain.Entities;
 using RomansShop.Domain.Extensibility.Repositories;
@@ -14,6 +16,8 @@ namespace RomansShop.Tests.Services
     public class ProductServiceTests : UnitTestBase
     {
         private Mock<IProductRepository> _mockRepository;
+        private Mock<ILogger> _mockLogger;
+
         private ProductService _productService;
 
         private static readonly Guid _productId = new Guid("00000000-0000-0000-0000-000000000001");
@@ -21,7 +25,15 @@ namespace RomansShop.Tests.Services
         public ProductServiceTests()
         {
             _mockRepository = MockRepository.Create<IProductRepository>();
-            _productService = new ProductService(_mockRepository.Object);
+            _mockLogger = MockRepository.Create<ILogger>();
+
+            Mock<ILoggerFactory> mockLoggerFactory = MockRepository.Create<ILoggerFactory>();
+
+            mockLoggerFactory
+                .Setup(lf => lf.CreateLogger(typeof(ProductService)))
+                .Returns(_mockLogger.Object);
+
+            _productService = new ProductService(_mockRepository.Object, mockLoggerFactory.Object);
         }
 
         [Fact(DisplayName = "GetRange Products")]
@@ -63,6 +75,8 @@ namespace RomansShop.Tests.Services
         {
             string expectedMessage = $"Product with id {_productId} not found.";
 
+            _mockLogger.Setup(logger => logger.Info(expectedMessage));
+
             _mockRepository
                 .Setup(repo => repo.GetById(_productId))
                 .Returns(() => null);
@@ -99,6 +113,8 @@ namespace RomansShop.Tests.Services
             Product product = GetProduct();
             string expectedMessage = $"Product with id {_productId} not found.";
 
+            _mockLogger.Setup(logger => logger.Info(expectedMessage));
+
             _mockRepository
                 .Setup(repo => repo.GetById(_productId))
                 .Returns(() => null);
@@ -131,6 +147,8 @@ namespace RomansShop.Tests.Services
         public void DeleteProductNotFound()
         {
             string expectedMessage = $"Product with id {_productId} not found.";
+
+            _mockLogger.Setup(logger => logger.Info(expectedMessage));
 
             _mockRepository
                 .Setup(repo => repo.GetById(_productId))

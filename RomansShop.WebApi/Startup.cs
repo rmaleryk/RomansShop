@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using NLog;
+using RomansShop.Core;
 using RomansShop.DataAccess;
 using RomansShop.DataAccess.Database;
 using RomansShop.Services;
@@ -40,6 +42,7 @@ namespace RomansShop.WebApi
             services.AddMvc(options =>
             {
                 options.Filters.Add<ApiExceptionFilterAttribute>();
+                options.Filters.Add<ValidateModelAttribute>();
 
             }).AddJsonOptions(options =>
             {
@@ -52,6 +55,7 @@ namespace RomansShop.WebApi
         {
             builder.RegisterModule(new DataAccessModule());
             builder.RegisterModule(new ServicesModule());
+            builder.RegisterModule(new CoreModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +67,8 @@ namespace RomansShop.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("nlog.config");
 
             loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
