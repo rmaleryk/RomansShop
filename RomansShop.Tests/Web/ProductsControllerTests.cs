@@ -62,7 +62,7 @@ namespace RomansShop.Tests.Web
         }
 
         [Fact(DisplayName = "GetById Product")]
-        public void GetByIdStatusTest()
+        public void GetByIdTest()
         {
             ValidationResponse<Product> validationResponse = GetOkValidationResponse();
             ProductResponseModel productResponse = GetProductResponseModel();
@@ -179,9 +179,7 @@ namespace RomansShop.Tests.Web
             Product product = GetProduct();
             ProductRequestModel productRequest = GetProductRequestModel();
             ProductResponseModel productResponse = GetProductResponseModel();
-
-            ValidationResponse<Product> validationResponse = 
-                new ValidationResponse<Product>(GetProduct(), ValidationStatus.Ok);
+            ValidationResponse<Product> validationResponse = GetOkValidationResponse();
 
             _mockMapper
                 .Setup(mapper => mapper.Map<ProductRequestModel, Product>(productRequest))
@@ -208,8 +206,7 @@ namespace RomansShop.Tests.Web
         public void PutProductNotFoundTest()
         {
             Product product = GetProduct();
-            ProductRequestModel productRequest = new ProductRequestModel();
-
+            ProductRequestModel productRequest = GetProductRequestModel();
             ValidationResponse<Product> validationResponse = GetNotFoundValidationResponse();
 
             _mockMapper
@@ -274,7 +271,6 @@ namespace RomansShop.Tests.Web
 
             IActionResult actionResult = _controller.GetByCategoryId(_categoryId);
 
-            IEnumerable<ProductResponseModel> expectedProductsResponse = new List<ProductResponseModel>();
             OkObjectResult actual = (OkObjectResult)actionResult;
             int actualCount = ((IEnumerable<ProductResponseModel>)actual.Value).Count();
 
