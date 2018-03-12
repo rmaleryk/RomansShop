@@ -4,8 +4,8 @@ using RomansShop.Core.Validation;
 using RomansShop.Domain.Entities;
 using RomansShop.Domain.Extensibility.Repositories;
 using RomansShop.Services.Extensibility;
-using ILoggerFactory = RomansShop.Core.Extensibility.ILoggerFactory;
-using ILogger = RomansShop.Core.Extensibility.ILogger;
+using ILoggerFactory = RomansShop.Core.Extensibility.Logger.ILoggerFactory;
+using ILogger = RomansShop.Core.Extensibility.Logger.ILogger;
 
 namespace RomansShop.Services
 {
@@ -37,7 +37,7 @@ namespace RomansShop.Services
             if (product == null)
             {
                 string message = $"Product with id {id} not found.";
-                _logger.Info(message);
+                _logger.LogWarning(message);
 
                 return new ValidationResponse<Product>(ValidationStatus.NotFound, message);
             }
@@ -52,14 +52,14 @@ namespace RomansShop.Services
             if (productTmp == null)
             {
                 string message = $"Product with id {product.Id} not found.";
-                _logger.Info(message);
+                _logger.LogWarning(message);
 
                 return new ValidationResponse<Product>(ValidationStatus.NotFound, message);
             }
 
-            product = _productRepository.Update(product);
+            Product updatedProduct = _productRepository.Update(product);
 
-            return new ValidationResponse<Product>(product, ValidationStatus.Ok);
+            return new ValidationResponse<Product>(updatedProduct, ValidationStatus.Ok);
         }
 
         public ValidationResponse<Product> Delete(Guid id)
@@ -69,7 +69,7 @@ namespace RomansShop.Services
             if (product == null)
             {
                 string message = $"Product with id {id} not found.";
-                _logger.Info(message);
+                _logger.LogWarning(message);
 
                 return new ValidationResponse<Product>(ValidationStatus.NotFound, message);
             }

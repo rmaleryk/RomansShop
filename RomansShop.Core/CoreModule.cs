@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using ILoggerFactory = RomansShop.Core.Extensibility.ILoggerFactory;
+using ILoggerFactory = RomansShop.Core.Extensibility.Logger.ILoggerFactory;
 using LoggerFactory = RomansShop.Core.Logger.LoggerFactory;
 
 namespace RomansShop.Core

@@ -1,6 +1,6 @@
 ﻿using System;
-using ILoggerFactory = RomansShop.Core.Extensibility.ILoggerFactory;
-using ILogger = RomansShop.Core.Extensibility.ILogger;
+using ILoggerFactory = RomansShop.Core.Extensibility.Logger.ILoggerFactory;
+using ILogger = RomansShop.Core.Extensibility.Logger.ILogger;
 
 namespace RomansShop.Core.Logger
 {
@@ -8,7 +8,7 @@ namespace RomansShop.Core.Logger
     {
         public ILogger CreateLogger(Type type)
         {
-            return new NLogger(type);
+            return new Logger(type);
         }
     }
 }

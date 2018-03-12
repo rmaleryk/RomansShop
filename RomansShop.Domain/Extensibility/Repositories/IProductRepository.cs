@@ -4,18 +4,8 @@ using RomansShop.Domain.Entities;
 
 namespace RomansShop.Domain.Extensibility.Repositories
 {
-    public interface IProductRepository
+    public interface IProductRepository : IRepository<Product>
     {
-        Product Add(Product product);
-
-        IEnumerable<Product> GetAll();
-
-        Product GetById(Guid productId);
-
-        Product Update(Product product);
-
-        void Delete(Product product);
-
         IEnumerable<Product> GetByCategoryId(Guid categoryId);
 
         IEnumerable<Product> GetRange(int startIndex, int offset);

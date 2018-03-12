@@ -38,7 +38,7 @@ namespace RomansShop.WebApi.Controllers
 
         // api/categories/{id}
         [HttpGet("{id}")]
-        public IActionResult Get(Guid id)
+        public IActionResult GetById(Guid id)
         {
             ValidationResponse<Category> validationResponse = _categoryService.GetById(id);
 

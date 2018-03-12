@@ -16,7 +16,7 @@ using Xunit;
 
 namespace RomansShop.Tests.Web
 {
-    public class ProductsControllerTests : UnitTestBase
+    public class ProductsControllerTest : UnitTestBase
     {
         private Mock<IProductService> _mockService;
         private Mock<IProductRepository> _mockRepository;
@@ -27,7 +27,15 @@ namespace RomansShop.Tests.Web
         private static readonly Guid _productId = new Guid("00000000-0000-0000-0000-000000000001");
         private static readonly string _productName = "TestProduct";
 
-        public ProductsControllerTests()
+        const string GetMethodName = nameof(ProductsController.Get) + ". ";
+        const string GetByIdMethodName = nameof(ProductsController.GetById) + ". ";
+        const string GetByCategoryIdMethodName = nameof(ProductsController.GetByCategoryId) + ". ";
+        const string GetRangeMethodName = nameof(ProductsController.GetRange) + ". ";
+        const string PostMethodName = nameof(ProductsController.Post) + ". ";
+        const string PutMethodName = nameof(ProductsController.Put) + ". ";
+        const string DeleteMethodName = nameof(ProductsController.Delete) + ". ";
+
+        public ProductsControllerTest()
         {
             _mockService = MockRepository.Create<IProductService>();
             _mockRepository = MockRepository.Create<IProductRepository>();
@@ -36,7 +44,7 @@ namespace RomansShop.Tests.Web
             _controller = new ProductsController(_mockService.Object, _mockRepository.Object, _mockMapper.Object);
         }
 
-        [Fact(DisplayName = "Get Product")]
+        [Fact(DisplayName = GetMethodName)]
         public void GetTest()
         {
             IEnumerable<Product> products = new List<Product> { GetProduct(), GetProduct() };
@@ -61,7 +69,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "GetById Product")]
+        [Fact(DisplayName = GetByIdMethodName)]
         public void GetByIdTest()
         {
             ValidationResponse<Product> validationResponse = GetOkValidationResponse();
@@ -75,7 +83,7 @@ namespace RomansShop.Tests.Web
                 .Setup(mapper => mapper.Map<Product, ProductResponseModel>(validationResponse.ResponseData))
                 .Returns(productResponse);
 
-            IActionResult actionResult = _controller.Get(_productId);
+            IActionResult actionResult = _controller.GetById(_productId);
 
             OkObjectResult actual = (OkObjectResult)actionResult;
             Guid actualId = ((ProductResponseModel)actual.Value).Id;
@@ -84,7 +92,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "GetById Product not found")]
+        [Fact(DisplayName = GetByIdMethodName + "Product not found")]
         public void GetByIdProductNotFoundTest()
         {
             ValidationResponse<Product> validationResponse = GetNotFoundValidationResponse();
@@ -93,13 +101,13 @@ namespace RomansShop.Tests.Web
                 .Setup(serv => serv.GetById(_productId))
                 .Returns(validationResponse);
 
-            IActionResult actionResult = _controller.Get(_productId);
+            IActionResult actionResult = _controller.GetById(_productId);
 
             NotFoundObjectResult actual = (NotFoundObjectResult)actionResult;
             Assert.Equal(StatusCodes.Status404NotFound, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "GetRange Products")]
+        [Fact(DisplayName = GetRangeMethodName)]
         public void GetRangeTest()
         {
             IEnumerable<Product> expectedProducts = new List<Product> { GetProduct(), GetProduct() };
@@ -130,7 +138,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "GetRange Products Incorrect indexes")]
+        [Fact(DisplayName = GetRangeMethodName + "Products Incorrect indexes")]
         public void GetRangeIncorrectIndexesTest()
         {
             int startIndex = -1;
@@ -145,7 +153,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status400BadRequest, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "Post Product")]
+        [Fact(DisplayName = PostMethodName)]
         public void PostTest()
         {
             Product product = GetProduct();
@@ -173,7 +181,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status201Created, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "Put Product")]
+        [Fact(DisplayName = PutMethodName)]
         public void PutTest()
         {
             Product product = GetProduct();
@@ -202,7 +210,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "Put Product not found")]
+        [Fact(DisplayName = PutMethodName + "Product not found")]
         public void PutProductNotFoundTest()
         {
             Product product = GetProduct();
@@ -223,7 +231,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status404NotFound, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "Delete Product")]
+        [Fact(DisplayName = DeleteMethodName)]
         public void DeleteTest()
         {
             ValidationResponse<Product> validationResponse = GetOkValidationResponse();
@@ -238,7 +246,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "Delete Product not found")]
+        [Fact(DisplayName = DeleteMethodName + "Product not found")]
         public void DeleteProductNotFoundTest()
         {
             ValidationResponse<Product> validationResponse = GetNotFoundValidationResponse();
@@ -253,7 +261,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status404NotFound, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "GetByCategoryId Products")]
+        [Fact(DisplayName = GetByCategoryIdMethodName)]
         public void GetByCategoryIdTest()
         {
             IEnumerable<Product> products = new List<Product> { GetProduct(), GetProduct() };
