@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Moq;
-using ILoggerFactory = RomansShop.Core.Extensibility.ILoggerFactory;
-using ILogger = RomansShop.Core.Extensibility.ILogger;
+using ILoggerFactory = RomansShop.Core.Extensibility.Logger.ILoggerFactory;
+using ILogger = RomansShop.Core.Extensibility.Logger.ILogger;
 using RomansShop.Core.Validation;
 using RomansShop.Domain.Entities;
 using RomansShop.Domain.Extensibility.Repositories;
@@ -13,16 +13,20 @@ using Xunit;
 
 namespace RomansShop.Tests.Services
 {
-    public class ProductServiceTests : UnitTestBase
+    public class ProductServiceTest : UnitTestBase
     {
         private Mock<IProductRepository> _mockRepository;
         private Mock<ILogger> _mockLogger;
-
         private ProductService _productService;
 
         private static readonly Guid _productId = new Guid("00000000-0000-0000-0000-000000000001");
 
-        public ProductServiceTests()
+        const string GetRangeMethodName = nameof(ProductService.GetRange) + ". ";
+        const string GetByIdMethodName = nameof(ProductService.GetById) + ". ";
+        const string UpdateMethodName = nameof(ProductService.Update) + ". ";
+        const string DeleteMethodName = nameof(ProductService.Delete) + ". ";
+
+        public ProductServiceTest()
         {
             _mockRepository = MockRepository.Create<IProductRepository>();
             _mockLogger = MockRepository.Create<ILogger>();
@@ -36,7 +40,7 @@ namespace RomansShop.Tests.Services
             _productService = new ProductService(_mockRepository.Object, mockLoggerFactory.Object);
         }
 
-        [Fact(DisplayName = "GetRange Products")]
+        [Fact(DisplayName = GetRangeMethodName)]
         public void GetRangeTest()
         {
             IEnumerable<Product> products = new List<Product> { GetProduct(), GetProduct() };
@@ -54,7 +58,7 @@ namespace RomansShop.Tests.Services
             Assert.Equal(products.Count(), actualCount);
         }
 
-        [Fact(DisplayName = "GetById Product")]
+        [Fact(DisplayName = GetByIdMethodName)]
         public void GetByIdTest()
         {
             Product product = GetProduct();
@@ -70,12 +74,12 @@ namespace RomansShop.Tests.Services
             Assert.Equal(product.Id, actualId);
         }
 
-        [Fact(DisplayName = "GetById Product not found")]
+        [Fact(DisplayName = GetByIdMethodName + "Product not found")]
         public void GetByIdProductNotFound()
         {
             string expectedMessage = $"Product with id {_productId} not found.";
 
-            _mockLogger.Setup(logger => logger.Info(expectedMessage));
+            _mockLogger.Setup(logger => logger.LogWarning(expectedMessage));
 
             _mockRepository
                 .Setup(repo => repo.GetById(_productId))
@@ -87,7 +91,7 @@ namespace RomansShop.Tests.Services
             Assert.Equal(ValidationStatus.NotFound, actual.Status);
         }
 
-        [Fact(DisplayName = "Update Product")]
+        [Fact(DisplayName = UpdateMethodName)]
         public void UpdateTest()
         {
             Product product = GetProduct(); 
@@ -107,13 +111,13 @@ namespace RomansShop.Tests.Services
             Assert.Equal(product.Name, actualName);
         }
 
-        [Fact(DisplayName = "Update Product not found")]
+        [Fact(DisplayName = UpdateMethodName + "Product not found")]
         public void UpdateProductNotFound()
         {
             Product product = GetProduct();
             string expectedMessage = $"Product with id {_productId} not found.";
 
-            _mockLogger.Setup(logger => logger.Info(expectedMessage));
+            _mockLogger.Setup(logger => logger.LogWarning(expectedMessage));
 
             _mockRepository
                 .Setup(repo => repo.GetById(_productId))
@@ -125,7 +129,7 @@ namespace RomansShop.Tests.Services
             Assert.Equal(ValidationStatus.NotFound, actual.Status);
         }
 
-        [Fact(DisplayName = "Delete Product")]
+        [Fact(DisplayName = DeleteMethodName + "Product")]
         public void DeleteTest()
         {
             Product product = GetProduct();
@@ -143,12 +147,12 @@ namespace RomansShop.Tests.Services
             Assert.Equal(product.Id, actualId);
         }
 
-        [Fact(DisplayName = "Delete Product not found")]
+        [Fact(DisplayName = DeleteMethodName + "Product not found")]
         public void DeleteProductNotFound()
         {
             string expectedMessage = $"Product with id {_productId} not found.";
 
-            _mockLogger.Setup(logger => logger.Info(expectedMessage));
+            _mockLogger.Setup(logger => logger.LogWarning(expectedMessage));
 
             _mockRepository
                 .Setup(repo => repo.GetById(_productId))

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Moq;
-using ILoggerFactory = RomansShop.Core.Extensibility.ILoggerFactory;
-using ILogger = RomansShop.Core.Extensibility.ILogger;
+using ILoggerFactory = RomansShop.Core.Extensibility.Logger.ILoggerFactory;
+using ILogger = RomansShop.Core.Extensibility.Logger.ILogger;
 using RomansShop.Core.Validation;
 using RomansShop.Domain.Entities;
 using RomansShop.Domain.Extensibility.Repositories;
@@ -12,17 +12,21 @@ using Xunit;
 
 namespace RomansShop.Tests.Services
 {
-    public class CategoryServiceTests : UnitTestBase
+    public class CategoryServiceTest : UnitTestBase
     {
         private Mock<ICategoryRepository> _mockRepository;
         private Mock<IProductRepository> _mockProductRepository;
         private Mock<ILogger> _mockLogger;
-
         private CategoryService _categoryService;
 
         private static readonly Guid _categoryId = new Guid("00000000-0000-0000-0000-000000000001");
 
-        public CategoryServiceTests()
+        const string GetByIdMethodName = nameof(CategoryService.GetById) + ". ";
+        const string AddMethodName = nameof(CategoryService.Add) + ". ";
+        const string UpdateMethodName = nameof(CategoryService.Update) + ". ";
+        const string DeleteMethodName = nameof(CategoryService.Delete) + ". ";
+
+        public CategoryServiceTest()
         {
             _mockRepository = MockRepository.Create<ICategoryRepository>();
             _mockProductRepository = MockRepository.Create<IProductRepository>();
@@ -37,7 +41,7 @@ namespace RomansShop.Tests.Services
             _categoryService = new CategoryService(_mockRepository.Object, _mockProductRepository.Object, mockLoggerFactory.Object);
         }
 
-        [Fact(DisplayName = "GetById Category")]
+        [Fact(DisplayName = GetByIdMethodName)]
         public void GetByIdTest()
         {
             Category category = GetCategory();
@@ -53,12 +57,12 @@ namespace RomansShop.Tests.Services
             Assert.Equal(_categoryId, actualId);
         }
 
-        [Fact(DisplayName = "GetById Category not found")]
+        [Fact(DisplayName = GetByIdMethodName + "Category not found")]
         public void GetByIdCategoryNotFoundTest()
         {
             string expectedMessage = $"Category with id {_categoryId} not found.";
 
-            _mockLogger.Setup(logger => logger.Info(expectedMessage));
+            _mockLogger.Setup(logger => logger.LogWarning(expectedMessage));
 
             _mockRepository
                 .Setup(repo => repo.GetById(_categoryId))
@@ -70,7 +74,7 @@ namespace RomansShop.Tests.Services
             Assert.Equal(ValidationStatus.NotFound, actual.Status);
         }
 
-        [Fact(DisplayName = "Add Category")]
+        [Fact(DisplayName = AddMethodName)]
         public void AddTest()
         {
             Category category = GetCategory();
@@ -90,7 +94,7 @@ namespace RomansShop.Tests.Services
             Assert.Equal(category.Name, actualName);
         }
 
-        [Fact(DisplayName = "Add Duplicate category")]
+        [Fact(DisplayName = AddMethodName + "Duplicate category")]
         public void AddDuplicateCategoryTest()
         {
             Category category = GetCategory();
@@ -98,7 +102,7 @@ namespace RomansShop.Tests.Services
 
             string expectedMessage = $"Category name \"{category.Name}\" already exist.";
 
-            _mockLogger.Setup(logger => logger.Info(expectedMessage));
+            _mockLogger.Setup(logger => logger.LogWarning(expectedMessage));
 
             _mockRepository
                 .Setup(repo => repo.GetByName(category.Name))
@@ -110,7 +114,7 @@ namespace RomansShop.Tests.Services
             Assert.Equal(ValidationStatus.Failed, actual.Status);
         }
 
-        [Fact(DisplayName = "Update Category")]
+        [Fact(DisplayName = UpdateMethodName)]
         public void UpdateTest()
         {
             Category category = GetCategory();
@@ -134,14 +138,14 @@ namespace RomansShop.Tests.Services
             Assert.Equal(category.Name, actualName);
         }
 
-        [Fact(DisplayName = "Update Category not found")]
+        [Fact(DisplayName = UpdateMethodName + "Category not found")]
         public void UpdateCategoryNotFoundTest()
         {
             Category category = GetCategory();
 
             string expectedMessage = $"Category with id {_categoryId} not found.";
 
-            _mockLogger.Setup(logger => logger.Info(expectedMessage));
+            _mockLogger.Setup(logger => logger.LogWarning(expectedMessage));
 
             _mockRepository
                 .Setup(repo => repo.GetById(_categoryId))
@@ -153,7 +157,7 @@ namespace RomansShop.Tests.Services
             Assert.Equal(ValidationStatus.NotFound, actual.Status);
         }
 
-        [Fact(DisplayName = "Update Duplicate category")]
+        [Fact(DisplayName = UpdateMethodName + "Duplicate category")]
         public void UpdateDuplicateCategoryTest()
         {
             Category category = GetCategory();
@@ -161,7 +165,7 @@ namespace RomansShop.Tests.Services
 
             string expectedMessage = $"Category name \"{category.Name}\" already exist.";
 
-            _mockLogger.Setup(logger => logger.Info(expectedMessage));
+            _mockLogger.Setup(logger => logger.LogWarning(expectedMessage));
 
             _mockRepository
                 .Setup(repo => repo.GetById(_categoryId))
@@ -177,7 +181,7 @@ namespace RomansShop.Tests.Services
             Assert.Equal(ValidationStatus.Failed, actual.Status);
         }
 
-        [Fact(DisplayName = "Delete Category")]
+        [Fact(DisplayName = DeleteMethodName)]
         public void DeleteTest()
         {
             Category category = GetCategory();
@@ -200,12 +204,12 @@ namespace RomansShop.Tests.Services
             Assert.Equal(ValidationStatus.Ok, actual.Status);
         }
 
-        [Fact(DisplayName = "Delete Category not found")]
+        [Fact(DisplayName = DeleteMethodName + "Category not found")]
         public void DeleteCategoryNotFoundTest()
         {
             string expectedMessage = $"Category with id {_categoryId} not found.";
 
-            _mockLogger.Setup(logger => logger.Info(expectedMessage));
+            _mockLogger.Setup(logger => logger.LogWarning(expectedMessage));
 
             _mockRepository
                 .Setup(repo => repo.GetById(_categoryId))
@@ -217,7 +221,7 @@ namespace RomansShop.Tests.Services
             Assert.Equal(ValidationStatus.NotFound, actual.Status);
         }
 
-        [Fact(DisplayName = "Delete Non-empty category")]
+        [Fact(DisplayName = DeleteMethodName + "Non-empty category")]
         public void DeleteNonEmptyCategoryTest()
         {
             Category category = GetCategory();
@@ -225,7 +229,7 @@ namespace RomansShop.Tests.Services
 
             string expectedMessage = $"Category with id {_categoryId} is not empty.";
 
-            _mockLogger.Setup(logger => logger.Info(expectedMessage));
+            _mockLogger.Setup(logger => logger.LogWarning(expectedMessage));
 
             _mockRepository
                 .Setup(repo => repo.GetById(_categoryId))

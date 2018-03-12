@@ -56,7 +56,7 @@ namespace RomansShop.WebApi.Controllers
 
         // api/products/{id}
         [HttpGet("{id}")]
-        public IActionResult Get(Guid id)
+        public IActionResult GetById(Guid id)
         {
             ValidationResponse<Product> validationResponse = _productService.GetById(id);
 

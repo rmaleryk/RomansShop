@@ -16,7 +16,7 @@ using Xunit;
 
 namespace RomansShop.Tests.Web
 {
-    public class CategoriesControllerTests : UnitTestBase
+    public class CategoriesControllerTest : UnitTestBase
     {
         private Mock<ICategoryService> _mockService;
         private Mock<ICategoryRepository> _mockRepository;
@@ -26,7 +26,13 @@ namespace RomansShop.Tests.Web
         private static readonly string _categoryName = "TestCategory";
         private static readonly Guid _categoryId = new Guid("00000000-0000-0000-0000-000000000002");
 
-        public CategoriesControllerTests()
+        const string GetMethodName = nameof(CategoriesController.Get) + ". ";
+        const string GetByIdMethodName = nameof(CategoriesController.GetById) + ". ";
+        const string PostMethodName = nameof(CategoriesController.Post) + ". ";
+        const string PutMethodName = nameof(CategoriesController.Put) + ". ";
+        const string DeleteMethodName = nameof(CategoriesController.Delete) + ". ";
+
+        public CategoriesControllerTest()
         {
             _mockService = MockRepository.Create<ICategoryService>();
             _mockRepository = MockRepository.Create<ICategoryRepository>();
@@ -35,7 +41,7 @@ namespace RomansShop.Tests.Web
             _controller = new CategoriesController(_mockService.Object, _mockRepository.Object, _mockMapper.Object);
         }
 
-        [Fact(DisplayName = "Get Categories")]
+        [Fact(DisplayName = GetMethodName)]
         public void GetTest()
         {
             IEnumerable<Category> categories = new List<Category> { GetCategory(), GetCategory() };
@@ -60,7 +66,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "GetById Category")]
+        [Fact(DisplayName = GetByIdMethodName)]
         public void GetByIdTest()
         {
             ValidationResponse<Category> validationResponse = GetOkValidationResponse();
@@ -74,7 +80,7 @@ namespace RomansShop.Tests.Web
                 .Setup(mapper => mapper.Map<Category, CategoryResponseModel>(validationResponse.ResponseData))
                 .Returns(categoryResponse);
 
-            IActionResult actionResult = _controller.Get(_categoryId);
+            IActionResult actionResult = _controller.GetById(_categoryId);
 
             OkObjectResult actual = (OkObjectResult)actionResult;
             Guid actualId = ((CategoryResponseModel)actual.Value).Id;
@@ -83,7 +89,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "GetById Category not found")]
+        [Fact(DisplayName = GetByIdMethodName + "Category not found")]
         public void GetByIdCategoryNotFoundTest()
         {
             ValidationResponse<Category> validationResponse = GetNotFoundValidationResponse();
@@ -92,13 +98,13 @@ namespace RomansShop.Tests.Web
                 .Setup(serv => serv.GetById(_categoryId))
                 .Returns(validationResponse);
 
-            IActionResult actionResult = _controller.Get(_categoryId);
+            IActionResult actionResult = _controller.GetById(_categoryId);
 
             NotFoundObjectResult actual = (NotFoundObjectResult)actionResult;
             Assert.Equal(StatusCodes.Status404NotFound, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "Post Category")]
+        [Fact(DisplayName = PostMethodName)]
         public void PostTest()
         {
             Category category = GetCategory();
@@ -127,7 +133,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status201Created, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "Post Category already exist")]
+        [Fact(DisplayName = PostMethodName + "Category already exist")]
         public void PostCategoryAlreadyExistTest()
         {
             Category category = GetCategory();
@@ -148,7 +154,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status400BadRequest, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "Put Category")]
+        [Fact(DisplayName = PutMethodName)]
         public void PutTest()
         {
             Category category = GetCategory();
@@ -177,7 +183,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "Put Category not found")]
+        [Fact(DisplayName = PutMethodName + "Category not found")]
         public void PutCategoryNotFoundTest()
         {
             Category category = GetCategory();
@@ -198,7 +204,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status404NotFound, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "Put Category already exist")]
+        [Fact(DisplayName = PutMethodName + "Category already exist")]
         public void PutCategoryAlreadyExistTest()
         {
             Category category = GetCategory();
@@ -219,7 +225,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status400BadRequest, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "Delete Category")]
+        [Fact(DisplayName = DeleteMethodName)]
         public void DeleteTest()
         {
             ValidationResponse<Category> validationResponse = GetOkValidationResponse();
@@ -234,7 +240,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "Delete Category not found")]
+        [Fact(DisplayName = DeleteMethodName + "Category not found")]
         public void DeleteCategoryNotFoundTest()
         {
             ValidationResponse<Category> validationResponse = GetNotFoundValidationResponse();
@@ -249,7 +255,7 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status404NotFound, actual.StatusCode);
         }
 
-        [Fact(DisplayName = "Delete Non empty category")]
+        [Fact(DisplayName = DeleteMethodName + "Non empty category")]
         public void DeleteNonEmptyCategoryTest()
         {
             ValidationResponse<Category> validationResponse = GetFailedValidationResponse();

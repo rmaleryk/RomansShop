@@ -12,7 +12,6 @@ namespace RomansShop.WebApi.ClientModels.Product
 
         public decimal Price { get; set; }
 
-        public Guid CategoryId { get; set; }
-
+        public Guid? CategoryId { get; set; }
     }
 }

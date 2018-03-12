@@ -1,7 +1,6 @@
 ﻿using System;
-using RomansShop.Core.Logger;
 
-namespace RomansShop.Core.Extensibility
+namespace RomansShop.Core.Extensibility.Logger
 {
     public interface ILoggerFactory
     {

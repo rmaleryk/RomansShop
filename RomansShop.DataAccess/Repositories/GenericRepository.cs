@@ -7,7 +7,7 @@ using RomansShop.Domain.Extensibility;
 
 namespace RomansShop.DataAccess.Repositories
 {
-    public class GenericRepository<TEntity> where TEntity : class, IEntity
+    internal abstract class GenericRepository<TEntity> where TEntity : class, IEntity
     {
         internal ShopDbContext context;
         internal DbSet<TEntity> dbSet;

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using NLog;
+using NLog.Config;
 using RomansShop.Core;
 using RomansShop.DataAccess;
 using RomansShop.DataAccess.Database;
@@ -68,7 +69,7 @@ namespace RomansShop.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-            LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("nlog.config");
+            LogManager.Configuration = new XmlLoggingConfiguration("nlog.config");
 
             loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();

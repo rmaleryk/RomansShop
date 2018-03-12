@@ -6,7 +6,7 @@ using RomansShop.Domain.Extensibility.Repositories;
 
 namespace RomansShop.DataAccess.Repositories
 {
-    public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
+    internal class CategoryRepository : GenericRepository<Category>, ICategoryRepository
     {
         private readonly ShopDbContext _shopDbContext;
 

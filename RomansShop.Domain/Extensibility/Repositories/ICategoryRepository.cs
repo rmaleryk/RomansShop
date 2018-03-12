@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using RomansShop.Domain.Entities;
+﻿using RomansShop.Domain.Entities;
 
 namespace RomansShop.Domain.Extensibility.Repositories
 {
-    public interface ICategoryRepository
+    public interface ICategoryRepository : IRepository<Category>
     {
-        Category Add(Category category);
-
-        IEnumerable<Category> GetAll();
-
-        Category GetById(Guid categoryId);
-
         Category GetByName(string categoryName);
-
-        Category Update(Category category);
-
-        void Delete(Category category);
     }
 }

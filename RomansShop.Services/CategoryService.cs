@@ -5,8 +5,8 @@ using RomansShop.Core.Validation;
 using RomansShop.Domain.Entities;
 using RomansShop.Domain.Extensibility.Repositories;
 using RomansShop.Services.Extensibility;
-using ILoggerFactory = RomansShop.Core.Extensibility.ILoggerFactory;
-using ILogger = RomansShop.Core.Extensibility.ILogger;
+using ILoggerFactory = RomansShop.Core.Extensibility.Logger.ILoggerFactory;
+using ILogger = RomansShop.Core.Extensibility.Logger.ILogger;
 
 namespace RomansShop.Services
 {
@@ -33,7 +33,7 @@ namespace RomansShop.Services
             if (category == null)
             {
                 string message = $"Category with id {id} not found.";
-                _logger.Info(message);
+                _logger.LogWarning(message);
 
                 return new ValidationResponse<Category>(ValidationStatus.NotFound, message);
             }
@@ -43,19 +43,17 @@ namespace RomansShop.Services
 
         public ValidationResponse<Category> Add(Category category)
         {
-            Category categoryTmp = _categoryRepository.GetByName(category.Name);
-
-            if (categoryTmp != null)
+            if (!IsUniqueName(category.Name))
             {
                 string message = $"Category name \"{category.Name}\" already exist.";
-                _logger.Info(message);
+                _logger.LogWarning(message);
 
                 return new ValidationResponse<Category>(ValidationStatus.Failed, message);
             }
 
-            category = _categoryRepository.Add(category);
+            Category addedCategory = _categoryRepository.Add(category);
 
-            return new ValidationResponse<Category>(category, ValidationStatus.Ok);
+            return new ValidationResponse<Category>(addedCategory, ValidationStatus.Ok);
         }
 
         public ValidationResponse<Category> Update(Category category)
@@ -65,7 +63,7 @@ namespace RomansShop.Services
             if (categoryTmp == null)
             {
                 string message = $"Category with id {category.Id} not found.";
-                _logger.Info(message);
+                _logger.LogWarning(message);
 
                 return new ValidationResponse<Category>(ValidationStatus.NotFound, message);
             }
@@ -75,14 +73,14 @@ namespace RomansShop.Services
             if (categoryTmp != null && categoryTmp.Id != category.Id)
             {
                 string message = $"Category name \"{category.Name}\" already exist.";
-                _logger.Info(message);
+                _logger.LogWarning(message);
 
                 return new ValidationResponse<Category>(ValidationStatus.Failed, message);
             }
 
-            category = _categoryRepository.Update(category);
+            Category updatedCategory = _categoryRepository.Update(category);
 
-            return new ValidationResponse<Category>(category, ValidationStatus.Ok);
+            return new ValidationResponse<Category>(updatedCategory, ValidationStatus.Ok);
         }
 
         public ValidationResponse<Category> Delete(Guid id)
@@ -92,7 +90,7 @@ namespace RomansShop.Services
             if (category == null)
             {
                 string message = $"Category with id {id} not found.";
-                _logger.Info(message);
+                _logger.LogWarning(message);
 
                 return new ValidationResponse<Category>(ValidationStatus.NotFound, message);
             }
@@ -102,15 +100,27 @@ namespace RomansShop.Services
             if (products.Any())
             {
                 string message = $"Category with id {id} is not empty.";
-                _logger.Info(message);
+                _logger.LogWarning(message);
 
                 return new ValidationResponse<Category>(ValidationStatus.Failed, message);
             }
 
             _categoryRepository.Delete(category);
 
-            return new ValidationResponse<Category>(category, ValidationStatus.Ok, 
+            return new ValidationResponse<Category>(category, ValidationStatus.Ok,
                 $"Category with id {id} was deleted.");
+        }
+
+        private bool IsUniqueName(string name)
+        {
+            Category category = _categoryRepository.GetByName(name);
+
+            if (category == null)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

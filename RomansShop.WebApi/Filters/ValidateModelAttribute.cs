@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ILoggerFactory = RomansShop.Core.Extensibility.ILoggerFactory;
-using LoggerFactory = RomansShop.Core.Logger.LoggerFactory;
-using ILogger = RomansShop.Core.Extensibility.ILogger;
+using ILoggerFactory = RomansShop.Core.Extensibility.Logger.ILoggerFactory;
+using ILogger = RomansShop.Core.Extensibility.Logger.ILogger;
 using Newtonsoft.Json;
 
 namespace RomansShop.WebApi.Filters
@@ -23,7 +22,7 @@ namespace RomansShop.WebApi.Filters
             if (!context.ModelState.IsValid)
             {
                 context.Result = new BadRequestObjectResult(context.ModelState);
-                _logger.Info("Model is invalid: " + JsonConvert.SerializeObject(context.Result));
+                _logger.LogWarning("Model is invalid: " + JsonConvert.SerializeObject(context.Result));
             }
         }
     }

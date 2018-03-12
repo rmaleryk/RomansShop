@@ -8,7 +8,7 @@ using RomansShop.Domain.Extensibility.Repositories;
 
 namespace RomansShop.DataAccess.Repositories
 {
-    public class ProductRepository : GenericRepository<Product>, IProductRepository
+    internal class ProductRepository : GenericRepository<Product>, IProductRepository
     {
         private readonly ShopDbContext _shopDbContext;
 

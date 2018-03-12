@@ -17,6 +17,6 @@ namespace RomansShop.WebApi.ClientModels.Product
 
         public long? Quantity { get; set; }
 
-        public Guid CategoryId { get; set; }
+        public Guid? CategoryId { get; set; }
     }
 }
