@@ -10,24 +10,31 @@ namespace RomansShop.DataAccess.Repositories
 {
     internal class ProductRepository : GenericRepository<Product>, IProductRepository
     {
-        private readonly ShopDbContext _shopDbContext;
-
         public ProductRepository(ShopDbContext shopDbContext) : base(shopDbContext)
         {
-            _shopDbContext = shopDbContext;
+        }
+
+        public override IEnumerable<Product> GetAll()
+        {
+            return dbSet
+                .AsNoTracking()
+                .OrderBy(prod => prod.Name)
+                .ToList();
         }
 
         public IEnumerable<Product> GetByCategoryId(Guid categoryId)
         {
-            return _shopDbContext.Products
+            return dbSet
                 .AsNoTracking()
+                .OrderBy(prod => prod.Name)
                 .Where(prod => prod.CategoryId == categoryId)
                 .ToList();
         }
 
         public IEnumerable<Product> GetRange(int startIndex, int offset)
         {
-            return _shopDbContext.Products
+            return dbSet
+                .AsNoTracking()
                 .OrderBy(prod => prod.Name)
                 .Skip(startIndex - 1)
                 .Take(offset)

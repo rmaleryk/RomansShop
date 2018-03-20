@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using RomansShop.DataAccess.Database;
 using RomansShop.Domain.Entities;
@@ -8,16 +9,23 @@ namespace RomansShop.DataAccess.Repositories
 {
     internal class CategoryRepository : GenericRepository<Category>, ICategoryRepository
     {
-        private readonly ShopDbContext _shopDbContext;
-
         public CategoryRepository(ShopDbContext shopDbContext) : base(shopDbContext)
         {
-            _shopDbContext = shopDbContext;
+        }
+
+        public override IEnumerable<Category> GetAll()
+        {
+            return dbSet
+                .AsNoTracking()
+                .OrderBy(cat => cat.Name)
+                .ToList();
         }
 
         public Category GetByName(string categoryName)
         {
-            return _shopDbContext.Categories.AsNoTracking().FirstOrDefault(cat => cat.Name == categoryName);
+            return dbSet
+                .AsNoTracking()
+                .FirstOrDefault(cat => cat.Name == categoryName);
         }
     }
 }

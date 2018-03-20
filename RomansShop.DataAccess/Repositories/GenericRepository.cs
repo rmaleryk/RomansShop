@@ -9,8 +9,8 @@ namespace RomansShop.DataAccess.Repositories
 {
     internal abstract class GenericRepository<TEntity> where TEntity : class, IEntity
     {
-        internal ShopDbContext context;
-        internal DbSet<TEntity> dbSet;
+        protected ShopDbContext context;
+        protected DbSet<TEntity> dbSet;
 
         public GenericRepository(ShopDbContext context)
         {
@@ -28,12 +28,16 @@ namespace RomansShop.DataAccess.Repositories
 
         public virtual IEnumerable<TEntity> GetAll()
         {
-            return dbSet.ToList();
+            return dbSet
+                .AsNoTracking()
+                .ToList();
         }
 
         public virtual TEntity GetById(Guid id)
         {
-            return dbSet.AsNoTracking().FirstOrDefault(entity => entity.Id == id);
+            return dbSet
+                .AsNoTracking()
+                .FirstOrDefault(entity => entity.Id == id);
         }
 
         public virtual TEntity Update(TEntity entity)
