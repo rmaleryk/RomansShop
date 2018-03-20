@@ -9,6 +9,7 @@ namespace RomansShop.Services
         {
             builder.RegisterType<ProductService>().As<IProductService>();
             builder.RegisterType<CategoryService>().As<ICategoryService>();
+            builder.RegisterType<UserService>().As<IUserService>();
         }
     }
 }
