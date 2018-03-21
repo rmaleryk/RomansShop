@@ -62,9 +62,9 @@ namespace RomansShop.Services
 
         public ValidationResponse<User> Update(User user)
         {
-            User userTmp = _userRepository.GetById(user.Id);
+            User userExistCheck = _userRepository.GetById(user.Id);
 
-            if (userTmp == null)
+            if (userExistCheck == null)
             {
                 string message = $"User with id {user.Id} not found.";
                 _logger.LogWarning(message);
@@ -72,9 +72,9 @@ namespace RomansShop.Services
                 return new ValidationResponse<User>(ValidationStatus.NotFound, message);
             }
 
-            userTmp = _userRepository.GetByEmail(user.Email);
+            User userEmailCheck = _userRepository.GetByEmail(user.Email);
 
-            if (userTmp != null && userTmp.Id != user.Id)
+            if (userEmailCheck != null && userEmailCheck.Id != user.Id)
             {
                 string message = $"User with email \"{user.Email}\" already exist.";
                 _logger.LogWarning(message);
@@ -82,7 +82,7 @@ namespace RomansShop.Services
                 return new ValidationResponse<User>(ValidationStatus.Failed, message);
             }
 
-            user.Password = userTmp.Password;
+            user.Password = userExistCheck.Password;
 
             User updatedUser = _userRepository.Update(user);
 
@@ -104,6 +104,29 @@ namespace RomansShop.Services
             _userRepository.Delete(user);
 
             return new ValidationResponse<User>(user, ValidationStatus.Ok, $"User with id {id} was deleted.");
+        }
+
+        public ValidationResponse<User> Authenticate(string email, string password)
+        {
+            User user = _userRepository.GetByEmail(email);
+
+            if (user == null)
+            {
+                string message = $"User with email {email} does not exist.";
+                _logger.LogWarning(message);
+
+                return new ValidationResponse<User>(ValidationStatus.NotFound, message);
+            }
+
+            if (user.Password != password)
+            {
+                string message = $"Wrong password for email {email}.";
+                _logger.LogWarning(message);
+
+                return new ValidationResponse<User>(ValidationStatus.Failed, message);
+            }
+
+            return new ValidationResponse<User>(user, ValidationStatus.Ok);
         }
 
         private bool IsUniqueEmail(string email)

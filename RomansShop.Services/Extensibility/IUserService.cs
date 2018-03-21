@@ -16,5 +16,7 @@ namespace RomansShop.Services.Extensibility
         ValidationResponse<User> Update(User category);
 
         ValidationResponse<User> Delete(Guid id);
+
+        ValidationResponse<User> Authenticate(string email, string password);
     }
 }

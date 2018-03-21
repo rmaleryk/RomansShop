@@ -98,9 +98,9 @@ namespace RomansShop.WebApi.Controllers
                 return BadRequest(validationResponse.Message);
             }
 
-            UserResponseModel categoryResponse = _mapper.Map<User, UserResponseModel>(validationResponse.ResponseData);
+            UserResponseModel userResponse = _mapper.Map<User, UserResponseModel>(validationResponse.ResponseData);
 
-            return Ok(categoryResponse);
+            return Ok(userResponse);
         }
 
         // api/users/{id}
@@ -121,21 +121,22 @@ namespace RomansShop.WebApi.Controllers
         [HttpPost("/api/authenticate")]
         public IActionResult Authenticate([FromBody]AuthenticateModel authenticateModel)
         {
-            User user = _userRepository.GetByEmail(authenticateModel.Email);
+            ValidationResponse<User> validationResponse = 
+                _userService.Authenticate(authenticateModel.Email, authenticateModel.Password);
 
-            if (user == null)
+            if (validationResponse.Status == ValidationStatus.NotFound)
             {
-                return BadRequest($"User with email {authenticateModel.Email} does not exist.");
+                return NotFound(validationResponse.Message);
             }
 
-            if(user.Password != authenticateModel.Password)
+            if(validationResponse.Status == ValidationStatus.Failed)
             {
-                return BadRequest("Wrong password.");
+                return BadRequest(validationResponse.Message);
             }
 
-            UserResponseModel userResponse = _mapper.Map<User, UserResponseModel>(user);
+            UserResponseModel userResponse = _mapper.Map<User, UserResponseModel>(validationResponse.ResponseData);
 
-            return CreatedAtAction("GetById", new { id = userResponse.Id }, userResponse);
+            return Ok(userResponse);
         }
     }
 }
