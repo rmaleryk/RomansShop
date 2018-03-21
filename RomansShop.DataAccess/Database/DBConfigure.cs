@@ -52,5 +52,33 @@ namespace RomansShop.DataAccess.Database
             modelBuilder.Entity<Category>()
                 .HasKey(category => category.Id);
         }
+
+        public static void ConfigureUser(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().ToTable("users");
+
+            modelBuilder.Entity<User>()
+                .Property(user => user.Id)
+                .HasColumnName("id");
+
+            modelBuilder.Entity<User>()
+                .Property(user => user.FullName)
+                .HasColumnName("fullName");
+
+            modelBuilder.Entity<User>()
+                .Property(user => user.Email)
+                .HasColumnName("email");
+
+            modelBuilder.Entity<User>()
+                .Property(user => user.Password)
+                .HasColumnName("password");
+
+            modelBuilder.Entity<User>()
+                .Property(user => user.Rights)
+                .HasColumnName("rights");
+
+            modelBuilder.Entity<User>()
+                .HasKey(user => user.Id);
+        }
     }
 }
