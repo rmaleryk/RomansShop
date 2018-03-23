@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using RomansShop.Domain.Extensibility;
 
 namespace RomansShop.Domain.Entities
@@ -16,5 +17,7 @@ namespace RomansShop.Domain.Entities
         public long Quantity { get; set; }
 
         public Guid? CategoryId { get; set; }
+
+        public IList<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
     }
 }
