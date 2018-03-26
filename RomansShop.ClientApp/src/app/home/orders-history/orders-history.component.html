@@ -16,7 +16,7 @@
     </thead>
     <tbody>
         <tr *ngFor="let order of orders">
-            <td class="text-sm" title="{{order.id}}">{{order.id.substring(0,5)}}...</td>
+            <td class="text-sm"><p [guid]="order.id"></p></td>
             <td>
                 <ol class="pl-0">
                     <li *ngFor="let product of order.products">{{product.name}}</li>

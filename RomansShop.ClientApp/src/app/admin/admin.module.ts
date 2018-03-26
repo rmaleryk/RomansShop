@@ -19,6 +19,7 @@ import { AlertService } from '../api/alert.service';
 import { ProductService } from '../api/product.service';
 import { UserService } from '../api/user.service';
 import { AdminRoutes } from './admin.routes';
+import { GuidDirective } from '../shared/directives/guid.directive';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { AdminRoutes } from './admin.routes';
     AdminOrdersComponent,
     EditOrderComponent,
     EditUserComponent,
-    AdminUsersComponent
+    AdminUsersComponent,
+    GuidDirective
   ],
   imports: [
     BrowserModule,
@@ -40,6 +42,7 @@ import { AdminRoutes } from './admin.routes';
     RouterModule.forRoot(AdminRoutes),
     NgbModule.forRoot()
   ],
+  exports: [ GuidDirective ],
   entryComponents: [
     EditCategoryComponent, 
     EditOrderComponent,
