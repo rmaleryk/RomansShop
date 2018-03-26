@@ -4,7 +4,6 @@
         <p *ngFor="let alert of alerts">
             <ngb-alert [type]="alert.type" *ngIf="alert.message" (close)="closeAlert(alert)">{{alert.message}}</ngb-alert>
         </p>
-        <p></p>
         <router-outlet></router-outlet>
     </div>
 </main>
