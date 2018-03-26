@@ -22,10 +22,12 @@ import { OrderService } from './api/order.service';
 import { OrdersHistoryComponent } from './home/orders-history/orders-history.component';
 import { UserSettingsComponent } from './home/user-settings/user-settings.component';
 import { AdminModule } from './admin/admin.module';
+import { AppHeader } from './header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    AppHeader,
     ProductGridComponent,
     ShoppingCartComponent,
     OrderComponent,

@@ -1,0 +1,60 @@
+header {
+    margin-bottom: 20px;
+}
+
+.navbar {
+    padding: 10px;
+}
+
+.navbar-brand {
+    margin-right: 30px;
+    margin-left: 20px;
+    font-size: 25px;
+}
+
+.nav-item {
+    cursor: pointer;
+}
+
+.icon-nav-item {
+    font-size: 20px;
+    display: inline;
+    border: 1px solid;
+    border-radius: 25px;
+    padding: 0.3em 0.45em;
+}
+
+.icon-nav-user {
+    padding: 0.3em 0.45em;
+}
+
+.icon-nav-cart {
+    padding: 0.3em 0.35em;
+}
+
+.user-dropdown>.dropdown-toggle::after {
+    display:none
+}
+
+.user-dropdown>.dropdown-menu {
+    left: -100%;
+}
+
+.cart-badge {
+    position: absolute;
+    font-size: 13px;
+    top: -0.7rem;
+    right: -0.3rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    background: #ff0000b5;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 1.1rem;
+    color: #ffffffd4;
+}
+
+.nav-cart-item {
+    position: relative;
+    display: inline;
+}
