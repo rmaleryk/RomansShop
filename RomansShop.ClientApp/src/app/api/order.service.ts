@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { Order } from '../shared/order';
-import { OrderStatus } from '../shared/order-status';
+import { Order } from '../shared/models/order';
+import { OrderStatus } from '../shared/enums/order-status';
 
 @Injectable()
 export class OrderService {

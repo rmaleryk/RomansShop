@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { debounceTime } from 'rxjs/operator/debounceTime';
 
-import { IAlert } from '../shared/alert';
+import { IAlert } from '../shared/interfaces/alert';
 
 @Injectable()
 export class AlertService {

@@ -2,15 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as shajs from 'sha.js';
 
-import { Product } from '../../shared/product';
+import { Product } from '../../shared/models/product';
 import { ProductService } from '../../api/product.service';
 import { ShoppingCartService } from '../../api/shopping-cart.service';
 import { OrderComponent } from '../order/order.component';
 import { AuthenticationService } from '../../api/authentication.service';
 import { AlertService } from '../../api/alert.service';
 import { UserService } from '../../api/user.service';
-import { User } from '../../shared/user';
-import { UserRights } from '../../shared/user-rights';
+import { User } from '../../shared/models/user';
+import { UserRights } from '../../shared/enums/user-rights';
 
 @Component({
     templateUrl: './sign-up.component.html'
@@ -30,7 +30,7 @@ export class SignUpComponent implements OnInit {
     }
 
     signUpClick() {
-        let user: User = new User(null, this.model.email, this.model.name, shajs('sha256').update(this.model.password).digest('hex'), UserRights.Customer);
+        let user: User = new User(null, this.model.email, this.model.name, shajs('sha256').update(this.model.password).digest('hex'), UserRights.CUSTOMER);
         this.userService.create(user).subscribe((user: User) => {
             this.signIn();
             this.activeModal.close();

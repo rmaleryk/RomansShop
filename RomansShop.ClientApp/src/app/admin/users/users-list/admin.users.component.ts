@@ -4,8 +4,8 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { AuthenticationService } from "../../../api/authentication.service";
 import { EditUserComponent } from "../edit-user/edit-user.component";
-import { User } from "../../../shared/user";
-import { UserRights } from "../../../shared/user-rights";
+import { User } from "../../../shared/models/user";
+import { UserRights } from "../../../shared/enums/user-rights";
 import { UserService } from "../../../api/user.service";
 
 @Component({

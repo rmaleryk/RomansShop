@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
-import { Category } from '../shared/category';
+import { Category } from '../shared/models/category';
 
 @Injectable()
 export class CategoryService {

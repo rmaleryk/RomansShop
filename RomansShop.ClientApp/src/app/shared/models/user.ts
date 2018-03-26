@@ -1,4 +1,4 @@
-import { UserRights } from "./user-rights";
+import { UserRights } from "../enums/user-rights";
 
 export class User {
     constructor(public id?: string,

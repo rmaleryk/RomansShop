@@ -4,16 +4,16 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 
 import { CategoryService } from '../api/category.service';
-import { Category } from '../shared/category';
+import { Category } from '../shared/models/category';
 import { ShoppingCartComponent } from '../home/shopping-cart/shopping-cart.component';
 import { ShoppingCartService } from '../api/shopping-cart.service';
-import { Product } from '../shared/product';
+import { Product } from '../shared/models/product';
 import { AlertService } from '../api/alert.service';
-import { IAlert } from '../shared/alert';
+import { IAlert } from '../shared/interfaces/alert';
 import { SignInComponent } from '../home/sign-in/sign-in.component';
 import { AuthenticationService } from '../api/authentication.service';
-import { User } from '../shared/user';
-import { UserRights } from '../shared/user-rights';
+import { User } from '../shared/models/user';
+import { UserRights } from '../shared/enums/user-rights';
 
 @Component({
   selector: 'app-header',
@@ -47,8 +47,8 @@ export class AppHeader implements OnInit {
   }
 
   get hasAdminPanel(): boolean {
-    return this.currentUser.rights == UserRights.Administrator ||
-      this.currentUser.rights == UserRights.Moderator
+    return this.currentUser.rights == UserRights.ADMINISTRATOR ||
+      this.currentUser.rights == UserRights.MODERATOR
   }
 
   logout() {

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/map';
 
-import { Product } from '../shared/product';
+import { Product } from '../shared/models/product';
 
 @Injectable()
 export class ProductService {

@@ -5,8 +5,8 @@ import { NgbPaginationConfig } from '@ng-bootstrap/ng-bootstrap';
 
 import { ProductService } from '../../api/product.service';
 import { CategoryService } from '../../api/category.service';
-import { Product } from '../../shared/product';
-import { Category } from '../../shared/category';
+import { Product } from '../../shared/models/product';
+import { Category } from '../../shared/models/category';
 import { ShoppingCartService } from '../../api/shopping-cart.service';
 
 @Component({

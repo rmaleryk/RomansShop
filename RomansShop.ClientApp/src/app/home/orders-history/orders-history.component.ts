@@ -1,11 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
 
-import { Order } from "../../shared/order";
+import { Order } from "../../shared/models/order";
 import { OrderService } from "../../api/order.service";
 import { AuthenticationService } from "../../api/authentication.service";
-import { Product } from "../../shared/product";
-import { OrderStatus } from "../../shared/order-status";
+import { Product } from "../../shared/models/product";
+import { OrderStatus } from "../../shared/enums/order-status";
 
 @Component({
   templateUrl: './orders-history.component.html'

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { Product } from '../../shared/product';
+import { Product } from '../../shared/models/product';
 import { ProductService } from '../../api/product.service';
 import { ShoppingCartService } from '../../api/shopping-cart.service';
 import { OrderComponent } from '../order/order.component';

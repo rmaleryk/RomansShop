@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { User } from '../shared/user';
-import { UserRights } from '../shared/user-rights';
+import { User } from '../shared/models/user';
+import { UserRights } from '../shared/enums/user-rights';
 
 @Injectable()
 export class UserService {

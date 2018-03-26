@@ -3,8 +3,8 @@ import { HttpResponse } from "@angular/common/http";
 
 import { CategoryService } from "../../../api/category.service";
 import { ProductService } from "../../../api/product.service";
-import { Category } from "../../../shared/category";
-import { Product } from "../../../shared/product";
+import { Category } from "../../../shared/models/category";
+import { Product } from "../../../shared/models/product";
 
 @Component({
   templateUrl: './admin.products.component.html'

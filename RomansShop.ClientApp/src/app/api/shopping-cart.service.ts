@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import { Product } from '../shared/product';
+import { Product } from '../shared/models/product';
 
 @Injectable()
 export class ShoppingCartService {

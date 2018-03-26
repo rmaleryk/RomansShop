@@ -2,11 +2,11 @@ import { Component, OnInit } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
-import { Order } from "../../../shared/order";
-import { OrderStatus } from "../../../shared/order-status";
+import { Order } from "../../../shared/models/order";
+import { OrderStatus } from "../../../shared/enums/order-status";
 import { OrderService } from "../../../api/order.service";
 import { AuthenticationService } from "../../../api/authentication.service";
-import { Product } from "../../../shared/product";
+import { Product } from "../../../shared/models/product";
 import { EditOrderComponent } from "../edit-order/edit-order.component";
 
 @Component({

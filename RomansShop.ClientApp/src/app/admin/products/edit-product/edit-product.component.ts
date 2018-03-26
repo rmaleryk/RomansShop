@@ -2,9 +2,9 @@ import { Component, OnInit, Input } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { FormGroup, FormBuilder, Validators, FormControl } from "@angular/forms";
 
-import { Product } from "../../../shared/product";
+import { Product } from "../../../shared/models/product";
 import { ProductService } from "../../../api/product.service";
-import { Category } from "../../../shared/category";
+import { Category } from "../../../shared/models/category";
 import { CategoryService } from "../../../api/category.service";
 
 @Component({
