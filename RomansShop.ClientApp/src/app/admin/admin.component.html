@@ -1,0 +1,23 @@
+<p></p>
+<div class="row">
+    <div class="col-md-3">
+        <h3>Admin panel</h3>
+    </div>
+    <div class="col-md-9">
+        <ul class="nav nav-pills justify-content-end">
+            <li class="nav-item">
+                <a class="nav-link" [ngClass]="{'active': (selectedTab=='products') }" [routerLink]="['/admin/products']">Products management</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [ngClass]="{'active': (selectedTab=='categories') }" [routerLink]="['/admin/categories']">Categories management</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [ngClass]="{'active': (selectedTab=='orders') }" [routerLink]="['/admin/orders']">Orders management</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [ngClass]="{'active': (selectedTab=='users') }" [routerLink]="['/admin/users']">Users management</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<hr>
