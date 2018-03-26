@@ -18,10 +18,9 @@ export class AdminOrdersComponent implements OnInit {
   isLoaded: boolean = false;
   selectedOrderStatus: OrderStatus = -1;
 
-  constructor(
-    private orderService: OrderService,
-    private authenticationService: AuthenticationService,
-    private modalService: NgbModal) {
+  constructor(private orderService: OrderService,
+              private authenticationService: AuthenticationService,
+              private modalService: NgbModal) {
   }
 
   ngOnInit() {

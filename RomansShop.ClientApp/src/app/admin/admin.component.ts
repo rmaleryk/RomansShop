@@ -4,12 +4,6 @@ import { Component, OnInit, Input } from "@angular/core";
   selector: 'admin-panel',
   templateUrl: './admin.component.html'
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent {
   @Input() selectedTab: string;
-
-  constructor() {
-  }
-
-  ngOnInit() {
-  }
 }

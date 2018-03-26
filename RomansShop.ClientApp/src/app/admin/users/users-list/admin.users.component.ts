@@ -17,17 +17,16 @@ export class AdminUsersComponent implements OnInit {
   selectedUserRights: UserRights = -1;
   isLoaded: boolean = false;
 
-  constructor(
-    private userService: UserService,
-    private authenticationService: AuthenticationService,
-    private modalService: NgbModal) {
+  constructor(private userService: UserService,
+              private authenticationService: AuthenticationService,
+              private modalService: NgbModal) {
   }
 
   ngOnInit() {
     this.loadUsers();
   }
 
-  getUserRights(): Array<string> {
+  getUserRights(): string[] {
     var keys = Object.keys(UserRights);
     return keys.slice(keys.length / 2);
   }

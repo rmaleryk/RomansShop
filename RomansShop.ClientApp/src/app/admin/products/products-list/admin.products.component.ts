@@ -15,9 +15,8 @@ export class AdminProductsComponent implements OnInit {
   selectedCategoryId: string;
   isLoaded: boolean = false;
 
-  constructor(
-    private productService: ProductService,
-    private categoryService: CategoryService) {
+  constructor(private productService: ProductService,
+              private categoryService: CategoryService) {
   }
 
   ngOnInit() {

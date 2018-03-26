@@ -8,7 +8,6 @@ import { Product } from '../shared/product';
 
 @Injectable()
 export class ProductService {
-
     private url = "http://localhost:50725/api";
     private resourceUrl = this.url + "/products";
     private products$: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);

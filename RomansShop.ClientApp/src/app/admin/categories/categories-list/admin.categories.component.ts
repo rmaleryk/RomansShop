@@ -17,10 +17,9 @@ export class AdminCategoriesComponent implements OnInit {
   categories: Category[];
   isLoaded: boolean = false;
 
-  constructor(
-    private categoryService: CategoryService,
-    private alertService: AlertService,
-    private modalService: NgbModal) {
+  constructor(private categoryService: CategoryService,
+              private alertService: AlertService,
+              private modalService: NgbModal) {
   }
 
   ngOnInit() {

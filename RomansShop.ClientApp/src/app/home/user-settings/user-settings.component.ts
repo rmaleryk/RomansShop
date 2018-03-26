@@ -17,14 +17,13 @@ import { UserService } from '../../api/user.service';
 export class UserSettingsComponent implements OnInit {
     user: User;
 
-    constructor(
-        private alertService: AlertService,
-        private authenticationService: AuthenticationService,
-        private userService: UserService) {
-        this.user = this.currentUser;
+    constructor(private alertService: AlertService,
+                private authenticationService: AuthenticationService,
+                private userService: UserService) {
     }
 
     ngOnInit() {
+        this.user = this.currentUser;
     }
 
     get currentUser(): User {
@@ -41,5 +40,4 @@ export class UserSettingsComponent implements OnInit {
             this.user = this.currentUser;
         });
     }
-
 }

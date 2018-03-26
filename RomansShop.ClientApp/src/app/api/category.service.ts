@@ -9,7 +9,6 @@ import { Category } from '../shared/category';
 
 @Injectable()
 export class CategoryService {
-
     private url = "http://localhost:50725/api/categories";
     private categories$: BehaviorSubject<Category[]> = new BehaviorSubject<Category[]>([]);
 

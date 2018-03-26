@@ -17,11 +17,10 @@ export class SignInComponent implements OnInit {
     model: any = {};
     errorMessage: string;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private modalService: NgbModal,
-        private authenticationService: AuthenticationService,
-        private alertService: AlertService) {
+    constructor(private activeModal: NgbActiveModal,
+                private modalService: NgbModal,
+                private authenticationService: AuthenticationService,
+                private alertService: AlertService) {
     }
 
     ngOnInit() {

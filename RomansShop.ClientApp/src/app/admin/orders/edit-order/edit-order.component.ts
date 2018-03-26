@@ -15,18 +15,17 @@ export class EditOrderComponent implements OnInit {
     notifyMessage: string;
     isNotifiable: boolean;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private orderService: OrderService,
-        private alertService: AlertService) {
+    constructor(private activeModal: NgbActiveModal,
+                private orderService: OrderService,
+                private alertService: AlertService) {
     }
 
     ngOnInit() {
     }
 
     save() {
-        this.orderService.update(this.order).subscribe(data => { 
-            if(this.isNotifiable) {
+        this.orderService.update(this.order).subscribe(data => {
+            if (this.isNotifiable) {
                 // send Notification
             }
         },

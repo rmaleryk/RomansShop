@@ -16,24 +16,23 @@ export class EditProductComponent implements OnInit {
     isLoaded: boolean;
     productForm: FormGroup;
 
-    constructor(
-        private productService: ProductService,
-        private categoryService: CategoryService,
-        private router: Router,
-        private activeRoute: ActivatedRoute,
-        private formBuilder: FormBuilder) {
+    constructor(private productService: ProductService,
+                private categoryService: CategoryService,
+                private router: Router,
+                private activeRoute: ActivatedRoute,
+                private formBuilder: FormBuilder) {
+    }
 
-        this.productId = activeRoute.snapshot.params["id"];
-
+    ngOnInit() {
+        this.productId = this.activeRoute.snapshot.params["id"];
+        
         this.productForm = this.formBuilder.group({
             "name": ["", [Validators.required, Validators.maxLength(30)]],
             "categoryId": [""],
             "price": ["", [Validators.required]],
             "description": ["", [Validators.maxLength(255)]],
         });
-    }
 
-    ngOnInit() {
         if (this.productId != null) {
             this.loadProduct(this.productId);
         } else {

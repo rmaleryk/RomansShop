@@ -13,10 +13,9 @@ export class EditCategoryComponent implements OnInit {
     @Input() isNewCategory: boolean = true;
     @Input() category: Category;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private categoryService: CategoryService,
-        private alertService: AlertService) {
+    constructor(private activeModal: NgbActiveModal,
+                private categoryService: CategoryService,
+                private alertService: AlertService) {
     }
 
     ngOnInit() {

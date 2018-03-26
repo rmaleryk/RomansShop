@@ -19,12 +19,11 @@ export class SignUpComponent implements OnInit {
     model: any = {};
     errorMessage: string;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private modalService: NgbModal,
-        private authenticationService: AuthenticationService,
-        private userService: UserService,
-        private alertService: AlertService) {
+    constructor(private activeModal: NgbActiveModal,
+                private modalService: NgbModal,
+                private authenticationService: AuthenticationService,
+                private userService: UserService,
+                private alertService: AlertService) {
     }
 
     ngOnInit() {

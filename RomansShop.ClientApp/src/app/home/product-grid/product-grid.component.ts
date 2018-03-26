@@ -22,18 +22,18 @@ export class ProductGridComponent implements OnInit {
     isLoaded: boolean = false;
     categoryId: string;
 
-    constructor(
-        private productService: ProductService,
-        private categoryService: CategoryService,
-        private shoppingCartService: ShoppingCartService,
-        private activeRoute: ActivatedRoute,
-        private router: Router,
-        private pageConfig: NgbPaginationConfig) {
-        this.categoryId = activeRoute.snapshot.params["categoryId"];
-        pageConfig.pageSize = 6;
+    constructor(private productService: ProductService,
+                private categoryService: CategoryService,
+                private shoppingCartService: ShoppingCartService,
+                private activeRoute: ActivatedRoute,
+                private router: Router,
+                private pageConfig: NgbPaginationConfig) {
     }
 
     ngOnInit() {
+        this.pageConfig.pageSize = 6;
+        this.categoryId = this.activeRoute.snapshot.params["categoryId"];
+
         this.activeRoute.params.subscribe(params => {
             this.categoryId = params["categoryId"];
 

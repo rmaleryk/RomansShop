@@ -11,9 +11,8 @@ import { AlertService } from "./alert.service";
 export class AuthenticationService {
     private url = "http://localhost:50725/api/authenticate";
 
-    constructor(
-        private http: HttpClient,
-        private alertService: AlertService) {
+    constructor(private http: HttpClient,
+                private alertService: AlertService) {
     }
 
     login(email: string, password: string): Observable<User> {

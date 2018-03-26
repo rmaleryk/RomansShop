@@ -7,17 +7,15 @@ import { User } from "../../../shared/user";
 import { UserService } from "../../../api/user.service";
 import { UserRights } from "../../../shared/user-rights";
 
-
 @Component({
     templateUrl: './edit-user.component.html'
 })
 export class EditUserComponent implements OnInit {
     @Input() user: User;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private userService: UserService,
-        private alertService: AlertService) {
+    constructor(private activeModal: NgbActiveModal,
+                private userService: UserService,
+                private alertService: AlertService) {
     }
 
     ngOnInit() {

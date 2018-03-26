@@ -14,15 +14,13 @@ import { OrderService } from '../../api/order.service';
     templateUrl: './order.component.html'
 })
 export class OrderComponent implements OnInit {
-    order: Order;
+    order: Order = new Order();
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private shoppingCartService: ShoppingCartService,
-        private alertService: AlertService,
-        private authenticationService: AuthenticationService,
-        private orderService: OrderService) {
-        this.order = new Order();
+    constructor(private activeModal: NgbActiveModal,
+                private shoppingCartService: ShoppingCartService,
+                private alertService: AlertService,
+                private authenticationService: AuthenticationService,
+                private orderService: OrderService) {
     }
 
     ngOnInit() {

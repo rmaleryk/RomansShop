@@ -8,7 +8,6 @@ import { UserRights } from '../shared/user-rights';
 
 @Injectable()
 export class UserService {
-    
     private url = "http://localhost:50725/api/users";
     private users$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
 

@@ -15,9 +15,8 @@ export class OrdersHistoryComponent implements OnInit {
   orderStatus = OrderStatus;
   isLoaded: boolean = false;
 
-  constructor(
-    private orderService: OrderService,
-    private authenticationService: AuthenticationService) {
+  constructor(private orderService: OrderService,
+              private authenticationService: AuthenticationService) {
   }
 
   ngOnInit() {

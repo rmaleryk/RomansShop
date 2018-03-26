@@ -25,20 +25,19 @@ export class AppHeader implements OnInit {
   isCollapsed = false;
   cartItemsCount: number;
   categories: Category[];
-  alerts: IAlert[];
+  alerts: IAlert[] = [];
 
-  constructor(
-    private categoryService: CategoryService,
-    private shoppingCartService: ShoppingCartService,
-    private alertService: AlertService,
-    private authenticationService: AuthenticationService,
-    private modalService: NgbModal,
-    private router: Router) {
-    this.alerts = new Array<IAlert>();
-    alertService.getAlerts().subscribe((alerts: IAlert[]) => this.alerts = alerts);
+  constructor(private categoryService: CategoryService,
+              private shoppingCartService: ShoppingCartService,
+              private alertService: AlertService,
+              private authenticationService: AuthenticationService,
+              private modalService: NgbModal,
+              private router: Router) {
   }
 
   ngOnInit() {
+    this.alertService.getAlerts().subscribe((alerts: IAlert[]) => this.alerts = alerts);
+
     this.loadCategories();
     this.loadCartItemsCount();
   }

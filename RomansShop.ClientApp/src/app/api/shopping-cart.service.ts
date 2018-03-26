@@ -20,8 +20,7 @@ export class ShoppingCartService {
     addCartItem(product: Product) {
         let products: Product[] = JSON.parse(localStorage.getItem(this.shoppingCartStorageName));
         
-        if(products == null)
-        {
+        if(products == null) {
             products = new Array<Product>();
         }
 

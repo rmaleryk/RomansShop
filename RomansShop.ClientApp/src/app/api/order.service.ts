@@ -6,10 +6,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Order } from '../shared/order';
 import { OrderStatus } from '../shared/order-status';
 
-
 @Injectable()
 export class OrderService {
-
     private url = "http://localhost:50725/api";
     private resourceUrl = this.url + "/orders";
     private orders$: BehaviorSubject<Order[]> = new BehaviorSubject<Order[]>([]);

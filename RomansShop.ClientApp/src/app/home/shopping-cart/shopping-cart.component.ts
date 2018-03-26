@@ -10,14 +10,13 @@ import { OrderComponent } from '../order/order.component';
     templateUrl: './shopping-cart.component.html'
 })
 export class ShoppingCartComponent implements OnInit {
-    cartItems: Product[];
+    cartItems: Product[] = [];
     totalPrice: number = 0;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private modalService: NgbModal,
-        private productService: ProductService,
-        private shoppingCartService: ShoppingCartService) {
+    constructor(private activeModal: NgbActiveModal,
+                private modalService: NgbModal,
+                private productService: ProductService,
+                private shoppingCartService: ShoppingCartService) {
     }
 
     ngOnInit() {
