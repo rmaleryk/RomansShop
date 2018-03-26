@@ -1,0 +1,48 @@
+<admin-panel [selectedTab]="'users'"></admin-panel>
+<p></p>
+<div class="form-inline justify-content-between">
+    <select class="form-control-sm" id="status" name="status" [(ngModel)]="selectedUserRights" (change)="loadUsers()">
+        <option value="-1">All user groups</option>
+        <option *ngFor="let rights of getUserRights(); let i = index" [value]="i">{{rights}}</option>
+    </select>
+</div>
+<p></p>
+<div *ngIf="!isLoaded" class="loading-spinner">
+    <i class="fa fa-spinner fa-spin"></i>
+</div>
+<table *ngIf="isLoaded" class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width: 40%">Full name</th>
+            <th style="width: 35%">Email</th>
+            <th style="width: 20%">Rights</th>
+            <th style="width: 5%">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let user of users">
+            <td>
+                {{user.fullName}}
+            </td>
+            <td>
+                <a href="mailto:{{user.email}}"><u>{{user.email}}</u></a>
+            </td>
+            <td>
+                <div [ngSwitch]="user.rights">
+                    <div *ngSwitchCase="userRights.Administrator">Administrator</div>
+                    <div *ngSwitchCase="userRights.Moderator">Moderator</div>
+                    <div *ngSwitchCase="userRights.Customer">Customer</div>
+                </div>
+            </td>
+            <td class="d-flex justify-content-center">
+                <button (click)="update(user)" class="btn btn-sm btn-dark">
+                    <span class="fa fa-edit"></span>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div *ngIf="isLoaded && users.length == 0">
+    <p></p>
+    <h6 class="text-center">There are no users.</h6>
+</div>

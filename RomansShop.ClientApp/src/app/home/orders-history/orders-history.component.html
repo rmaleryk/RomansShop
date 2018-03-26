@@ -1,0 +1,38 @@
+<p></p>
+<h3>Orders history</h3>
+<p></p>
+<div *ngIf="!isLoaded" class="loading-spinner">
+    <i class="fa fa-spinner fa-spin"></i>
+</div>
+<table *ngIf="isLoaded" class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width: 20%">Id</th>
+            <th style="width: 30%">Products</th>
+            <th style="width: 30%">Shipping address</th>
+            <th style="width: 10%">Price</th>
+            <th style="width: 10%">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let order of orders">
+            <td class="text-sm" title="{{order.id}}">{{order.id.substring(0,5)}}...</td>
+            <td>
+                <ol class="pl-0">
+                    <li *ngFor="let product of order.products">{{product.name}}</li>
+                </ol>
+            </td>
+            <td>{{order.address}}</td>
+            <td>${{order.price}}</td>
+            <td [ngSwitch]="order.status">
+                <div *ngSwitchCase="orderStatus.Processing">Processing</div>
+                <div *ngSwitchCase="orderStatus.Boxing">Boxing</div>
+                <div *ngSwitchCase="orderStatus.Sent">Sent</div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div *ngIf="isLoaded && orders.length == 0">
+    <p></p>
+    <h6 class="text-center">You have not made orders before.</h6>
+</div>

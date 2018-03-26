@@ -1,0 +1,15 @@
+<div class="modal-header">
+    <h4 class="modal-title" *ngIf="isNewCategory">Create new category</h4>
+    <h4 class="modal-title" *ngIf="!isNewCategory">Edit the category</h4>
+    <button type="button" class="close" aria-label="Close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <label for="categoryName">Category name:</label> 
+    <input type="text" class="form-control" id="categoryName" placeholder="Enter category name" [(ngModel)]="category.name" maxlength="30" #name="ngModel" required>
+    <small id="nameHelp" class="text-muted">Max length: 30</small>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-dark" [disabled]="name.invalid" (click)="save()">Save</button>
+</div>
