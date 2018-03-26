@@ -80,5 +80,70 @@ namespace RomansShop.DataAccess.Database
             modelBuilder.Entity<User>()
                 .HasKey(user => user.Id);
         }
+
+        public static void ConfigureOrder(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Order>().ToTable("orders");
+
+            modelBuilder.Entity<Order>()
+                .Property(order => order.Id)
+                .HasColumnName("id");
+
+            modelBuilder.Entity<Order>()
+                .Property(order => order.UserId)
+                .HasColumnName("userId");
+
+            modelBuilder.Entity<Order>()
+                .Property(order => order.CustomerEmail)
+                .HasColumnName("customerEmail");
+
+            modelBuilder.Entity<Order>()
+                .Property(order => order.CustomerName)
+                .HasColumnName("customerName");
+
+            modelBuilder.Entity<Order>()
+                .Property(order => order.Address)
+                .HasColumnName("address");
+
+            modelBuilder.Entity<Order>()
+                .Property(order => order.Price)
+                .HasColumnName("price");
+
+            modelBuilder.Entity<Order>()
+                .Property(order => order.Status)
+                .HasColumnName("status");
+
+            modelBuilder.Entity<Order>()
+                .HasKey(order => order.Id);
+        }
+
+        public static void ConfigureOrderProduct(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<OrderProduct>().ToTable("order_products");
+
+            modelBuilder.Entity<OrderProduct>()
+               .Property(op => op.Id)
+               .HasColumnName("id");
+
+            modelBuilder.Entity<OrderProduct>()
+                .Property(op => op.OrderId)
+                .HasColumnName("orderId");
+
+            modelBuilder.Entity<OrderProduct>()
+                .Property(op => op.ProductId)
+                .HasColumnName("productId");
+
+            modelBuilder.Entity<OrderProduct>().HasKey(op => op.Id);
+
+            modelBuilder.Entity<OrderProduct>()
+                .HasOne(op => op.Order)
+                .WithMany(order => order.OrderProducts)
+                .HasForeignKey(op => op.OrderId);
+
+            modelBuilder.Entity<OrderProduct>()
+                .HasOne(op => op.Product)
+                .WithMany(prod => prod.OrderProducts)
+                .HasForeignKey(op => op.ProductId);
+        }
     }
 }

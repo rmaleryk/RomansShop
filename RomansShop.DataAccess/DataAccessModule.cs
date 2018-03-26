@@ -11,6 +11,7 @@ namespace RomansShop.DataAccess
             builder.RegisterType<ProductRepository>().As<IProductRepository>();
             builder.RegisterType<CategoryRepository>().As<ICategoryRepository>();
             builder.RegisterType<UserRepository>().As<IUserRepository>();
+            builder.RegisterType<OrderRepository>().As<IOrderRepository>();
         }
     }
 }

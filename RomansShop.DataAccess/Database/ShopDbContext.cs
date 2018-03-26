@@ -5,10 +5,7 @@ namespace RomansShop.DataAccess.Database
 {
     public class ShopDbContext : DbContext
     {
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Category> Categories { get; set; }
-
-        public DbSet<User> Users { get; set; }
+        public DbSet<OrderProduct> OrderProducts { get; set; }
 
         public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options)
         {
@@ -19,6 +16,8 @@ namespace RomansShop.DataAccess.Database
             modelBuilder.ConfigureProduct();
             modelBuilder.ConfigureCategory();
             modelBuilder.ConfigureUser();
+            modelBuilder.ConfigureOrder();
+            modelBuilder.ConfigureOrderProduct();
 
             base.OnModelCreating(modelBuilder);
         }
