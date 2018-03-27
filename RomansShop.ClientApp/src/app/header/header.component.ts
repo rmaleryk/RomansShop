@@ -8,8 +8,6 @@ import { Category } from '../shared/models/category';
 import { ShoppingCartComponent } from '../home/shopping-cart/shopping-cart.component';
 import { ShoppingCartService } from '../api/shopping-cart.service';
 import { Product } from '../shared/models/product';
-import { AlertService } from '../api/alert.service';
-import { IAlert } from '../shared/interfaces/alert';
 import { SignInComponent } from '../home/sign-in/sign-in.component';
 import { AuthenticationService } from '../api/authentication.service';
 import { User } from '../shared/models/user';
@@ -25,19 +23,15 @@ export class AppHeader implements OnInit {
   isCollapsed = false;
   cartItemsCount: number;
   categories: Category[];
-  alerts: IAlert[] = [];
 
   constructor(private categoryService: CategoryService,
               private shoppingCartService: ShoppingCartService,
-              private alertService: AlertService,
               private authenticationService: AuthenticationService,
               private modalService: NgbModal,
               private router: Router) {
   }
 
   ngOnInit() {
-    this.alertService.getAlerts().subscribe((alerts: IAlert[]) => this.alerts = alerts);
-
     this.loadCategories();
     this.loadCartItemsCount();
   }
@@ -75,9 +69,5 @@ export class AppHeader implements OnInit {
 
   openSignInForm() {
     this.modalService.open(SignInComponent);
-  }
-
-  closeAlert(alert: IAlert) {
-    this.alertService.closeAlert(alert);
   }
 }
