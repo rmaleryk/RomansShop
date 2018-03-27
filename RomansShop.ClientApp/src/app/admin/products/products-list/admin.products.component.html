@@ -13,17 +13,17 @@
 </div>
 <table *ngIf="isLoaded" class="table table-striped mt-3">
     <thead>
-        <tr>
-            <th style="width: 50%">Product</th>
-            <th style="width: 40%">Price</th>
-            <th style="width: 10%">Options</th>
+        <tr class="d-flex">
+            <th class="col-6">Product</th>
+            <th class="col-5">Price</th>
+            <th class="col-1">Options</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let product of products">
-            <td>{{ product.name }}</td>
-            <td>{{ product.price }}</td>
-            <td>
+        <tr class="d-flex" *ngFor="let product of products">
+            <td class="col-6">{{ product.name }}</td>
+            <td class="col-5">{{ product.price }}</td>
+            <td class="col-1">
                 <button [routerLink]="['/admin/products/edit', product.id]" class="btn btn-sm btn-dark">
                     <span class="fa fa-edit"></span>
                 </button>

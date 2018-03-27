@@ -9,15 +9,15 @@
 </div>
 <table *ngIf="isLoaded" class="table table-striped mt-3">
     <thead>
-        <tr>
-            <th style="width: 90%">Category</th>
-            <th style="width: 10%">Options</th>
+        <tr class="d-flex">
+            <th class="col-11">Category</th>
+            <th class="col-1">Options</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let category of categories">
-            <td>{{ category.name }}</td>
-            <td>
+        <tr class="d-flex" *ngFor="let category of categories">
+            <td class="col-11">{{ category.name }}</td>
+            <td class="col-1">
                 <button (click)="update(category)" class="btn btn-sm btn-dark">
                     <span class="fa fa-edit"></span>
                 </button>

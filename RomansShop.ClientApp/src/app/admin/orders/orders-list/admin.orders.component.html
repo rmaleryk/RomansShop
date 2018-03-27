@@ -10,44 +10,46 @@
 </div>
 <table *ngIf="isLoaded" class="table table-striped mt-3">
     <thead>
-        <tr>
-            <th style="width: 10%">Id</th>
-            <th style="width: 20%">Products</th>
-            <th style="width: 20%">Customer</th>
-            <th style="width: 25%">Shipping address</th>
-            <th style="width: 10%">Price</th>
-            <th style="width: 10%">Status</th>
-            <th style="width: 5%">Options</th>
+        <tr class="d-flex">
+            <th class="col-1">Id</th>
+            <th class="col-2">Products</th>
+            <th class="col-3">Customer</th>
+            <th class="col-2">Shipping address</th>
+            <th class="col-1">Price</th>
+            <th class="col-2">Status</th>
+            <th class="col-1">Options</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let order of orders">
-            <td class="text-sm"><p [guid]="order.id"></p></td>
-            <td>
+        <tr class="d-flex" *ngFor="let order of orders">
+            <td class="col-1 text-sm"><p [guid]="order.id"></p></td>
+            <td class="col-2">
                 <ol class="pl-3">
                     <li *ngFor="let product of order.products">{{ product.name }}</li>
                 </ol>
             </td>
-            <td>
+            <td class="col-3">
                 {{ order.customerName }}
                 <br>
                 <a href="mailto:{{ order.customerEmail }}">
                     <u>{{ order.customerEmail }}</u>
                 </a>
             </td>
-            <td>{{ order.address }}</td>
-            <td>${{ order.price }}</td>
-            <td>
+            <td class="col-2">{{ order.address }}</td>
+            <td class="col-1">${{ order.price }}</td>
+            <td class="col-2">
                 <div [ngSwitch]="order.status">
                     <div *ngSwitchCase="orderStatus.PROCESSING">Processing</div>
                     <div *ngSwitchCase="orderStatus.BOXING">Boxing</div>
                     <div *ngSwitchCase="orderStatus.SENT">Sent</div>
                 </div>
             </td>
-            <td class="d-flex justify-content-center">
-                <button (click)="update(order)" class="btn btn-sm btn-dark">
-                    <span class="fa fa-edit"></span>
-                </button>
+            <td class="col-1">
+                <div class="d-flex justify-content-center">
+                    <button (click)="update(order)" class="btn btn-sm btn-dark">
+                        <span class="fa fa-edit"></span>
+                    </button>
+                </div>
             </td>
         </tr>
     </tbody>

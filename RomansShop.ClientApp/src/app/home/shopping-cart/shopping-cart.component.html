@@ -7,22 +7,24 @@
 <div class="modal-body">
     <table class="table table-striped">
         <thead>
-            <tr>
-                <th style="width: 5%">#</th>
-                <th style="width: 70%">Product</th>
-                <th style="width: 20%">Price</th>
-                <th style="width: 5%"></th>
+            <tr class="d-flex">
+                <th class="col-1">#</th>
+                <th class="col-7">Product</th>
+                <th class="col-2">Price</th>
+                <th class="col-2"></th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let cartItem of cartItems; index as i">
-                <td>{{ i+1 }}</td>
-                <td>{{ cartItem.name }}</td>
-                <td>{{ cartItem.price }}</td>
-                <td>
-                    <button (click)="delete(i)" class="btn btn-sm btn-dark">
-                        <span class="fa fa-trash"></span>
-                    </button>
+            <tr class="d-flex" *ngFor="let cartItem of cartItems; index as i">
+                <td class="col-1">{{ i+1 }}</td>
+                <td class="col-7">{{ cartItem.name }}</td>
+                <td class="col-2">{{ cartItem.price }}</td>
+                <td class="col-2">
+                    <div class="d-flex justify-content-end">
+                        <button (click)="delete(i)" class="btn btn-sm btn-dark">
+                            <span class="fa fa-trash"></span>
+                        </button>
+                    </div>
                 </td>
             </tr>
         </tbody>
@@ -32,7 +34,7 @@
     </div>
 </div>
 <div class="modal-footer d-flex justify-content-between">
-    <div class=" justify-content-start">Total price: ${{ totalPrice }}</div>
+    <div class="justify-content-start">Total price: ${{ totalPrice }}</div>
     <button type="button justify-content-end" [disabled]="totalPrice == 0" class="btn btn-dark" (click)="openOrderForm()">
         Continue
     </button>

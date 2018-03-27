@@ -10,32 +10,34 @@
 </div>
 <table *ngIf="isLoaded" class="table table-striped mt-3">
     <thead>
-        <tr>
-            <th style="width: 40%">Full name</th>
-            <th style="width: 35%">Email</th>
-            <th style="width: 20%">Rights</th>
-            <th style="width: 5%">Options</th>
+        <tr class="d-flex">
+            <th class="col-5">Full name</th>
+            <th class="col-4">Email</th>
+            <th class="col-2">Rights</th>
+            <th class="col-1">Options</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let user of users">
-            <td>
+        <tr class="d-flex" *ngFor="let user of users">
+            <td class="col-5">
                 {{ user.fullName }}
             </td>
-            <td>
+            <td class="col-4">
                 <a href="mailto:{{ user.email }}"><u>{{ user.email }}</u></a>
             </td>
-            <td>
+            <td class="col-2">
                 <div [ngSwitch]="user.rights">
                     <div *ngSwitchCase="userRights.ADMINISTRATOR">Administrator</div>
                     <div *ngSwitchCase="userRights.MODERATOR">Moderator</div>
                     <div *ngSwitchCase="userRights.CUSTOMER">Customer</div>
                 </div>
             </td>
-            <td class="d-flex justify-content-center">
-                <button (click)="update(user)" class="btn btn-sm btn-dark">
-                    <span class="fa fa-edit"></span>
-                </button>
+            <td class="col-1">
+                <div class="d-flex justify-content-center">
+                    <button (click)="update(user)" class="btn btn-sm btn-dark">
+                        <span class="fa fa-edit"></span>
+                    </button>
+                </div>
             </td>
         </tr>
     </tbody>

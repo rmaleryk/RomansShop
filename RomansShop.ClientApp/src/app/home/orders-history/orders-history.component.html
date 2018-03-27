@@ -4,25 +4,25 @@
 </div>
 <table *ngIf="isLoaded" class="table table-striped mt-3">
     <thead>
-        <tr>
-            <th style="width: 20%">Id</th>
-            <th style="width: 30%">Products</th>
-            <th style="width: 30%">Shipping address</th>
-            <th style="width: 10%">Price</th>
-            <th style="width: 10%">Status</th>
+        <tr class="d-flex">
+            <th class="col-3">Id</th>
+            <th class="col-3">Products</th>
+            <th class="col-3">Shipping address</th>
+            <th class="col-2">Price</th>
+            <th class="col-1">Status</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let order of orders">
-            <td class="text-sm"><p [guid]="order.id"></p></td>
-            <td>
+        <tr class="d-flex" *ngFor="let order of orders">
+            <td class="col-3 text-sm"><p [guid]="order.id"></p></td>
+            <td class="col-3">
                 <ol class="pl-0">
                     <li *ngFor="let product of order.products">{{ product.name }}</li>
                 </ol>
             </td>
-            <td>{{ order.address }}</td>
-            <td>${{ order.price }}</td>
-            <td [ngSwitch]="order.status">
+            <td class="col-3">{{ order.address }}</td>
+            <td class="col-2">${{ order.price }}</td>
+            <td class="col-1" [ngSwitch]="order.status">
                 <div *ngSwitchCase="orderStatus.PROCESSING">Processing</div>
                 <div *ngSwitchCase="orderStatus.BOXING">Boxing</div>
                 <div *ngSwitchCase="orderStatus.SENT">Sent</div>
