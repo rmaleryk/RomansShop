@@ -45,7 +45,6 @@ export class EditOrderComponent implements OnInit {
 
     getOrderStatuses(): string[] {
         var keys = Object.keys(OrderStatus);
-        console.log(keys);
         return keys.slice(keys.length / 2);
     }
 }

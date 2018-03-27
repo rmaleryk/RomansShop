@@ -38,9 +38,11 @@ export class ShoppingCartComponent implements OnInit {
     }
 
     calculateTotalCost() {
-        this.totalPrice = this.cartItems
-            .map((prod) => prod.price)
-            .reduce((prev, curr) => prev + curr);
+        if (this.cartItems.length > 0) {
+            this.totalPrice = this.cartItems
+                .map((prod) => prod.price)
+                .reduce((prev, curr) => prev + curr);
+        }
     }
 
     openOrderForm() {

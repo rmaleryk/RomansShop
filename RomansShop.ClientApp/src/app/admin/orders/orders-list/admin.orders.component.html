@@ -39,9 +39,9 @@
             <td>${{ order.price }}</td>
             <td>
                 <div [ngSwitch]="order.status">
-                    <div *ngSwitchCase="orderStatus.Processing">Processing</div>
-                    <div *ngSwitchCase="orderStatus.Boxing">Boxing</div>
-                    <div *ngSwitchCase="orderStatus.Sent">Sent</div>
+                    <div *ngSwitchCase="orderStatus.PROCESSING">Processing</div>
+                    <div *ngSwitchCase="orderStatus.BOXING">Boxing</div>
+                    <div *ngSwitchCase="orderStatus.SENT">Sent</div>
                 </div>
             </td>
             <td class="d-flex justify-content-center">

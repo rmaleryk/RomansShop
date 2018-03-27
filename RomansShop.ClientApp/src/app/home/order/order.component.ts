@@ -14,7 +14,7 @@ import { OrderService } from '../../api/order.service';
     templateUrl: './order.component.html'
 })
 export class OrderComponent implements OnInit {
-    order: Order = new Order();
+    order: Order = new Order({});
 
     constructor(private activeModal: NgbActiveModal,
                 private shoppingCartService: ShoppingCartService,
@@ -32,9 +32,12 @@ export class OrderComponent implements OnInit {
 
         this.shoppingCartService.getCartItems().subscribe((data: Product[]) => {
             this.order.products = data;
-            this.order.price = data
-                .map((prod) => prod.price)
-                .reduce((prev, curr) => prev + curr);
+            
+            if (data.length > 0) {
+                this.order.price = data
+                    .map((prod) => prod.price)
+                    .reduce((prev, curr) => prev + curr);
+            }
         });
     }
 
@@ -45,12 +48,11 @@ export class OrderComponent implements OnInit {
     makeOrder() {
         this.orderService.create(this.order)
             .subscribe((data: Order) => {
-                console.log(data);
                 this.shoppingCartService.clean();
                 this.alertService.info(`Order "${data.id}" was accepted. Please, wait for an email with further instructions.`);
                 this.close();
             }, error => {
-                console.log(error);
+                this.alertService.info(error.error);
             });
     }
 
