@@ -19,7 +19,7 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" ngbDropdownMenu>
                         <li *ngFor="let category of categories">
-                            <a class="dropdown-item" [routerLink]="['categories', category.id]">{{category.name}}</a>
+                            <a class="dropdown-item" [routerLink]="['categories', category.id]">{{ category.name }}</a>
                         </li>
                     </ul>
                 </li>
@@ -57,7 +57,7 @@
                 <li class="nav-item">
                     <a class="nav-link" (click)="openShoppingCart()">
                         <div class="nav-cart-item">
-                            <span *ngIf="cartItemsCount > 0" class="cart-badge">{{cartItemsCount}}</span>
+                            <span *ngIf="cartItemsCount > 0" class="cart-badge">{{ cartItemsCount }}</span>
                             <span class="fa fa-shopping-cart icon-nav-item icon-nav-cart"></span>
                         </div>
                     </a>

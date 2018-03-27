@@ -2,7 +2,7 @@
 <div class="form-inline justify-content-between">
     <select class="form-control-sm" id="category" name="category" [(ngModel)]="selectedCategoryId" (change)="loadProducts()">
         <option value="undefined">All categories</option>
-        <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
     </select>
     <button [routerLink]="['/admin/products/create']" class="btn btn-sm btn-dark">
         <span class="fa fa-plus"></span> Add new product
@@ -21,8 +21,8 @@
     </thead>
     <tbody>
         <tr *ngFor="let product of products">
-            <td>{{product.name}}</td>
-            <td>{{product.price}}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.price }}</td>
             <td>
                 <button [routerLink]="['/admin/products/edit', product.id]" class="btn btn-sm btn-dark">
                     <span class="fa fa-edit"></span>

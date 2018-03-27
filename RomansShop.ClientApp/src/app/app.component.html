@@ -2,7 +2,7 @@
 <main role="main">
     <div class="container">
         <p *ngFor="let alert of alerts">
-            <ngb-alert [type]="alert.type" *ngIf="alert.message" (close)="closeAlert(alert)">{{alert.message}}</ngb-alert>
+            <ngb-alert [type]="alert.type" *ngIf="alert.message" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
         </p>
         <router-outlet></router-outlet>
     </div>

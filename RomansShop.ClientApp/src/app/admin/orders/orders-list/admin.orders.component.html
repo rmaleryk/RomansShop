@@ -2,7 +2,7 @@
 <div class="form-inline justify-content-between">
     <select class="form-control-sm" id="status" name="status" [(ngModel)]="selectedOrderStatus" (change)="loadOrders()">
         <option value="-1">All orders</option>
-        <option *ngFor="let status of getOrderStatuses(); let i = index" [value]="i">{{status}}</option>
+        <option *ngFor="let status of getOrderStatuses(); let i = index" [value]="i">{{ status }}</option>
     </select>
 </div>
 <div *ngIf="!isLoaded" class="loading-spinner">
@@ -25,18 +25,18 @@
             <td class="text-sm"><p [guid]="order.id"></p></td>
             <td>
                 <ol class="pl-3">
-                    <li *ngFor="let product of order.products">{{product.name}}</li>
+                    <li *ngFor="let product of order.products">{{ product.name }}</li>
                 </ol>
             </td>
             <td>
-                {{order.customerName}}
+                {{ order.customerName }}
                 <br>
-                <a href="mailto:{{order.customerEmail}}">
-                    <u>{{order.customerEmail}}</u>
+                <a href="mailto:{{ order.customerEmail }}">
+                    <u>{{ order.customerEmail }}</u>
                 </a>
             </td>
-            <td>{{order.address}}</td>
-            <td>${{order.price}}</td>
+            <td>{{ order.address }}</td>
+            <td>${{ order.price }}</td>
             <td>
                 <div [ngSwitch]="order.status">
                     <div *ngSwitchCase="orderStatus.Processing">Processing</div>

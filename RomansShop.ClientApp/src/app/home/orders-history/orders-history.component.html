@@ -17,15 +17,15 @@
             <td class="text-sm"><p [guid]="order.id"></p></td>
             <td>
                 <ol class="pl-0">
-                    <li *ngFor="let product of order.products">{{product.name}}</li>
+                    <li *ngFor="let product of order.products">{{ product.name }}</li>
                 </ol>
             </td>
-            <td>{{order.address}}</td>
-            <td>${{order.price}}</td>
+            <td>{{ order.address }}</td>
+            <td>${{ order.price }}</td>
             <td [ngSwitch]="order.status">
-                <div *ngSwitchCase="orderStatus.Processing">Processing</div>
-                <div *ngSwitchCase="orderStatus.Boxing">Boxing</div>
-                <div *ngSwitchCase="orderStatus.Sent">Sent</div>
+                <div *ngSwitchCase="orderStatus.PROCESSING">Processing</div>
+                <div *ngSwitchCase="orderStatus.BOXING">Boxing</div>
+                <div *ngSwitchCase="orderStatus.SENT">Sent</div>
             </td>
         </tr>
     </tbody>

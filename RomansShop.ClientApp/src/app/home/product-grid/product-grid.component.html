@@ -1,4 +1,4 @@
-<h3>{{categoryName}}</h3>
+<h3>{{ categoryName }}</h3>
 <div *ngIf="!isLoaded" class="loading-spinner">
     <i class="fa fa-spinner fa-spin"></i>
 </div>
@@ -8,8 +8,8 @@
             <div class="card shop-item">
                 <div class="card-body item-body text-center">
                     <img class="card-img-top img-thumbnail item-thumbnail" src="http://seismowave.com/js/vendor/plugnpay/no_product.png" alt="Product image">
-                    <h5 class="card-title">{{product.name}}</h5>
-                    <p class="card-text">Price: ${{product.price}}</p>
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">Price: ${{ product.price }}</p>
                     <a class="btn btn-dark text-white" (click)="addToCart(product)">
                         <span class="fa fa-shopping-cart"></span> Add to cart
                     </a>
