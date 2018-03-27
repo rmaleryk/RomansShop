@@ -22,7 +22,7 @@ export class ShoppingCartComponent implements OnInit {
     ngOnInit() {
         this.shoppingCartService.getCartItems().subscribe((data: Product[]) => {
             this.cartItems = data;
-            this.setTotalCost();
+            this.calculateTotalCost();
         });
     }
 
@@ -34,12 +34,13 @@ export class ShoppingCartComponent implements OnInit {
         this.cartItems.splice(index, 1);
         this.shoppingCartService.deleteCartItem(index);
 
-        this.setTotalCost();
+        this.calculateTotalCost();
     }
 
-    setTotalCost() {
-        this.totalPrice = 0;
-        this.cartItems.forEach(product => this.totalPrice += product.price);
+    calculateTotalCost() {
+        this.totalPrice = this.cartItems
+            .map((prod) => prod.price)
+            .reduce((prev, curr) => prev + curr);
     }
 
     openOrderForm() {

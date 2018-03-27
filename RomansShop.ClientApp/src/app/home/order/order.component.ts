@@ -32,8 +32,9 @@ export class OrderComponent implements OnInit {
 
         this.shoppingCartService.getCartItems().subscribe((data: Product[]) => {
             this.order.products = data;
-            this.order.price = 0;
-            data.forEach(product => this.order.price += product.price);
+            this.order.price = data
+                .map((prod) => prod.price)
+                .reduce((prev, curr) => prev + curr);
         });
     }
 
