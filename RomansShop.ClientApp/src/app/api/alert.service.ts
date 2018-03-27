@@ -1,13 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { debounceTime } from 'rxjs/operator/debounceTime';
+import { Subject } from "rxjs/Subject";
+import 'rxjs/add/operator/takeUntil';
 
 import { IAlert } from '../shared/interfaces/alert';
 
 @Injectable()
-export class AlertService {
+export class AlertService implements OnDestroy {
     private alerts$: BehaviorSubject<IAlert[]> = new BehaviorSubject<IAlert[]>([]);
+    destroy$: Subject<boolean> = new Subject<boolean>();
 
     constructor() {
     }
@@ -29,11 +32,16 @@ export class AlertService {
         const newLength = alerts.push({ type: type, message: message });
 
         if (timer != null) {
-            debounceTime.call(this.alerts$, timer).subscribe((alerts: IAlert[]) => {
-                if (alerts[newLength - 1] != null) {
-                    alerts[newLength - 1].message = null;
-                }
-            });
+            debounceTime
+                .call(this.alerts$, timer)
+                .takeUntil(this.destroy$)
+                .subscribe(
+                    (alerts: IAlert[]) => {
+                        if (alerts[newLength - 1] != null) {
+                            alerts[newLength - 1].message = null;
+                        }
+                    }
+                );
         }
 
         this.alerts$.next(alerts);
@@ -45,5 +53,10 @@ export class AlertService {
         alerts.splice(index, 1);
 
         this.alerts$.next(alerts);
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.unsubscribe();
     }
 }

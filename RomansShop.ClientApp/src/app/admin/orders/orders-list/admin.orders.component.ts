@@ -1,6 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { Subject } from "rxjs/Subject";
+import 'rxjs/add/operator/takeUntil';
 
 import { Order } from "../../../shared/models/order";
 import { OrderStatus } from "../../../shared/enums/order-status";
@@ -12,11 +14,12 @@ import { EditOrderComponent } from "../edit-order/edit-order.component";
 @Component({
   templateUrl: './admin.orders.component.html'
 })
-export class AdminOrdersComponent implements OnInit {
+export class AdminOrdersComponent implements OnInit, OnDestroy {
   orders: Order[];
   orderStatus = OrderStatus;
   isLoaded: boolean = false;
   selectedOrderStatus: OrderStatus = -1;
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private orderService: OrderService,
               private authenticationService: AuthenticationService,
@@ -35,16 +38,22 @@ export class AdminOrdersComponent implements OnInit {
   private loadOrders() {
     if (this.selectedOrderStatus == null || this.selectedOrderStatus == -1) {
       this.orderService.getOrders()
-        .subscribe((data: Order[]) => {
-          this.orders = data;
-          this.isLoaded = true;
-        });
+        .takeUntil(this.destroy$)
+        .subscribe(
+          (data: Order[]) => {
+            this.orders = data;
+            this.isLoaded = true;
+          }
+        );
     } else {
       this.orderService.getByStatus(this.selectedOrderStatus)
-        .subscribe((data: Order[]) => {
-          this.orders = data;
-          this.isLoaded = true;
-        });
+        .takeUntil(this.destroy$)
+        .subscribe(
+          (data: Order[]) => {
+            this.orders = data;
+            this.isLoaded = true;
+          }
+        );
     }
   }
 
@@ -52,5 +61,10 @@ export class AdminOrdersComponent implements OnInit {
     const updatedOrder = Object.assign({}, order);
     const modalRef = this.modalService.open(EditOrderComponent);
     modalRef.componentInstance.order = updatedOrder;
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

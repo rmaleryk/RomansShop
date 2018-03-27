@@ -1,16 +1,19 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from "rxjs/Subject";
+import 'rxjs/add/operator/takeUntil';
 
 import { Order } from '../shared/models/order';
 import { OrderStatus } from '../shared/enums/order-status';
 import { AppSettings } from '../shared/constants/app-settings';
 
 @Injectable()
-export class OrderService {
+export class OrderService implements OnDestroy {
     private resourceUrl = AppSettings.API_ENDPOINT + "/orders";
     private orders$: BehaviorSubject<Order[]> = new BehaviorSubject<Order[]>([]);
+    destroy$: Subject<boolean> = new Subject<boolean>();
 
     constructor(private http: HttpClient) {
         this.loadOrders();
@@ -55,10 +58,18 @@ export class OrderService {
     private loadOrders() {
         this.http.get<Order[]>(this.resourceUrl)
             .map((data: any[]) => this.createOrders(data))
-            .subscribe((data: any) => this.orders$.next(data));
+            .takeUntil(this.destroy$)
+            .subscribe(
+                (data: any) => this.orders$.next(data)
+            );
     }
 
     private createOrders(ordersData: any): Order[] {
         return ordersData.map(order => new Order(order));
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.unsubscribe();
     }
 }

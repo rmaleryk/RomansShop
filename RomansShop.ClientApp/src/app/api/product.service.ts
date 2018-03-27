@@ -1,16 +1,19 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from "rxjs/Subject";
+import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/map';
 
 import { Product } from '../shared/models/product';
 import { AppSettings } from '../shared/constants/app-settings';
 
 @Injectable()
-export class ProductService {
+export class ProductService implements OnDestroy {
     private resourceUrl = AppSettings.API_ENDPOINT + "/products";
     private products$: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
+    destroy$: Subject<boolean> = new Subject<boolean>();
 
     constructor(private http: HttpClient) {
         this.loadProducts();
@@ -55,10 +58,18 @@ export class ProductService {
     private loadProducts() {
         this.http.get(this.resourceUrl)
             .map((data: any[]) => this.createProducts(data))
-            .subscribe((data: Product[]) => this.products$.next(data));
+            .takeUntil(this.destroy$)
+            .subscribe(
+                (data: Product[]) => this.products$.next(data)
+            );
     }
 
     private createProducts(productsData: any): Product[] {
         return productsData.map(product => new Product(product));
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.unsubscribe();
     }
 }

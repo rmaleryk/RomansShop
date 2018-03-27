@@ -1,7 +1,9 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from "rxjs/Subject";
+import 'rxjs/add/operator/takeUntil';
 
 import { CategoryService } from "../../../api/category.service";
 import { ProductService } from "../../../api/product.service";
@@ -13,10 +15,11 @@ import { AlertService } from "../../../api/alert.service";
 @Component({
   templateUrl: './admin.categories.component.html'
 })
-export class AdminCategoriesComponent implements OnInit {
+export class AdminCategoriesComponent implements OnInit, OnDestroy {
   categories: Category[];
   isLoaded: boolean = false;
-
+  destroy$: Subject<boolean> = new Subject<boolean>();
+  
   constructor(private categoryService: CategoryService,
               private alertService: AlertService,
               private modalService: NgbModal) {
@@ -28,9 +31,11 @@ export class AdminCategoriesComponent implements OnInit {
 
   private loadCategories() {
     this.categoryService.getCategories()
-      .subscribe((data: Category[]) => {
-        this.categories = data;
-        this.isLoaded = true;
+      .takeUntil(this.destroy$)
+      .subscribe(
+        (data: Category[]) => {
+          this.categories = data;
+          this.isLoaded = true;
       });
   }
 
@@ -51,8 +56,16 @@ export class AdminCategoriesComponent implements OnInit {
 
   private delete(id: string) {
     if (confirm("Are you sure to delete?")) {
-      this.categoryService.delete(id).subscribe(data => { },
-        error => this.alertService.warning(error.error));
+      this.categoryService.delete(id)
+        .subscribe(
+          (data: any) => { },
+          (error: any) => this.alertService.warning(error.error)
+        );
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

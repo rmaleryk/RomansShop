@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Subject } from "rxjs/Subject";
+import 'rxjs/add/operator/takeUntil';
 
 import { Product } from '../../shared/models/product';
 import { ProductService } from '../../api/product.service';
@@ -9,9 +11,10 @@ import { OrderComponent } from '../order/order.component';
 @Component({
     templateUrl: './shopping-cart.component.html'
 })
-export class ShoppingCartComponent implements OnInit {
+export class ShoppingCartComponent implements OnInit, OnDestroy {
     cartItems: Product[] = [];
     totalPrice: number = 0;
+    destroy$: Subject<boolean> = new Subject<boolean>();
 
     constructor(private activeModal: NgbActiveModal,
                 private modalService: NgbModal,
@@ -20,10 +23,14 @@ export class ShoppingCartComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.shoppingCartService.getCartItems().subscribe((data: Product[]) => {
-            this.cartItems = data;
-            this.calculateTotalCost();
-        });
+        this.shoppingCartService.getCartItems()
+            .takeUntil(this.destroy$)    
+            .subscribe(
+                (data: Product[]) => {
+                    this.cartItems = data;
+                    this.calculateTotalCost();
+                }
+            );
     }
 
     private addToCart(product: Product) {
@@ -52,5 +59,10 @@ export class ShoppingCartComponent implements OnInit {
 
     private close() {
         this.activeModal.close();
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.unsubscribe();
     }
 }

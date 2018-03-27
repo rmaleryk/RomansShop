@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
+import { Subject } from "rxjs/Subject";
+import 'rxjs/add/operator/takeUntil';
 
 import { CategoryService } from '../api/category.service';
 import { Category } from '../shared/models/category';
@@ -19,10 +21,11 @@ import { UserRights } from '../shared/enums/user-rights';
   styleUrls: ['./header.component.css'],
   providers: [NgbModal]
 })
-export class AppHeader implements OnInit {
+export class AppHeader implements OnInit, OnDestroy {
   isCollapsed = false;
   cartItemsCount: number;
   categories: Category[];
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private categoryService: CategoryService,
               private shoppingCartService: ShoppingCartService,
@@ -51,16 +54,23 @@ export class AppHeader implements OnInit {
   }
 
   private loadCartItemsCount() {
-    this.shoppingCartService.getCartItems().subscribe((data: Product[]) => {
-      if (data != null) {
-        this.cartItemsCount = data.length;
-      }
-    });
+    this.shoppingCartService.getCartItems()
+      .takeUntil(this.destroy$)
+      .subscribe(
+        (data: Product[]) => {
+          if (data != null) {
+            this.cartItemsCount = data.length;
+          }
+        }
+      );
   }
 
   private loadCategories() {
     this.categoryService.getCategories()
-      .subscribe((data: Category[]) => this.categories = data);
+      .takeUntil(this.destroy$)
+      .subscribe(
+        (data: Category[]) => this.categories = data
+      );
   }
 
   private openShoppingCart() {
@@ -69,5 +79,10 @@ export class AppHeader implements OnInit {
 
   private openSignInForm() {
     this.modalService.open(SignInComponent);
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

@@ -1,5 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
+import { Subject } from "rxjs/Subject";
+import 'rxjs/add/operator/takeUntil';
 
 import { CategoryService } from "../../../api/category.service";
 import { ProductService } from "../../../api/product.service";
@@ -9,11 +11,12 @@ import { Product } from "../../../shared/models/product";
 @Component({
   templateUrl: './admin.products.component.html'
 })
-export class AdminProductsComponent implements OnInit {
+export class AdminProductsComponent implements OnInit, OnDestroy {
   products: Product[];
   categories: Category[];
   selectedCategoryId: string;
   isLoaded: boolean = false;
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private productService: ProductService,
               private categoryService: CategoryService) {
@@ -27,27 +30,45 @@ export class AdminProductsComponent implements OnInit {
   private loadProducts() {
     if (this.selectedCategoryId == null || this.selectedCategoryId == "undefined") {
       this.productService.getProducts()
-        .subscribe((data: Product[]) => {
-          this.products = data;
-          this.isLoaded = true;
-        });
+        .takeUntil(this.destroy$)
+        .subscribe(
+          (data: Product[]) => {
+            this.products = data;
+            this.isLoaded = true;
+          }
+        );
     } else {
       this.productService.getByCategoryId(this.selectedCategoryId)
-        .subscribe((data: Product[]) => {
-          this.products = data;
-          this.isLoaded = true;
-        });
+        .takeUntil(this.destroy$)
+        .subscribe(
+          (data: Product[]) => {
+            this.products = data;
+            this.isLoaded = true;
+          }
+        );
     }
   }
 
   private loadCategories() {
     this.categoryService.getCategories()
-      .subscribe((data: Category[]) => this.categories = data);
+      .takeUntil(this.destroy$)
+      .subscribe(
+        (data: Category[]) => this.categories = data
+      );
   }
 
   private delete(id: string) {
     if (confirm("Are you sure to delete?")) {
-      this.productService.delete(id).subscribe(data => this.loadProducts());
+      this.productService.delete(id)
+        .takeUntil(this.destroy$)
+        .subscribe(
+          data => this.loadProducts()
+        );
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

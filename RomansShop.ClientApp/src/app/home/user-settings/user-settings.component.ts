@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Subject } from "rxjs/Subject";
+import 'rxjs/add/operator/takeUntil';
 
 import { Product } from '../../shared/models/product';
 import { ProductService } from '../../api/product.service';
@@ -14,8 +16,9 @@ import { UserService } from '../../api/user.service';
 @Component({
     templateUrl: './user-settings.component.html'
 })
-export class UserSettingsComponent implements OnInit {
+export class UserSettingsComponent implements OnInit, OnDestroy {
     user: User;
+    destroy$: Subject<boolean> = new Subject<boolean>();
 
     constructor(private alertService: AlertService,
                 private authenticationService: AuthenticationService,
@@ -31,13 +34,23 @@ export class UserSettingsComponent implements OnInit {
     }
 
     private save() {
-        this.userService.update(this.user).subscribe(data => {
-            this.alertService.info("Your profile has been successfully updated.", 2000)
-            localStorage.setItem('currentUser', JSON.stringify(this.user));
+        this.userService.update(this.user)
+            .takeUntil(this.destroy$)
+            .subscribe(
+                (user: User) => {
+                    this.alertService.info("Your profile has been successfully updated.", 2000)
+                    localStorage.setItem('currentUser', JSON.stringify(user));
 
-        }, error => {
-            this.alertService.info(error.error);
-            this.user = this.currentUser;
-        });
+                },
+                (error: any) => {
+                    this.alertService.info(error.error);
+                    this.user = this.currentUser;
+                }
+            );
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.unsubscribe();
     }
 }
