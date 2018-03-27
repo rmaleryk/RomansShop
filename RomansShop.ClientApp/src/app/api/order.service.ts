@@ -22,33 +22,28 @@ export class OrderService {
 
     getById(id: string): Observable<Order> {
         return this.http.get(`${this.resourceUrl}/${id}`)
-            .map((resp: any) => new Order(resp.id, resp.userId, resp.customerEmail, resp.customerName, resp.products, resp.address, resp.price, resp.status));
+            .map((data: any) => new Order(data));
     }
 
     getByUserId(id: string): Observable<Order[]> {
         return this.http.get(`${AppSettings.API_ENDPOINT}/users/${id}/orders`)
-            .map((data: any) => data.map(function (resp: any) {
-                return new Order(resp.id, resp.userId, resp.customerEmail, resp.customerName, resp.products, resp.address, resp.price, resp.status);
-            }));
+            .map((data: any[]) => this.createOrders(data));
     }
 
     getByStatus(status: OrderStatus): Observable<Order[]> {
         return this.http.get(`${this.resourceUrl}/status/${status}`)
-            .map((data: any) => data.map(function (resp: any) {
-                return new Order(resp.id, resp.userId, resp.customerEmail, resp.customerName, resp.products, resp.address, resp.price, resp.status);
-            }));
+            .map((data: any[]) => this.createOrders(data));
     }
 
     create(order: Order): Observable<Order> {
-        console.log(JSON.stringify(order));
         return this.http.post(this.resourceUrl, order)
-            .map((resp: any) => new Order(resp.id, resp.userId, resp.customerEmail, resp.customerName, resp.products, resp.address, resp.price, resp.status))
+            .map((data: any) => new Order(data))
             .do(() => this.loadOrders());
     }
 
     update(order: Order): Observable<Order> {
         return this.http.put(`${this.resourceUrl}/${order.id}`, order)
-            .map((resp: any) => new Order(resp.id, resp.userId, resp.customerEmail, resp.customerName, resp.products, resp.address, resp.price, resp.status))
+            .map((data: any) => new Order(data))
             .do(() => this.loadOrders());
     }
 
@@ -59,9 +54,11 @@ export class OrderService {
 
     private loadOrders() {
         this.http.get<Order[]>(this.resourceUrl)
-            .map((data: any) => data.map(function (resp: any) {
-                return new Order(resp.id, resp.userId, resp.customerEmail, resp.customerName, resp.products, resp.address, resp.price, resp.status);
-            }))
-            .subscribe((data: Order[]) => this.orders$.next(data));
+            .map((data: any[]) => this.createOrders(data))
+            .subscribe((data: any) => this.orders$.next(data));
+    }
+
+    private createOrders(ordersData: any): Order[] {
+        return ordersData.map(order => new Order(order));
     }
 }

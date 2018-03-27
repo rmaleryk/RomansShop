@@ -28,7 +28,7 @@ export class AlertService {
         let alerts = this.alerts$.getValue();
         let newLength = alerts.push({ type: type, message: message });
 
-        if (timer) {
+        if (timer != null) {
             debounceTime.call(this.alerts$, timer).subscribe((alerts: IAlert[]) => {
                 if (alerts[newLength - 1] != null) {
                     alerts[newLength - 1].message = null;

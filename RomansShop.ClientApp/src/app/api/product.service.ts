@@ -22,32 +22,28 @@ export class ProductService {
 
     getById(id: string): Observable<Product> {
         return this.http.get(`${this.resourceUrl}/${id}`)
-            .map((data: any) => new Product(data.id, data.name, null, data.categoryId, data.price));
+            .map((data: any) => new Product(data));
     }
 
     getByCategoryId(id: string): Observable<Product[]> {
         return this.http.get(`${AppSettings.API_ENDPOINT}/categories/${id}/products`)
-            .map((data: any) => data.map(function (productResponse: any) {
-                return new Product(productResponse.id, productResponse.name, null, productResponse.categoryId, productResponse.price);
-            }));
+            .map((data: any[]) => this.createProducts(data));
     }
 
     getRange(startIndex: number, offset: number): Observable<Product[]> {
         return this.http.get(`${this.resourceUrl}/page?startIndex=${startIndex}&offset=${offset}`)
-            .map((data: any) => data.map(function (productResponse: any) {
-                return new Product(productResponse.id, productResponse.name, null, productResponse.categoryId, productResponse.price);
-            }));
+            .map((data: any[]) => this.createProducts(data));
     }
 
     create(product: Product): Observable<Product> {
         return this.http.post(this.resourceUrl, product)
-            .map((data: any) => new Product(data.id, data.name, null, data.categoryId, data.price))
+            .map((data: any) => new Product(data))
             .do(() => this.loadProducts());
     }
 
     update(product: Product): Observable<Product> {
         return this.http.put(`${this.resourceUrl}/${product.id}`, product)
-            .map((data: any) => new Product(data.id, data.name, null, data.categoryId, data.price))
+            .map((data: any) => new Product(data))
             .do(() => this.loadProducts());
     }
 
@@ -58,9 +54,11 @@ export class ProductService {
 
     private loadProducts() {
         this.http.get(this.resourceUrl)
-            .map((data: any) => data.map(function (productResponse: any) {
-                return new Product(productResponse.id, productResponse.name, null, productResponse.categoryId, productResponse.price);
-            }))
+            .map((data: any[]) => this.createProducts(data))
             .subscribe((data: Product[]) => this.products$.next(data));
+    }
+
+    private createProducts(productsData: any): Product[] {
+        return productsData.map(product => new Product(product));
     }
 }

@@ -21,7 +21,7 @@ export class ShoppingCartService {
         let products: Product[] = JSON.parse(localStorage.getItem(this.shoppingCartStorageName));
         
         if(products == null) {
-            products = new Array<Product>();
+            products = [];
         }
 
         products.push(product);
@@ -47,7 +47,7 @@ export class ShoppingCartService {
         let cartItems: Product[] = JSON.parse(localStorage.getItem(this.shoppingCartStorageName));
         
         if(cartItems == null) {
-            cartItems = new Array<Product>();
+            cartItems = [];
         }
 
         this.cartItems$.next(cartItems);

@@ -19,13 +19,13 @@ export class AuthenticationService {
     login(email: string, password: string): Observable<User> {
         return this.http.post<any>(this.url, { email: email, password: password })
             .map((user: User) => {
-                if (user) {
+                if (user != null) {
                     localStorage.setItem('currentUser', JSON.stringify(user));
                 }
                 return user;
             })
             .do((user: User) => {
-                if (user.id) {
+                if (user.id != null) {
                     this.alertService.info(`Hello! You are logged in as ${user.fullName}.`, 2000);
                 }
             });

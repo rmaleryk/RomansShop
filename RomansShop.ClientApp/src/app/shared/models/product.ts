@@ -1,9 +1,12 @@
 export class Product {
-    constructor(public id?: string,
-                public name?: string,
-                public categoryName: string = "No category",
-                public categoryId?: string,
-                public price?: number,
-                public description?: string) {
+    id?: string;
+    name?: string;
+    categoryName: string = "No category";
+    categoryId?: string;
+    price?: number;
+    description?: string;
+
+    constructor(data: any) {
+        Object.assign(this, data);
     }
 }

@@ -23,18 +23,18 @@ export class CategoryService {
 
     getById(id: string): Observable<Category> {
         return this.http.get(`${this.url}/${id}`)
-            .map((data: any) => new Category(data.id, data.name));
+            .map((data: any) => new Category(data));
     }
 
     create(category: Category): Observable<Category> {
         return this.http.post(this.url, category)
-            .map((data: any) => new Category(data.id, data.name))
+            .map((data: any) => new Category(data))
             .do(() => this.loadCategories());
     }
 
     update(category: Category): Observable<Category> {
         return this.http.put(`${this.url}/${category.id}`, category)
-            .map((data: any) => new Category(data.id, data.name))
+            .map((data: any) => new Category(data))
             .do(() => this.loadCategories());
     }
 
@@ -45,11 +45,11 @@ export class CategoryService {
 
     private loadCategories() {
         this.http.get(this.url)
-            .map((data: any) => {
-                return data.map(function (categoryResponse: any) {
-                    return new Category(categoryResponse.id, categoryResponse.name);
-                });
-            })
+            .map((data: any[]) => this.createCategories(data))
             .subscribe((data: Category[]) => this.categories$.next(data));
+    }
+
+    private createCategories(categoriesData: any): Category[] {
+        return categoriesData.map(category => new Category(category));
     }
 }

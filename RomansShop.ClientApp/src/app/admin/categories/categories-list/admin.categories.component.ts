@@ -35,10 +35,9 @@ export class AdminCategoriesComponent implements OnInit {
   }
 
   create() {
-    let category = new Category();
     let modalRef = this.modalService.open(EditCategoryComponent);
 
-    modalRef.componentInstance.category = category;
+    modalRef.componentInstance.category = new Category({});
     modalRef.componentInstance.isNewCategory = true;
   }
 

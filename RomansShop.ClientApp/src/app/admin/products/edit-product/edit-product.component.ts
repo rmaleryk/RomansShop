@@ -59,7 +59,7 @@ export class EditProductComponent implements OnInit {
     }
 
     save() {
-        let product: Product = new Product();
+        let product: Product = new Product({});
         product.id = this.productId;
         product.name = this.productForm.controls["name"].value;
         product.categoryId = this.productForm.controls["categoryId"].value;

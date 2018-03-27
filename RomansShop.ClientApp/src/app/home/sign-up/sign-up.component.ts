@@ -30,7 +30,11 @@ export class SignUpComponent implements OnInit {
     }
 
     signUpClick() {
-        let user: User = new User(null, this.model.email, this.model.name, shajs('sha256').update(this.model.password).digest('hex'), UserRights.CUSTOMER);
+        let user: User = new User(this.model);
+
+        user.password = shajs('sha256').update(user.password).digest('hex');
+        user.rights = UserRights.CUSTOMER;
+
         this.userService.create(user).subscribe((user: User) => {
             this.signIn();
             this.activeModal.close();

@@ -1,10 +1,13 @@
 import { UserRights } from "../enums/user-rights";
 
 export class User {
-    constructor(public id?: string,
-                public email?: string,
-                public fullName?: string,
-                public password?: string,
-                public rights?: UserRights) {
+    id?: string;
+    email?: string;
+    fullName?: string;
+    password?: string;
+    rights?: UserRights;
+
+    constructor(data: any) {
+        Object.assign(this, data);
     }
 }
