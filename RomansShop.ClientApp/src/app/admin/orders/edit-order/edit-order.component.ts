@@ -23,7 +23,7 @@ export class EditOrderComponent implements OnInit {
     ngOnInit() {
     }
 
-    save() {
+    private save() {
         this.orderService.update(this.order).subscribe(data => {
             if (this.isNotifiable) {
                 // send Notification
@@ -33,18 +33,18 @@ export class EditOrderComponent implements OnInit {
         this.close();
     }
 
-    delete() {
+    private delete() {
         this.orderService.delete(this.order.id).subscribe(data => { },
             error => this.alertService.warning(error.error));
         this.close();
     }
 
-    close() {
+    private close() {
         this.activeModal.close();
     }
 
-    getOrderStatuses(): string[] {
-        var keys = Object.keys(OrderStatus);
+    private getOrderStatuses(): string[] {
+        const keys = Object.keys(OrderStatus);
         return keys.slice(keys.length / 2);
     }
 }

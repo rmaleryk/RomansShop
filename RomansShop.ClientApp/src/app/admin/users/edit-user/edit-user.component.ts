@@ -21,24 +21,24 @@ export class EditUserComponent implements OnInit {
     ngOnInit() {
     }
 
-    save() {
+    private save() {
         this.userService.update(this.user).subscribe(data => { },
             error => this.alertService.warning(error.error));
         this.close();
     }
 
-    delete() {
+    private delete() {
         this.userService.delete(this.user.id).subscribe(data => { },
             error => this.alertService.warning(error.error));
         this.close();
     }
 
-    close() {
+    private close() {
         this.activeModal.close();
     }
 
-    getUserRights(): Array<string> {
-        var keys = Object.keys(UserRights);
+    private getUserRights(): Array<string> {
+        const keys = Object.keys(UserRights);
         return keys.slice(keys.length / 2);
     }
 }

@@ -21,7 +21,7 @@ export class EditCategoryComponent implements OnInit {
     ngOnInit() {
     }
 
-    save() {
+    private save() {
         if (this.isNewCategory) {
             this.categoryService.create(this.category).subscribe(data => { },
                 error => this.alertService.warning(error.error));
@@ -33,7 +33,7 @@ export class EditCategoryComponent implements OnInit {
         this.close();
     }
 
-    close() {
+    private close() {
         this.activeModal.close();
     }
 }

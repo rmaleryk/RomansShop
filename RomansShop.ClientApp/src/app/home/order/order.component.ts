@@ -45,7 +45,7 @@ export class OrderComponent implements OnInit {
         return this.authenticationService.getCurrentUser();
     }
 
-    makeOrder() {
+    private makeOrder() {
         this.orderService.create(this.order)
             .subscribe((data: Order) => {
                 this.shoppingCartService.clean();
@@ -56,7 +56,7 @@ export class OrderComponent implements OnInit {
             });
     }
 
-    close() {
+    private close() {
         this.activeModal.close();
     }
 }

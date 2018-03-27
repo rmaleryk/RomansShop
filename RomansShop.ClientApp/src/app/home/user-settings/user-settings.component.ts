@@ -30,7 +30,7 @@ export class UserSettingsComponent implements OnInit {
         return this.authenticationService.getCurrentUser();
     }
 
-    save() {
+    private save() {
         this.userService.update(this.user).subscribe(data => {
             this.alertService.info("Your profile has been successfully updated.", 2000)
             localStorage.setItem('currentUser', JSON.stringify(this.user));

@@ -45,12 +45,12 @@ export class AppHeader implements OnInit {
       this.currentUser.rights == UserRights.MODERATOR
   }
 
-  logout() {
+  private logout() {
     this.authenticationService.logout();
     this.router.navigateByUrl("/")
   }
 
-  loadCartItemsCount() {
+  private loadCartItemsCount() {
     this.shoppingCartService.getCartItems().subscribe((data: Product[]) => {
       if (data != null) {
         this.cartItemsCount = data.length;
@@ -58,16 +58,16 @@ export class AppHeader implements OnInit {
     });
   }
 
-  loadCategories() {
+  private loadCategories() {
     this.categoryService.getCategories()
       .subscribe((data: Category[]) => this.categories = data);
   }
 
-  openShoppingCart() {
+  private openShoppingCart() {
     this.modalService.open(ShoppingCartComponent);
   }
 
-  openSignInForm() {
+  private openSignInForm() {
     this.modalService.open(SignInComponent);
   }
 }

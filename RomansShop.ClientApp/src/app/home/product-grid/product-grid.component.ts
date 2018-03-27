@@ -47,7 +47,7 @@ export class ProductGridComponent implements OnInit {
          });
     }
 
-    loadAllProducts() {
+    private loadAllProducts() {
         this.productService.getProducts()
             .subscribe((data: Product[]) => {
                 this.products = data;
@@ -56,7 +56,7 @@ export class ProductGridComponent implements OnInit {
             });
     }
 
-    loadProductsPage() {
+    private loadProductsPage() {
         this.productService.getRange(this.pageConfig.pageSize*(this.pageNumber-1) + 1, this.pageConfig.pageSize)
             .subscribe((data: Product[]) => {
                 this.products = data;
@@ -64,7 +64,7 @@ export class ProductGridComponent implements OnInit {
             });
     }
 
-    loadByCategoryId(categoryId: string) {
+    private loadByCategoryId(categoryId: string) {
         this.productService.getByCategoryId(categoryId)
             .subscribe((data: Product[]) => {
                 this.products = data;
@@ -73,7 +73,7 @@ export class ProductGridComponent implements OnInit {
             });
     }
 
-    setCategoryNameById(categoryId: string) {
+    private setCategoryNameById(categoryId: string) {
         this.categoryService.getById(categoryId)
             .subscribe((data: Category) => {
                 this.categoryName = data.name;
@@ -82,13 +82,13 @@ export class ProductGridComponent implements OnInit {
             });
     }
 
-    addToCart(product: Product) {
+    private addToCart(product: Product) {
         this.shoppingCartService.addCartItem(product);
     }
 
-    pageChange() {
-        let startIndex = this.pageConfig.pageSize * (this.pageNumber-1);
-        let endIndex = this.pageConfig.pageSize * this.pageNumber;
+    private pageChange() {
+        const startIndex = this.pageConfig.pageSize * (this.pageNumber-1);
+        const endIndex = this.pageConfig.pageSize * this.pageNumber;
         this.productsPage = this.products.slice(startIndex, endIndex);
     }
 }

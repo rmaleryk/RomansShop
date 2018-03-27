@@ -29,8 +29,8 @@ export class SignUpComponent implements OnInit {
     ngOnInit() {
     }
 
-    signUpClick() {
-        let user: User = new User(this.model);
+    private signUpClick() {
+        const user: User = new User(this.model);
 
         user.password = shajs('sha256').update(user.password).digest('hex');
         user.rights = UserRights.CUSTOMER;
@@ -51,7 +51,7 @@ export class SignUpComponent implements OnInit {
         });
     }
 
-    close() {
+    private close() {
         this.activeModal.close();
         this.errorMessage = null;
     }

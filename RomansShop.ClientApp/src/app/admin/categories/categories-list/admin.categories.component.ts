@@ -26,7 +26,7 @@ export class AdminCategoriesComponent implements OnInit {
     this.loadCategories();
   }
 
-  loadCategories() {
+  private loadCategories() {
     this.categoryService.getCategories()
       .subscribe((data: Category[]) => {
         this.categories = data;
@@ -34,22 +34,22 @@ export class AdminCategoriesComponent implements OnInit {
       });
   }
 
-  create() {
-    let modalRef = this.modalService.open(EditCategoryComponent);
+  private create() {
+    const modalRef = this.modalService.open(EditCategoryComponent);
 
     modalRef.componentInstance.category = new Category({});
     modalRef.componentInstance.isNewCategory = true;
   }
 
-  update(category: Category) {
-    let updatedCategory = Object.assign({}, category);
-    let modalRef = this.modalService.open(EditCategoryComponent);
+  private update(category: Category) {
+    const updatedCategory = Object.assign({}, category);
+    const modalRef = this.modalService.open(EditCategoryComponent);
 
     modalRef.componentInstance.category = updatedCategory;
     modalRef.componentInstance.isNewCategory = false;
   }
 
-  delete(id: string) {
+  private delete(id: string) {
     if (confirm("Are you sure to delete?")) {
       this.categoryService.delete(id).subscribe(data => { },
         error => this.alertService.warning(error.error));

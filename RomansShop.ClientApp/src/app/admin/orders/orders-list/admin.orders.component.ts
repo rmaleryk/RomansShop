@@ -27,12 +27,12 @@ export class AdminOrdersComponent implements OnInit {
     this.loadOrders();
   }
 
-  getOrderStatuses(): Array<string> {
-    var keys = Object.keys(OrderStatus);
+  private getOrderStatuses(): string[] {
+    const keys = Object.keys(OrderStatus);
     return keys.slice(keys.length / 2);
   }
 
-  loadOrders() {
+  private loadOrders() {
     if (this.selectedOrderStatus == null || this.selectedOrderStatus == -1) {
       this.orderService.getOrders()
         .subscribe((data: Order[]) => {
@@ -48,9 +48,9 @@ export class AdminOrdersComponent implements OnInit {
     }
   }
 
-  update(order: Order) {
-    let updatedOrder = Object.assign({}, order);
-    let modalRef = this.modalService.open(EditOrderComponent);
+  private update(order: Order) {
+    const updatedOrder = Object.assign({}, order);
+    const modalRef = this.modalService.open(EditOrderComponent);
     modalRef.componentInstance.order = updatedOrder;
   }
 }

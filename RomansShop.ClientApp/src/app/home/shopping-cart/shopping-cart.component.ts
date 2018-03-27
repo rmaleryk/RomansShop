@@ -26,18 +26,18 @@ export class ShoppingCartComponent implements OnInit {
         });
     }
 
-    addToCart(product: Product) {
+    private addToCart(product: Product) {
         this.shoppingCartService.addCartItem(product);
     }
 
-    delete(index: number) {
+    private delete(index: number) {
         this.cartItems.splice(index, 1);
         this.shoppingCartService.deleteCartItem(index);
 
         this.calculateTotalCost();
     }
 
-    calculateTotalCost() {
+    private calculateTotalCost() {
         if (this.cartItems.length > 0) {
             this.totalPrice = this.cartItems
                 .map((prod) => prod.price)
@@ -45,12 +45,12 @@ export class ShoppingCartComponent implements OnInit {
         }
     }
 
-    openOrderForm() {
+    private openOrderForm() {
         this.activeModal.close();
         this.modalService.open(OrderComponent);
     }
 
-    close() {
+    private close() {
         this.activeModal.close();
     }
 }

@@ -26,12 +26,12 @@ export class AdminUsersComponent implements OnInit {
     this.loadUsers();
   }
 
-  getUserRights(): string[] {
-    var keys = Object.keys(UserRights);
+  private getUserRights(): string[] {
+    const keys = Object.keys(UserRights);
     return keys.slice(keys.length / 2);
   }
 
-  loadUsers() {
+  private loadUsers() {
     if (this.selectedUserRights == null || this.selectedUserRights == -1) {
       this.userService.getUsers()
         .subscribe((data: User[]) => {
@@ -47,9 +47,9 @@ export class AdminUsersComponent implements OnInit {
     }
   }
 
-  update(user: User) {
-    let updatedUser = Object.assign({}, user);
-    let modalRef = this.modalService.open(EditUserComponent);
+  private update(user: User) {
+    const updatedUser = Object.assign({}, user);
+    const modalRef = this.modalService.open(EditUserComponent);
     modalRef.componentInstance.user = updatedUser;
   }
 }

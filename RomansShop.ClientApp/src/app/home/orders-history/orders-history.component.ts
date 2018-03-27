@@ -23,8 +23,8 @@ export class OrdersHistoryComponent implements OnInit {
     this.loadOrders();
   }
 
-  loadOrders() {
-    let userId = this.authenticationService.getCurrentUser().id;
+  private loadOrders() {
+    const userId = this.authenticationService.getCurrentUser().id;
     this.orderService.getByUserId(userId)
       .subscribe((data: Order[]) => {
         this.orders = data;

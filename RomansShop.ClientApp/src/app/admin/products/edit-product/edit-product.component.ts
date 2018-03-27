@@ -42,12 +42,12 @@ export class EditProductComponent implements OnInit {
         this.loadCategories();
     }
 
-    loadCategories() {
+    private loadCategories() {
         this.categoryService.getCategories()
             .subscribe((data: Category[]) => this.categories = data);
     }
 
-    loadProduct(id: string) {
+    private loadProduct(id: string) {
         this.productService.getById(id)
             .subscribe((data: Product) => {
                 this.productForm.controls["name"].setValue(data.name);
@@ -58,8 +58,8 @@ export class EditProductComponent implements OnInit {
             });
     }
 
-    save() {
-        let product: Product = new Product({});
+    private save() {
+        const product: Product = new Product({});
         product.id = this.productId;
         product.name = this.productForm.controls["name"].value;
         product.categoryId = this.productForm.controls["categoryId"].value;

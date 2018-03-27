@@ -24,7 +24,7 @@ export class AdminProductsComponent implements OnInit {
     this.loadCategories();
   }
 
-  loadProducts() {
+  private loadProducts() {
     if (this.selectedCategoryId == null || this.selectedCategoryId == "undefined") {
       this.productService.getProducts()
         .subscribe((data: Product[]) => {
@@ -40,12 +40,12 @@ export class AdminProductsComponent implements OnInit {
     }
   }
 
-  loadCategories() {
+  private loadCategories() {
     this.categoryService.getCategories()
       .subscribe((data: Category[]) => this.categories = data);
   }
 
-  delete(id: string) {
+  private delete(id: string) {
     if (confirm("Are you sure to delete?")) {
       this.productService.delete(id).subscribe(data => this.loadProducts());
     }

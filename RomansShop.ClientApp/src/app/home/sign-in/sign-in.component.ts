@@ -26,19 +26,19 @@ export class SignInComponent implements OnInit {
     ngOnInit() {
     }
 
-    signInClick() {
+    private signInClick() {
         this.authenticationService.login(this.model.email, shajs('sha256').update(this.model.password).digest('hex'))
             .subscribe(user => {
                 this.activeModal.close();
             }, error => this.errorMessage = error.error);
     }
 
-    signUpClick() {
+    private signUpClick() {
         this.activeModal.close();
         this.modalService.open(SignUpComponent);
     }
 
-    close() {
+    private close() {
         this.activeModal.close();
         this.errorMessage = null;
     }

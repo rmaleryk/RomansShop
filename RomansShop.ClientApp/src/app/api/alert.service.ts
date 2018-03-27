@@ -25,8 +25,8 @@ export class AlertService {
     }
 
     private showAlert(message: string, type: string, timer: number) {
-        let alerts = this.alerts$.getValue();
-        let newLength = alerts.push({ type: type, message: message });
+        const alerts = this.alerts$.getValue();
+        const newLength = alerts.push({ type: type, message: message });
 
         if (timer != null) {
             debounceTime.call(this.alerts$, timer).subscribe((alerts: IAlert[]) => {
@@ -40,8 +40,8 @@ export class AlertService {
     }
 
     closeAlert(alert: IAlert) {
-        let alerts = this.alerts$.getValue();
-        let index: number = alerts.indexOf(alert);
+        const alerts = this.alerts$.getValue();
+        const index: number = alerts.indexOf(alert);
         alerts.splice(index, 1);
 
         this.alerts$.next(alerts);
