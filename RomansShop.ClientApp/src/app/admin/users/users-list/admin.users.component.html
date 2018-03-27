@@ -2,7 +2,7 @@
 <div class="form-inline justify-content-between">
     <select class="form-control-sm" id="status" name="status" [(ngModel)]="selectedUserRights" (change)="loadUsers()">
         <option value="-1">All user groups</option>
-        <option *ngFor="let rights of getUserRights(); let i = index" [value]="i">{{ rights }}</option>
+        <option *ngFor="let rights of userRightsArray; let i = index" [value]="i">{{ rights }}</option>
     </select>
 </div>
 <div *ngIf="!isLoaded" class="loading-spinner">
@@ -27,9 +27,9 @@
             </td>
             <td>
                 <div [ngSwitch]="user.rights">
-                    <div *ngSwitchCase="userRights.Administrator">Administrator</div>
-                    <div *ngSwitchCase="userRights.Moderator">Moderator</div>
-                    <div *ngSwitchCase="userRights.Customer">Customer</div>
+                    <div *ngSwitchCase="userRights.ADMINISTRATOR">Administrator</div>
+                    <div *ngSwitchCase="userRights.MODERATOR">Moderator</div>
+                    <div *ngSwitchCase="userRights.CUSTOMER">Customer</div>
                 </div>
             </td>
             <td class="d-flex justify-content-center">

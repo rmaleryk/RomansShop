@@ -26,7 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
       );
   }
 
-  closeAlert(alert: IAlert) {
+  private closeAlert(alert: IAlert) {
     this.alertService.closeAlert(alert);
   }
 

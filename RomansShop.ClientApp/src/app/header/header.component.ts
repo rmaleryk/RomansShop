@@ -25,6 +25,8 @@ export class AppHeader implements OnInit, OnDestroy {
   isCollapsed = false;
   cartItemsCount: number;
   categories: Category[];
+  currentUser: User;
+  hasAdminPanel: boolean;
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private categoryService: CategoryService,
@@ -37,15 +39,10 @@ export class AppHeader implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadCategories();
     this.loadCartItemsCount();
-  }
-
-  get currentUser(): User {
-    return this.authenticationService.getCurrentUser();
-  }
-
-  get hasAdminPanel(): boolean {
-    return this.currentUser.rights == UserRights.ADMINISTRATOR ||
-      this.currentUser.rights == UserRights.MODERATOR
+    this.currentUser = this.authenticationService.getCurrentUser();
+    
+    this.hasAdminPanel = this.currentUser.rights == UserRights.ADMINISTRATOR ||
+      this.currentUser.rights == UserRights.MODERATOR;
   }
 
   private logout() {

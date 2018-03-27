@@ -68,7 +68,6 @@ export class ProductGridComponent implements OnInit, OnDestroy {
 
     private loadProductsPage() {
         this.productService.getRange(this.pageConfig.pageSize*(this.pageNumber-1) + 1, this.pageConfig.pageSize)
-            .takeUntil(this.destroy$)
             .subscribe(
                 (data: Product[]) => {
                     this.products = data;
@@ -79,7 +78,6 @@ export class ProductGridComponent implements OnInit, OnDestroy {
 
     private loadByCategoryId(categoryId: string) {
         this.productService.getByCategoryId(categoryId)
-            .takeUntil(this.destroy$)
             .subscribe(
                 (data: Product[]) => {
                     this.products = data;
@@ -91,7 +89,6 @@ export class ProductGridComponent implements OnInit, OnDestroy {
 
     private setCategoryNameById(categoryId: string) {
         this.categoryService.getById(categoryId)
-            .takeUntil(this.destroy$)
             .subscribe(
                 (data: Category) => this.categoryName = data.name,
                 (error: any) => this.categoryName = "Category not found!"

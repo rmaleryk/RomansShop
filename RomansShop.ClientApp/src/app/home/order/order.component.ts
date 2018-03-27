@@ -27,10 +27,12 @@ export class OrderComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        if (this.currentUser) {
-            this.order.userId = this.currentUser.id;
-            this.order.customerName = this.currentUser.fullName;
-            this.order.customerEmail = this.currentUser.email;
+        const currentUser = this.authenticationService.getCurrentUser();
+
+        if (currentUser) {
+            this.order.userId = currentUser.id;
+            this.order.customerName = currentUser.fullName;
+            this.order.customerEmail = currentUser.email;
         }
 
         this.shoppingCartService.getCartItems()
@@ -48,13 +50,8 @@ export class OrderComponent implements OnInit, OnDestroy {
             );
     }
 
-    get currentUser(): User {
-        return this.authenticationService.getCurrentUser();
-    }
-
     private makeOrder() {
         this.orderService.create(this.order)
-            .takeUntil(this.destroy$)
             .subscribe(
                 (data: Order) => {
                     this.shoppingCartService.clean();

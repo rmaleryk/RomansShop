@@ -1,9 +1,7 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from "rxjs/Subject";
-import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
@@ -11,10 +9,9 @@ import { Category } from '../shared/models/category';
 import { AppSettings } from '../shared/constants/app-settings';
 
 @Injectable()
-export class CategoryService implements OnDestroy {
+export class CategoryService {
     private url = AppSettings.API_ENDPOINT + "/categories";
     private categories$: BehaviorSubject<Category[]> = new BehaviorSubject<Category[]>([]);
-    destroy$: Subject<boolean> = new Subject<boolean>();
 
     constructor(private http: HttpClient) {
         this.loadCategories();
@@ -49,7 +46,6 @@ export class CategoryService implements OnDestroy {
     private loadCategories() {
         this.http.get(this.url)
             .map((data: any[]) => this.createCategories(data))
-            .takeUntil(this.destroy$)
             .subscribe(
                 (data: Category[]) => this.categories$.next(data)
             );
@@ -57,10 +53,5 @@ export class CategoryService implements OnDestroy {
 
     private createCategories(categoriesData: any): Category[] {
         return categoriesData.map(category => new Category(category));
-    }
-
-    ngOnDestroy() {
-        this.destroy$.next(true);
-        this.destroy$.unsubscribe();
     }
 }

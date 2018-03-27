@@ -17,8 +17,9 @@ import { EditOrderComponent } from "../edit-order/edit-order.component";
 export class AdminOrdersComponent implements OnInit, OnDestroy {
   orders: Order[];
   orderStatus = OrderStatus;
+  orderStatuses: string[];
   isLoaded: boolean = false;
-  selectedOrderStatus: OrderStatus = -1;
+  selectedOrderStatus: OrderStatus | -1 = -1;
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private orderService: OrderService,
@@ -28,6 +29,7 @@ export class AdminOrdersComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadOrders();
+    this.orderStatuses = this.getOrderStatuses();
   }
 
   private getOrderStatuses(): string[] {
@@ -36,25 +38,15 @@ export class AdminOrdersComponent implements OnInit, OnDestroy {
   }
 
   private loadOrders() {
-    if (this.selectedOrderStatus == null || this.selectedOrderStatus == -1) {
-      this.orderService.getOrders()
-        .takeUntil(this.destroy$)
-        .subscribe(
-          (data: Order[]) => {
-            this.orders = data;
-            this.isLoaded = true;
-          }
-        );
-    } else {
-      this.orderService.getByStatus(this.selectedOrderStatus)
-        .takeUntil(this.destroy$)
-        .subscribe(
-          (data: Order[]) => {
-            this.orders = data;
-            this.isLoaded = true;
-          }
-        );
-    }
+    ((this.selectedOrderStatus == null || this.selectedOrderStatus == -1) ?
+        this.orderService.getOrders().takeUntil(this.destroy$) :
+        this.orderService.getByStatus(this.selectedOrderStatus))
+          .subscribe(
+            (data: Order[]) => {
+              this.orders = data;
+              this.isLoaded = true;
+            }
+          );
   }
 
   private update(order: Order) {

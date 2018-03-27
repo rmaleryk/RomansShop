@@ -19,7 +19,7 @@ export class AdminCategoriesComponent implements OnInit, OnDestroy {
   categories: Category[];
   isLoaded: boolean = false;
   destroy$: Subject<boolean> = new Subject<boolean>();
-  
+
   constructor(private categoryService: CategoryService,
               private alertService: AlertService,
               private modalService: NgbModal) {

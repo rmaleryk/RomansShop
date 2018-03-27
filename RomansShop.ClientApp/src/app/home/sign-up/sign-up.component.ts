@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as shajs from 'sha.js';
-import { Subject } from "rxjs/Subject";
-import 'rxjs/add/operator/takeUntil';
 
 import { Product } from '../../shared/models/product';
 import { ProductService } from '../../api/product.service';
@@ -17,10 +15,9 @@ import { UserRights } from '../../shared/enums/user-rights';
 @Component({
     templateUrl: './sign-up.component.html'
 })
-export class SignUpComponent implements OnInit, OnDestroy {
+export class SignUpComponent implements OnInit {
     model: any = {};
     errorMessage: string;
-    destroy$: Subject<boolean> = new Subject<boolean>();
 
     constructor(private activeModal: NgbActiveModal,
                 private modalService: NgbModal,
@@ -39,7 +36,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
         user.rights = UserRights.CUSTOMER;
 
         this.userService.create(user)
-            .takeUntil(this.destroy$)
             .subscribe(
                 (user: User) => {
                     this.signIn();
@@ -51,7 +47,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
 
     private signIn() {
         this.authenticationService.login(this.model.email, shajs('sha256').update(this.model.password).digest('hex'))
-            .takeUntil(this.destroy$)    
             .subscribe(
                 (user: User) => {
                     if (!user.id) {
@@ -64,10 +59,5 @@ export class SignUpComponent implements OnInit, OnDestroy {
     private close() {
         this.activeModal.close();
         this.errorMessage = null;
-    }
-
-    ngOnDestroy() {
-        this.destroy$.next(true);
-        this.destroy$.unsubscribe();
     }
 }

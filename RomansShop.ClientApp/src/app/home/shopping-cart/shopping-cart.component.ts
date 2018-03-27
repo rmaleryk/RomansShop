@@ -24,7 +24,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.shoppingCartService.getCartItems()
-            .takeUntil(this.destroy$)    
+            .takeUntil(this.destroy$)   
             .subscribe(
                 (data: Product[]) => {
                     this.cartItems = data;

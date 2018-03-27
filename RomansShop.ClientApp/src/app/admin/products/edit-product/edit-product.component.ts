@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, OnDestroy } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { FormGroup, FormBuilder, Validators, FormControl } from "@angular/forms";
+import { Subject } from "rxjs/Subject";
+import 'rxjs/add/operator/takeUntil';
 
 import { Product } from "../../../shared/models/product";
 import { ProductService } from "../../../api/product.service";
@@ -10,11 +12,12 @@ import { CategoryService } from "../../../api/category.service";
 @Component({
     templateUrl: './edit-product.component.html'
 })
-export class EditProductComponent implements OnInit {
+export class EditProductComponent implements OnInit, OnDestroy {
     categories: Category[];
     productId: string;
     isLoaded: boolean;
     productForm: FormGroup;
+    destroy$: Subject<boolean> = new Subject<boolean>();
 
     constructor(private productService: ProductService,
                 private categoryService: CategoryService,
@@ -38,6 +41,7 @@ export class EditProductComponent implements OnInit {
 
     private loadCategories() {
         this.categoryService.getCategories()
+            .takeUntil(this.destroy$)
             .subscribe(
                 (data: Category[]) => this.categories = data
             );
@@ -76,5 +80,10 @@ export class EditProductComponent implements OnInit {
                 "price": [product.price, [Validators.required]],
                 "description": [product.description, [Validators.maxLength(255)]]
             });
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.unsubscribe();
     }
 }

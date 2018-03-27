@@ -8,7 +8,7 @@
     <div class="form-group">
         <label for="status">Order status:</label>
         <select class="form-control" id="status" name="status" [(ngModel)]="order.status" #status="ngModel" required>
-            <option *ngFor="let status of getOrderStatuses(); let i = index" [value]="i">{{ status }}</option>
+            <option *ngFor="let status of orderStatuses; let i = index" [value]="i">{{ status }}</option>
         </select>
     </div>
     <div class="form-group">

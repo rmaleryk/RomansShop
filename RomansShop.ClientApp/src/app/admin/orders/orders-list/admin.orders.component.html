@@ -2,7 +2,7 @@
 <div class="form-inline justify-content-between">
     <select class="form-control-sm" id="status" name="status" [(ngModel)]="selectedOrderStatus" (change)="loadOrders()">
         <option value="-1">All orders</option>
-        <option *ngFor="let status of getOrderStatuses(); let i = index" [value]="i">{{ status }}</option>
+        <option *ngFor="let status of orderStatuses; let i = index" [value]="i">{{ status }}</option>
     </select>
 </div>
 <div *ngIf="!isLoaded" class="loading-spinner">

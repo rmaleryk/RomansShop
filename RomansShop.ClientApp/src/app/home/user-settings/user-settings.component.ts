@@ -1,7 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subject } from "rxjs/Subject";
-import 'rxjs/add/operator/takeUntil';
 
 import { Product } from '../../shared/models/product';
 import { ProductService } from '../../api/product.service';
@@ -16,9 +14,9 @@ import { UserService } from '../../api/user.service';
 @Component({
     templateUrl: './user-settings.component.html'
 })
-export class UserSettingsComponent implements OnInit, OnDestroy {
+export class UserSettingsComponent implements OnInit {
     user: User;
-    destroy$: Subject<boolean> = new Subject<boolean>();
+    currentUser: User;
 
     constructor(private alertService: AlertService,
                 private authenticationService: AuthenticationService,
@@ -26,16 +24,12 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.currentUser = this.authenticationService.getCurrentUser();
         this.user = this.currentUser;
-    }
-
-    get currentUser(): User {
-        return this.authenticationService.getCurrentUser();
     }
 
     private save() {
         this.userService.update(this.user)
-            .takeUntil(this.destroy$)
             .subscribe(
                 (user: User) => {
                     this.alertService.info("Your profile has been successfully updated.", 2000)
@@ -47,10 +41,5 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
                     this.user = this.currentUser;
                 }
             );
-    }
-
-    ngOnDestroy() {
-        this.destroy$.next(true);
-        this.destroy$.unsubscribe();
     }
 }

@@ -17,7 +17,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   selectedCategoryId: string;
   isLoaded: boolean = false;
   destroy$: Subject<boolean> = new Subject<boolean>();
-
+  
   constructor(private productService: ProductService,
               private categoryService: CategoryService) {
   }
@@ -28,25 +28,15 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   }
 
   private loadProducts() {
-    if (this.selectedCategoryId == null || this.selectedCategoryId == "undefined") {
-      this.productService.getProducts()
-        .takeUntil(this.destroy$)
+    ((this.selectedCategoryId == null || this.selectedCategoryId == "undefined") ? 
+      this.productService.getProducts().takeUntil(this.destroy$) : 
+      this.productService.getByCategoryId(this.selectedCategoryId))
         .subscribe(
           (data: Product[]) => {
             this.products = data;
             this.isLoaded = true;
           }
         );
-    } else {
-      this.productService.getByCategoryId(this.selectedCategoryId)
-        .takeUntil(this.destroy$)
-        .subscribe(
-          (data: Product[]) => {
-            this.products = data;
-            this.isLoaded = true;
-          }
-        );
-    }
   }
 
   private loadCategories() {
@@ -60,7 +50,6 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   private delete(id: string) {
     if (confirm("Are you sure to delete?")) {
       this.productService.delete(id)
-        .takeUntil(this.destroy$)
         .subscribe(
           data => this.loadProducts()
         );
