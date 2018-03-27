@@ -5,11 +5,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { Order } from '../shared/models/order';
 import { OrderStatus } from '../shared/enums/order-status';
+import { AppSettings } from '../shared/constants/app-settings';
 
 @Injectable()
 export class OrderService {
-    private url = "http://localhost:50725/api";
-    private resourceUrl = this.url + "/orders";
+    private resourceUrl = AppSettings.API_ENDPOINT + "/orders";
     private orders$: BehaviorSubject<Order[]> = new BehaviorSubject<Order[]>([]);
 
     constructor(private http: HttpClient) {
@@ -26,7 +26,7 @@ export class OrderService {
     }
 
     getByUserId(id: string): Observable<Order[]> {
-        return this.http.get(`${this.url}/users/${id}/orders`)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/users/${id}/orders`)
             .map((data: any) => data.map(function (resp: any) {
                 return new Order(resp.id, resp.userId, resp.customerEmail, resp.customerName, resp.products, resp.address, resp.price, resp.status);
             }));

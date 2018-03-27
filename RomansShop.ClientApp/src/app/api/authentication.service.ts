@@ -6,10 +6,11 @@ import 'rxjs/add/observable/of';
 import { User } from "../shared/models/user";
 import { UserRights } from "../shared/enums/user-rights";
 import { AlertService } from "./alert.service";
+import { AppSettings } from "../shared/constants/app-settings";
 
 @Injectable()
 export class AuthenticationService {
-    private url = "http://localhost:50725/api/authenticate";
+    private url = AppSettings.API_ENDPOINT + "/authenticate";
 
     constructor(private http: HttpClient,
                 private alertService: AlertService) {

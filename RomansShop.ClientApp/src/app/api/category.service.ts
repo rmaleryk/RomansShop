@@ -6,10 +6,11 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
 import { Category } from '../shared/models/category';
+import { AppSettings } from '../shared/constants/app-settings';
 
 @Injectable()
 export class CategoryService {
-    private url = "http://localhost:50725/api/categories";
+    private url = AppSettings.API_ENDPOINT + "/categories";
     private categories$: BehaviorSubject<Category[]> = new BehaviorSubject<Category[]>([]);
 
     constructor(private http: HttpClient) {

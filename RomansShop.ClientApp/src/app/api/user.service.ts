@@ -5,10 +5,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { User } from '../shared/models/user';
 import { UserRights } from '../shared/enums/user-rights';
+import { AppSettings } from '../shared/constants/app-settings';
 
 @Injectable()
 export class UserService {
-    private url = "http://localhost:50725/api/users";
+    private url = AppSettings.API_ENDPOINT + "/users";
     private users$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
 
     constructor(private http: HttpClient) { 

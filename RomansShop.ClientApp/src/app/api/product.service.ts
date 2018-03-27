@@ -5,11 +5,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/map';
 
 import { Product } from '../shared/models/product';
+import { AppSettings } from '../shared/constants/app-settings';
 
 @Injectable()
 export class ProductService {
-    private url = "http://localhost:50725/api";
-    private resourceUrl = this.url + "/products";
+    private resourceUrl = AppSettings.API_ENDPOINT + "/products";
     private products$: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
 
     constructor(private http: HttpClient) {
@@ -26,7 +26,7 @@ export class ProductService {
     }
 
     getByCategoryId(id: string): Observable<Product[]> {
-        return this.http.get(`${this.url}/categories/${id}/products`)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/categories/${id}/products`)
             .map((data: any) => data.map(function (productResponse: any) {
                 return new Product(productResponse.id, productResponse.name, null, productResponse.categoryId, productResponse.price);
             }));
