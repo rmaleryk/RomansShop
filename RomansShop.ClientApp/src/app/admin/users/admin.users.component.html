@@ -1,0 +1,41 @@
+<admin-panel [selectedTab]="'users'"></admin-panel>
+<div class="form-inline justify-content-between">
+    <select class="form-control-sm" id="status" name="status" [(ngModel)]="selectedUserRights" (change)="loadUsers()">
+        <option value="-1">All user groups</option>
+        <option *ngFor="let rights of userRights; let i = index" [value]="i">{{ rights }}</option>
+    </select>
+</div>
+<div *ngIf="!isLoaded" class="loading-spinner">
+    <i class="fa fa-spinner fa-spin"></i>
+</div>
+<table *ngIf="isLoaded" class="table table-striped mt-3">
+    <thead>
+        <tr class="d-flex">
+            <th class="col-5">Full name</th>
+            <th class="col-4">Email</th>
+            <th class="col-2">Rights</th>
+            <th class="col-1">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="d-flex" *ngFor="let user of users">
+            <td class="col-5">
+                {{ user.fullName }}
+            </td>
+            <td class="col-4">
+                <a href="mailto:{{ user.email }}"><u>{{ user.email }}</u></a>
+            </td>
+            <td class="col-2">{{ userRights[user.rights] }}</td>
+            <td class="col-1">
+                <div class="d-flex justify-content-center">
+                    <button (click)="update(user)" class="btn btn-sm btn-dark">
+                        <span class="fa fa-edit"></span>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div class="mt-3" *ngIf="isLoaded && users.length == 0">
+    <h6 class="text-center">There are no users.</h6>
+</div>

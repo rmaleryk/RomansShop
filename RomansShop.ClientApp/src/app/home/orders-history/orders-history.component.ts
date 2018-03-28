@@ -1,35 +1,51 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
+import { Subject } from "rxjs/Subject";
+import 'rxjs/add/operator/takeUntil';
 
-import { Order } from "../../shared/order";
+import { Order } from "../../shared/models/order";
 import { OrderService } from "../../api/order.service";
 import { AuthenticationService } from "../../api/authentication.service";
-import { Product } from "../../shared/product";
-import { OrderStatus } from "../../shared/order-status";
+import { Product } from "../../shared/models/product";
+import { OrderStatus } from "../../shared/enums/order-status";
+import { User } from "../../shared/models/user";
 
 @Component({
   templateUrl: './orders-history.component.html'
 })
-export class OrdersHistoryComponent implements OnInit {
+export class OrdersHistoryComponent implements OnInit, OnDestroy {
   orders: Order[];
-  orderStatus = OrderStatus;
+  orderStatuses: string[];
   isLoaded: boolean = false;
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(
-    private orderService: OrderService,
-    private authenticationService: AuthenticationService) {
+  constructor(private orderService: OrderService,
+              private authenticationService: AuthenticationService) {
   }
 
   ngOnInit() {
     this.loadOrders();
+    this.orderStatuses = Object.values(OrderStatus);
   }
 
-  loadOrders() {
-    let userId = this.authenticationService.getCurrentUser().id;
-    this.orderService.getByUserId(userId)
-      .subscribe((data: Order[]) => {
-        this.orders = data;
-        this.isLoaded = true;
-      });
+  private loadOrders() {
+    this.authenticationService.getCurrentUser()
+      .takeUntil(this.destroy$)
+      .subscribe(
+        (user: User) => {
+          this.orderService.getByUserId(user.id)
+            .subscribe(
+              (data: Order[]) => {
+                this.orders = data;
+                this.isLoaded = true;
+              }
+            );
+        }
+      );
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

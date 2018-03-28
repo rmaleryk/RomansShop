@@ -1,0 +1,35 @@
+<div class="modal-header">
+    <h4 class="modal-title">Make order</h4>
+    <button type="button" class="close" aria-label="Close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+        <label for="email">Email address</label>
+        <input [type]="email" class="form-control" id="email" placeholder="Enter your email" [(ngModel)]="order.customerEmail" #email="ngModel"
+            email required>
+    </div>
+    <div class="form-group">
+        <label for="name">Full name</label>
+        <input type="text" class="form-control" id="name" placeholder="Enter your full name" [(ngModel)]="order.customerName" #name="ngModel"
+            required>
+    </div>
+    <div class="form-group">
+        <label for="address">Shipping address</label>
+        <input type="text" class="form-control" id="address" placeholder="Enter shipping address" [(ngModel)]="order.address" #address="ngModel"
+            required>
+    </div>
+    <div class="d-flex justify-content-center">
+        <h5>Total price: ${{ order.price }}</h5>
+    </div>
+</div>
+<div class="modal-footer d-flex justify-content-end">
+    <div class="d-flex justify-content-center">
+            <p class="text-small text-muted">After making order you will receive an email with information about the details for payment.</p>
+    </div>
+    <button type="button justify-content-end" [disabled]="order.price == 0 || email.invalid || name.invalid || address.invalid"
+        class="btn btn-dark" (click)="makeOrder()">
+        <i class="fa fa-shopping-cart"></i> Make order
+    </button>
+</div>

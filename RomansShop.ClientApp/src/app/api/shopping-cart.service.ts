@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import { Product } from '../shared/product';
+import { Product } from '../shared/models/product';
 
 @Injectable()
 export class ShoppingCartService {
@@ -20,9 +20,8 @@ export class ShoppingCartService {
     addCartItem(product: Product) {
         let products: Product[] = JSON.parse(localStorage.getItem(this.shoppingCartStorageName));
         
-        if(products == null)
-        {
-            products = new Array<Product>();
+        if(products == null) {
+            products = [];
         }
 
         products.push(product);
@@ -48,7 +47,7 @@ export class ShoppingCartService {
         let cartItems: Product[] = JSON.parse(localStorage.getItem(this.shoppingCartStorageName));
         
         if(cartItems == null) {
-            cartItems = new Array<Product>();
+            cartItems = [];
         }
 
         this.cartItems$.next(cartItems);

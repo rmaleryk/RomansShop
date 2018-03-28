@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <h4 class="modal-title">Edit the user</h4>
+    <button type="button" class="close" aria-label="Close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+        <label for="rights">User rights:</label>
+        <select class="form-control" id="rights" name="rights" [(ngModel)]="user.rights" #rights="ngModel" required>
+            <option *ngFor="let rights of userRights; let i = index" [value]="i">{{ rights }}</option>
+        </select>
+    </div>
+</div>
+<div class="modal-footer justify-content-between">
+    <ng-template #popContent>
+        <button type="button" class="btn btn-outline-danger" (click)="delete()">Yes</button>
+        <button type="button" class="btn btn-outline-dark" (click)="p.close()">Cancel</button>
+    </ng-template>
+    <button type="button" class="btn btn-outline-danger" [ngbPopover]="popContent" placement="top" #p="ngbPopover" popoverTitle="Are you sure?">
+        <i class="fa fa-trash"></i> Delete user
+    </button>
+    <button type="button" class="btn btn-dark" [disabled]="rights.invalid" (click)="save()">Save</button>
+</div>
