@@ -4,7 +4,7 @@ import { AdminComponent } from "./admin.component";
 import { EditProductComponent } from "./products/edit-product/edit-product.component";
 import { AdminProductsComponent } from "./products/products-list/admin.products.component";
 import { AdminCategoriesComponent } from "./categories/categories-list/admin.categories.component";
-import { AuthGuard } from "../api/auth.guard";
+import { AuthGuard } from "../admin/core/auth.guard";
 import { AdminOrdersComponent } from "./orders/orders-list/admin.orders.component";
 import { AdminUsersComponent } from "./users/users-list/admin.users.component";
 

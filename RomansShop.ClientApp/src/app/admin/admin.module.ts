@@ -13,7 +13,7 @@ import { EditCategoryComponent } from './categories/edit-category/edit-category.
 import { EditUserComponent } from './users/edit-user/edit-user.component';
 import { AdminUsersComponent } from './users/users-list/admin.users.component';
 import { EditOrderComponent } from './orders/edit-order/edit-order.component';
-import { AuthGuard } from '../api/auth.guard';
+import { AuthGuard } from '../admin/core/auth.guard';
 import { CategoryService } from '../api/category.service';
 import { AlertService } from '../api/alert.service';
 import { ProductService } from '../api/product.service';
