@@ -7,10 +7,10 @@ import 'rxjs/add/operator/takeUntil';
 
 import { CategoryService } from '../api/category.service';
 import { Category } from '../shared/models/category';
-import { ShoppingCartComponent } from '../home/shopping-cart/shopping-cart.component';
+import { ShoppingCartComponent } from '../shared/widgets/shopping-cart/shopping-cart.component';
 import { ShoppingCartService } from '../api/shopping-cart.service';
 import { Product } from '../shared/models/product';
-import { SignInComponent } from '../home/sign-in/sign-in.component';
+import { SignInComponent } from '../shared/widgets/sign-in/sign-in.component';
 import { AuthenticationService } from '../api/authentication.service';
 import { User } from '../shared/models/user';
 import { UserRights } from '../shared/enums/user-rights';

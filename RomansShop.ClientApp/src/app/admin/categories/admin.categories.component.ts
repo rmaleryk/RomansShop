@@ -5,12 +5,12 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from "rxjs/Subject";
 import 'rxjs/add/operator/takeUntil';
 
-import { CategoryService } from "../../../api/category.service";
-import { ProductService } from "../../../api/product.service";
-import { Category } from "../../../shared/models/category";
-import { Product } from "../../../shared/models/product";
-import { EditCategoryComponent } from "../edit-category/edit-category.component";
-import { AlertService } from "../../../api/alert.service";
+import { CategoryService } from "../../api/category.service";
+import { ProductService } from "../../api/product.service";
+import { Category } from "../../shared/models/category";
+import { Product } from "../../shared/models/product";
+import { EditCategoryComponent } from "../shared/widgets/edit-category/edit-category.component";
+import { AlertService } from "../../api/alert.service";
 
 @Component({
   templateUrl: './admin.categories.component.html'

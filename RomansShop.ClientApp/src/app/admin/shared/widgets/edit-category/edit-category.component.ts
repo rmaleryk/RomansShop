@@ -2,9 +2,9 @@ import { Component, OnInit, Input } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { CategoryService } from "../../../api/category.service";
-import { Category } from "../../../shared/models/category";
-import { AlertService } from "../../../api/alert.service";
+import { CategoryService } from "../../../../api/category.service";
+import { Category } from "../../../../shared/models/category";
+import { AlertService } from "../../../../api/alert.service";
 
 @Component({
     templateUrl: './edit-category.component.html'

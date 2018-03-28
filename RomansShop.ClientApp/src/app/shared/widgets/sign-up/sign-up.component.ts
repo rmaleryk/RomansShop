@@ -2,15 +2,15 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as shajs from 'sha.js';
 
-import { Product } from '../../shared/models/product';
-import { ProductService } from '../../api/product.service';
-import { ShoppingCartService } from '../../api/shopping-cart.service';
-import { OrderComponent } from '../order/order.component';
-import { AuthenticationService } from '../../api/authentication.service';
-import { AlertService } from '../../api/alert.service';
-import { UserService } from '../../api/user.service';
-import { User } from '../../shared/models/user';
-import { UserRights } from '../../shared/enums/user-rights';
+import { Product } from '../../models/product';
+import { ProductService } from '../../../api/product.service';
+import { ShoppingCartService } from '../../../api/shopping-cart.service';
+import { OrderComponent } from '../make-order/make-order.component';
+import { AuthenticationService } from '../../../api/authentication.service';
+import { AlertService } from '../../../api/alert.service';
+import { UserService } from '../../../api/user.service';
+import { User } from '../../models/user';
+import { UserRights } from '../../enums/user-rights';
 
 @Component({
     templateUrl: './sign-up.component.html'

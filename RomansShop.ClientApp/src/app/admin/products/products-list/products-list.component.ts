@@ -9,7 +9,7 @@ import { Category } from "../../../shared/models/category";
 import { Product } from "../../../shared/models/product";
 
 @Component({
-  templateUrl: './admin.products.component.html'
+  templateUrl: './products-list.component.html'
 })
 export class AdminProductsComponent implements OnInit, OnDestroy {
   products: Product[];

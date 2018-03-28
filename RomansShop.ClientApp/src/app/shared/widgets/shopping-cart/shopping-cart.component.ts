@@ -3,10 +3,10 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from "rxjs/Subject";
 import 'rxjs/add/operator/takeUntil';
 
-import { Product } from '../../shared/models/product';
-import { ProductService } from '../../api/product.service';
-import { ShoppingCartService } from '../../api/shopping-cart.service';
-import { OrderComponent } from '../order/order.component';
+import { Product } from '../../models/product';
+import { ProductService } from '../../../api/product.service';
+import { ShoppingCartService } from '../../../api/shopping-cart.service';
+import { OrderComponent } from '../make-order/make-order.component';
 
 @Component({
     templateUrl: './shopping-cart.component.html'

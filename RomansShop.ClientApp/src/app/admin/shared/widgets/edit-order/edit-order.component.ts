@@ -2,10 +2,10 @@ import { Component, OnInit, Input } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { AlertService } from "../../../api/alert.service";
-import { OrderService } from "../../../api/order.service";
-import { Order } from "../../../shared/models/order";
-import { OrderStatus } from "../../../shared/enums/order-status";
+import { AlertService } from "../../../../api/alert.service";
+import { OrderService } from "../../../../api/order.service";
+import { Order } from "../../../../shared/models/order";
+import { OrderStatus } from "../../../../shared/enums/order-status";
 
 @Component({
     templateUrl: './edit-order.component.html'

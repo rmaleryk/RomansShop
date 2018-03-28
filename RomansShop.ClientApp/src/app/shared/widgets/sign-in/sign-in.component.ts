@@ -2,12 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as shajs from 'sha.js';
 
-import { Product } from '../../shared/models/product';
-import { ProductService } from '../../api/product.service';
-import { ShoppingCartService } from '../../api/shopping-cart.service';
-import { OrderComponent } from '../order/order.component';
-import { AuthenticationService } from '../../api/authentication.service';
-import { AlertService } from '../../api/alert.service';
+import { Product } from '../../models/product';
+import { ProductService } from '../../../api/product.service';
+import { ShoppingCartService } from '../../../api/shopping-cart.service';
+import { OrderComponent } from '../make-order/make-order.component';
+import { AuthenticationService } from '../../../api/authentication.service';
+import { AlertService } from '../../../api/alert.service';
 import { SignUpComponent } from '../sign-up/sign-up.component';
 
 @Component({

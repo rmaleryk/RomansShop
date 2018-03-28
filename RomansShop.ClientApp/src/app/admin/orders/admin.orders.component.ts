@@ -4,12 +4,12 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Subject } from "rxjs/Subject";
 import 'rxjs/add/operator/takeUntil';
 
-import { Order } from "../../../shared/models/order";
-import { OrderStatus } from "../../../shared/enums/order-status";
-import { OrderService } from "../../../api/order.service";
-import { AuthenticationService } from "../../../api/authentication.service";
-import { Product } from "../../../shared/models/product";
-import { EditOrderComponent } from "../edit-order/edit-order.component";
+import { Order } from "../../shared/models/order";
+import { OrderStatus } from "../../shared/enums/order-status";
+import { OrderService } from "../../api/order.service";
+import { AuthenticationService } from "../../api/authentication.service";
+import { Product } from "../../shared/models/product";
+import { EditOrderComponent } from "../shared/widgets/edit-order/edit-order.component";
 
 @Component({
   templateUrl: './admin.orders.component.html'

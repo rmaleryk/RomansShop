@@ -3,17 +3,17 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from "rxjs/Subject";
 import 'rxjs/add/operator/takeUntil';
 
-import { Product } from '../../shared/models/product';
-import { ProductService } from '../../api/product.service';
-import { ShoppingCartService } from '../../api/shopping-cart.service';
-import { Order } from '../../shared/models/order';
-import { AlertService } from '../../api/alert.service';
-import { User } from '../../shared/models/user';
-import { AuthenticationService } from '../../api/authentication.service';
-import { OrderService } from '../../api/order.service';
+import { Product } from '../../models/product';
+import { ProductService } from '../../../api/product.service';
+import { ShoppingCartService } from '../../../api/shopping-cart.service';
+import { Order } from '../../models/order';
+import { AlertService } from '../../../api/alert.service';
+import { User } from '../../models/user';
+import { AuthenticationService } from '../../../api/authentication.service';
+import { OrderService } from '../../../api/order.service';
 
 @Component({
-    templateUrl: './order.component.html'
+    templateUrl: './make-order.component.html'
 })
 export class OrderComponent implements OnInit, OnDestroy {
     order: Order = new Order({});

@@ -2,10 +2,10 @@ import { Component, OnInit, Input } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { AlertService } from "../../../api/alert.service";
-import { User } from "../../../shared/models/user";
-import { UserService } from "../../../api/user.service";
-import { UserRights } from "../../../shared/enums/user-rights";
+import { AlertService } from "../../../../api/alert.service";
+import { User } from "../../../../shared/models/user";
+import { UserService } from "../../../../api/user.service";
+import { UserRights } from "../../../../shared/enums/user-rights";
 
 @Component({
     templateUrl: './edit-user.component.html'
