@@ -13,7 +13,7 @@ namespace RomansShop.Domain.Entities
 
         public string Password { get; set; }
 
-        public UserRights Rights { get; set; }
+        public UserRights Rights { get; set; } = UserRights.Customer;
 
     }
 }

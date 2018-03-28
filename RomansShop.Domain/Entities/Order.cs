@@ -20,7 +20,7 @@ namespace RomansShop.Domain.Entities
 
         public DateTime Date { get; set; } = DateTime.Now;
 
-        public OrderStatus Status { get; set; }
+        public OrderStatus Status { get; set; } = OrderStatus.Processing;
 
         public IList<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
     }
