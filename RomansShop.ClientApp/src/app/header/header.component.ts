@@ -41,12 +41,18 @@ export class AppHeader implements OnInit, OnDestroy {
     this.loadCartItemsCount();
     const userRights = Object.values(UserRights);
 
-    this.currentUser = this.authenticationService.getCurrentUser();
-    
-    if(this.currentUser != null) {
-      this.hasAdminPanel = userRights[this.currentUser.rights] == UserRights.ADMINISTRATOR ||
-        userRights[this.currentUser.rights] == UserRights.MODERATOR;
-    }
+    this.authenticationService.getCurrentUser()
+      .takeUntil(this.destroy$)
+      .subscribe(
+        (user: User) => {
+          this.currentUser = user;
+          
+          if(this.currentUser != null) {
+            this.hasAdminPanel = userRights[this.currentUser.rights] == UserRights.ADMINISTRATOR ||
+              userRights[this.currentUser.rights] == UserRights.MODERATOR;
+          }
+        } 
+      );
   }
 
   private logout() {

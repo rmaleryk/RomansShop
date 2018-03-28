@@ -1,6 +1,7 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import 'rxjs/add/observable/of';
 
 import { User } from "../shared/models/user";
@@ -11,9 +12,15 @@ import { AppSettings } from "../shared/constants/app-settings";
 @Injectable()
 export class AuthenticationService {
     private url = AppSettings.API_ENDPOINT + "/authenticate";
+    private currentUser$: BehaviorSubject<User> = new BehaviorSubject<User>({});
 
     constructor(private http: HttpClient,
                 private alertService: AlertService) {
+        this.loadCurrentUser();        
+    }
+
+    getCurrentUser(): Observable<User> {
+        return this.currentUser$.asObservable();
     }
 
     login(email: string, password: string): Observable<User> {
@@ -27,6 +34,7 @@ export class AuthenticationService {
             .do((user: User) => {
                 if (user.id != null) {
                     this.alertService.info(`Hello! You are logged in as ${user.fullName}.`, 2000);
+                    this.loadCurrentUser();
                 }
             });
     }
@@ -34,10 +42,11 @@ export class AuthenticationService {
     logout() {
         localStorage.removeItem('currentUser');
         this.alertService.info("You have successfully logged out of your account.", 2000);
+        this.loadCurrentUser();
     }
 
-    getCurrentUser(): User {
-        let currentUser: User = JSON.parse(localStorage.getItem('currentUser'));
-        return currentUser;
+    private loadCurrentUser() {
+        const currentUser: User = JSON.parse(localStorage.getItem('currentUser'));
+        this.currentUser$.next(currentUser);
     }
 }

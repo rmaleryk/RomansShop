@@ -27,13 +27,17 @@ export class OrderComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        const currentUser = this.authenticationService.getCurrentUser();
-
-        if (currentUser) {
-            this.order.userId = currentUser.id;
-            this.order.customerName = currentUser.fullName;
-            this.order.customerEmail = currentUser.email;
-        }
+        this.authenticationService.getCurrentUser()
+            .takeUntil(this.destroy$)
+            .subscribe(
+                (user: User) => {
+                    if (user) {
+                        this.order.userId = user.id;
+                        this.order.customerName = user.fullName;
+                        this.order.customerEmail = user.email;
+                    }
+                }
+            );
 
         this.shoppingCartService.getCartItems()
             .takeUntil(this.destroy$)
