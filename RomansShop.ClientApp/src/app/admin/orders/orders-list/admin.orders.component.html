@@ -37,13 +37,7 @@
             </td>
             <td class="col-2">{{ order.address }}</td>
             <td class="col-1">${{ order.price }}</td>
-            <td class="col-2">
-                <div [ngSwitch]="order.status">
-                    <div *ngSwitchCase="orderStatus.PROCESSING">Processing</div>
-                    <div *ngSwitchCase="orderStatus.BOXING">Boxing</div>
-                    <div *ngSwitchCase="orderStatus.SENT">Sent</div>
-                </div>
-            </td>
+            <td class="col-2">{{ orderStatuses[order.status] }}</td>
             <td class="col-1">
                 <div class="d-flex justify-content-center">
                     <button (click)="update(order)" class="btn btn-sm btn-dark">

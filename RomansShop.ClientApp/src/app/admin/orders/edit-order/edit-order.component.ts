@@ -22,7 +22,7 @@ export class EditOrderComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.orderStatuses = this.getOrderStatuses();
+        this.orderStatuses = Object.values(OrderStatus);
     }
 
     private save() {
@@ -51,15 +51,5 @@ export class EditOrderComponent implements OnInit {
 
     private close() {
         this.activeModal.close();
-    }
-
-    private getOrderStatuses(): string[] {
-        const keys = Object.keys(OrderStatus);
-        return keys.slice(keys.length / 2);
-    }
-
-    ngOnDestroy() {
-        this.destroy$.next(true);
-        this.destroy$.unsubscribe();
     }
 }

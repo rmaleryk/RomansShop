@@ -8,7 +8,7 @@
     <div class="form-group">
         <label for="rights">User rights:</label>
         <select class="form-control" id="rights" name="rights" [(ngModel)]="user.rights" #rights="ngModel" required>
-            <option *ngFor="let rights of userRightsArray; let i = index" [value]="i">{{ rights }}</option>
+            <option *ngFor="let rights of userRights; let i = index" [value]="i">{{ rights }}</option>
         </select>
     </div>
 </div>

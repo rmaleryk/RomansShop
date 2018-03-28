@@ -1,5 +1,5 @@
 export enum UserRights {
-    CUSTOMER,
-    MODERATOR,
-    ADMINISTRATOR
+    CUSTOMER = 'Customer',
+    MODERATOR = 'Moderator',
+    ADMINISTRATOR = 'Administrator'
 }

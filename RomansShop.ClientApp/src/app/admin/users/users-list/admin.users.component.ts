@@ -13,8 +13,7 @@ import { UserService } from "../../../api/user.service";
 })
 export class AdminUsersComponent implements OnInit {
   users: User[];
-  userRights = UserRights;
-  userRightsArray: string[];
+  userRights: string[];
   selectedUserRights: UserRights | -1 = -1;
   isLoaded: boolean = false;
 
@@ -25,12 +24,7 @@ export class AdminUsersComponent implements OnInit {
 
   ngOnInit() {
     this.loadUsers();
-    this.userRightsArray = this.getUserRights();
-  }
-
-  private getUserRights(): string[] {
-    const keys = Object.keys(UserRights);
-    return keys.slice(keys.length / 2);
+    this.userRights = Object.values(UserRights);
   }
 
   private loadUsers() {

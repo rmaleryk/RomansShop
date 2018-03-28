@@ -12,7 +12,7 @@ import { UserRights } from "../../../shared/enums/user-rights";
 })
 export class EditUserComponent implements OnInit {
     @Input() user: User;
-    userRightsArray: string[];
+    userRights: string[];
 
     constructor(private activeModal: NgbActiveModal,
                 private userService: UserService,
@@ -20,7 +20,7 @@ export class EditUserComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.userRightsArray = this.getUserRights();
+        this.userRights = Object.values(UserRights);
     }
 
     private save() {
@@ -45,10 +45,5 @@ export class EditUserComponent implements OnInit {
 
     private close() {
         this.activeModal.close();
-    }
-
-    private getUserRights(): string[] {
-        const keys = Object.keys(UserRights);
-        return keys.slice(keys.length / 2);
     }
 }

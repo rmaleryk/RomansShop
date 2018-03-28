@@ -2,7 +2,7 @@
 <div class="form-inline justify-content-between">
     <select class="form-control-sm" id="status" name="status" [(ngModel)]="selectedUserRights" (change)="loadUsers()">
         <option value="-1">All user groups</option>
-        <option *ngFor="let rights of userRightsArray; let i = index" [value]="i">{{ rights }}</option>
+        <option *ngFor="let rights of userRights; let i = index" [value]="i">{{ rights }}</option>
     </select>
 </div>
 <div *ngIf="!isLoaded" class="loading-spinner">
@@ -25,13 +25,7 @@
             <td class="col-4">
                 <a href="mailto:{{ user.email }}"><u>{{ user.email }}</u></a>
             </td>
-            <td class="col-2">
-                <div [ngSwitch]="user.rights">
-                    <div *ngSwitchCase="userRights.ADMINISTRATOR">Administrator</div>
-                    <div *ngSwitchCase="userRights.MODERATOR">Moderator</div>
-                    <div *ngSwitchCase="userRights.CUSTOMER">Customer</div>
-                </div>
-            </td>
+            <td class="col-2">{{ userRights[user.rights] }}</td>
             <td class="col-1">
                 <div class="d-flex justify-content-center">
                     <button (click)="update(user)" class="btn btn-sm btn-dark">

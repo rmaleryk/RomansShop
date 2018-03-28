@@ -39,10 +39,14 @@ export class AppHeader implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadCategories();
     this.loadCartItemsCount();
+    const userRights = Object.values(UserRights);
+
     this.currentUser = this.authenticationService.getCurrentUser();
     
-    this.hasAdminPanel = this.currentUser.rights == UserRights.ADMINISTRATOR ||
-      this.currentUser.rights == UserRights.MODERATOR;
+    if(this.currentUser != null) {
+      this.hasAdminPanel = userRights[this.currentUser.rights] == UserRights.ADMINISTRATOR ||
+        userRights[this.currentUser.rights] == UserRights.MODERATOR;
+    }
   }
 
   private logout() {

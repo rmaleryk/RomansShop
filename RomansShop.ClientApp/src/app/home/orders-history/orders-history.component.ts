@@ -12,7 +12,7 @@ import { OrderStatus } from "../../shared/enums/order-status";
 })
 export class OrdersHistoryComponent implements OnInit {
   orders: Order[];
-  orderStatus = OrderStatus;
+  orderStatuses: string[];
   isLoaded: boolean = false;
 
   constructor(private orderService: OrderService,
@@ -21,6 +21,7 @@ export class OrdersHistoryComponent implements OnInit {
 
   ngOnInit() {
     this.loadOrders();
+    this.orderStatuses = Object.values(OrderStatus);
   }
 
   private loadOrders() {

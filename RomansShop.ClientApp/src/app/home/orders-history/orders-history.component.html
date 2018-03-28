@@ -5,16 +5,16 @@
 <table *ngIf="isLoaded" class="table table-striped mt-3">
     <thead>
         <tr class="d-flex">
-            <th class="col-3">Id</th>
+            <th class="col-2">Id</th>
             <th class="col-3">Products</th>
             <th class="col-3">Shipping address</th>
             <th class="col-2">Price</th>
-            <th class="col-1">Status</th>
+            <th class="col-2 pl-5">Status</th>
         </tr>
     </thead>
     <tbody>
         <tr class="d-flex" *ngFor="let order of orders">
-            <td class="col-3 text-sm"><p [guid]="order.id"></p></td>
+            <td class="col-2 text-sm"><p [guid]="order.id"></p></td>
             <td class="col-3">
                 <ol class="pl-0">
                     <li *ngFor="let product of order.products">{{ product.name }}</li>
@@ -22,11 +22,7 @@
             </td>
             <td class="col-3">{{ order.address }}</td>
             <td class="col-2">${{ order.price }}</td>
-            <td class="col-1" [ngSwitch]="order.status">
-                <div *ngSwitchCase="orderStatus.PROCESSING">Processing</div>
-                <div *ngSwitchCase="orderStatus.BOXING">Boxing</div>
-                <div *ngSwitchCase="orderStatus.SENT">Sent</div>
-            </td>
+            <td class="col-2 pl-5">{{ orderStatuses[order.status] }}</td>
         </tr>
     </tbody>
 </table>

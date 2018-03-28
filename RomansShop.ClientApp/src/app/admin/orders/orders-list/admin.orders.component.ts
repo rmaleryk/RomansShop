@@ -16,7 +16,6 @@ import { EditOrderComponent } from "../edit-order/edit-order.component";
 })
 export class AdminOrdersComponent implements OnInit, OnDestroy {
   orders: Order[];
-  orderStatus = OrderStatus;
   orderStatuses: string[];
   isLoaded: boolean = false;
   selectedOrderStatus: OrderStatus | -1 = -1;
@@ -29,12 +28,7 @@ export class AdminOrdersComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadOrders();
-    this.orderStatuses = this.getOrderStatuses();
-  }
-
-  private getOrderStatuses(): string[] {
-    const keys = Object.keys(OrderStatus);
-    return keys.slice(keys.length / 2);
+    this.orderStatuses = Object.values(OrderStatus);
   }
 
   private loadOrders() {
