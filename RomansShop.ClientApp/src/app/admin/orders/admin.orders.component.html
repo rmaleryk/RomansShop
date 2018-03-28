@@ -12,18 +12,19 @@
     <thead>
         <tr class="d-flex">
             <th class="col-1">Id</th>
-            <th class="col-2">Products</th>
+            <th class="col-2">Created</th>
+            <th class="col-3">Products</th>
             <th class="col-3">Customer</th>
-            <th class="col-2">Shipping address</th>
             <th class="col-1">Price</th>
-            <th class="col-2">Status</th>
+            <th class="col-1">Status</th>
             <th class="col-1">Options</th>
         </tr>
     </thead>
     <tbody>
         <tr class="d-flex" *ngFor="let order of orders">
             <td class="col-1 text-sm"><p [guid]="order.id"></p></td>
-            <td class="col-2">
+            <td class="col-2 text-sm">{{ order.date | date: 'short' }}</td>
+            <td class="col-3">
                 <ol class="pl-3">
                     <li *ngFor="let product of order.products">{{ product.name }}</li>
                 </ol>
@@ -31,13 +32,20 @@
             <td class="col-3">
                 {{ order.customerName }}
                 <br>
-                <a href="mailto:{{ order.customerEmail }}">
-                    <u>{{ order.customerEmail }}</u>
-                </a>
+                <p>
+                    Email:
+                    <a href="mailto:{{ order.customerEmail }}">
+                        <u>{{ order.customerEmail }}</u>
+                    </a>
+                </p>
+                <p>
+                    Shipping address:
+                    <br>
+                    {{ order.address }}
+                </p>
             </td>
-            <td class="col-2">{{ order.address }}</td>
             <td class="col-1">${{ order.price }}</td>
-            <td class="col-2">{{ orderStatuses[order.status] }}</td>
+            <td class="col-1">{{ orderStatuses[order.status] }}</td>
             <td class="col-1">
                 <div class="d-flex justify-content-center">
                     <button (click)="update(order)" class="btn btn-sm btn-dark">

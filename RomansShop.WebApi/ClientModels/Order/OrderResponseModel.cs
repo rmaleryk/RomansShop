@@ -19,6 +19,8 @@ namespace RomansShop.WebApi.ClientModels.Order
 
         public decimal Price { get; set; }
 
+        public DateTime Date { get; set; }
+
         public OrderStatus Status { get; set; }
 
         public IList<ProductResponseModel> Products { get; set; }

@@ -16,7 +16,11 @@ namespace RomansShop.DataAccess.Repositories
 
         public override IEnumerable<Order> GetAll()
         {
-            IList<Order> orders = dbSet.AsNoTracking().ToList();
+            IList<Order> orders = dbSet
+                .AsNoTracking()
+                .OrderByDescending(order => order.Date)
+                .ToList();
+
             LoadProductsForOrders(ref orders);
 
             return orders;
@@ -26,6 +30,7 @@ namespace RomansShop.DataAccess.Repositories
         {
             IList<Order> orders = dbSet.AsNoTracking()
                 .Where(order => order.UserId == userId)
+                .OrderByDescending(order => order.Date)
                 .ToList();
 
             LoadProductsForOrders(ref orders);
@@ -37,6 +42,7 @@ namespace RomansShop.DataAccess.Repositories
         {
             IList<Order> orders = dbSet.AsNoTracking()
                 .Where(order => order.Status == status)
+                .OrderByDescending(order => order.Date)
                 .ToList();
 
             LoadProductsForOrders(ref orders);

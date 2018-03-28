@@ -110,6 +110,10 @@ namespace RomansShop.DataAccess.Database
                 .HasColumnName("price");
 
             modelBuilder.Entity<Order>()
+                .Property(order => order.Date)
+                .HasColumnName("date");
+
+            modelBuilder.Entity<Order>()
                 .Property(order => order.Status)
                 .HasColumnName("status");
 

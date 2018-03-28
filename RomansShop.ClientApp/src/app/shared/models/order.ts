@@ -9,6 +9,7 @@ export class Order {
     products: Product[] = [];
     address?: string;
     price?: number;
+    date?: Date;
     status?: OrderStatus;
 
     constructor(data: any) {
