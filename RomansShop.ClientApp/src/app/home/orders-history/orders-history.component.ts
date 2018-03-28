@@ -33,13 +33,15 @@ export class OrdersHistoryComponent implements OnInit, OnDestroy {
       .takeUntil(this.destroy$)
       .subscribe(
         (user: User) => {
-          this.orderService.getByUserId(user.id)
-            .subscribe(
-              (data: Order[]) => {
-                this.orders = data;
-                this.isLoaded = true;
-              }
-            );
+          if(user != null) {
+            this.orderService.getByUserId(user.id)
+              .subscribe(
+                (data: Order[]) => {
+                  this.orders = data;
+                  this.isLoaded = true;
+                }
+              );
+          }
         }
       );
   }

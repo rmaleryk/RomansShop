@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
-import { User } from '../../shared/models/user';
-import { UserRights } from '../../shared/enums/user-rights';
+import { User } from '../shared/models/user';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -10,10 +9,8 @@ export class AuthGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         const currentUser: User = JSON.parse(localStorage.getItem('currentUser'));
-        const userRights = Object.values(UserRights);
 
-        if (currentUser!= null && (userRights[currentUser.rights] == UserRights.MODERATOR || 
-            userRights[currentUser.rights] == UserRights.ADMINISTRATOR)) {
+        if (currentUser != null) {
                 return true;
         }
         

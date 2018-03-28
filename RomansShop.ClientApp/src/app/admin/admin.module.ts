@@ -13,7 +13,7 @@ import { EditCategoryComponent } from './shared/widgets/edit-category/edit-categ
 import { EditUserComponent } from './shared/widgets/edit-user/edit-user.component';
 import { AdminUsersComponent } from './users/admin.users.component';
 import { EditOrderComponent } from './shared/widgets/edit-order/edit-order.component';
-import { AuthGuard } from '../admin/core/auth.guard';
+import { AdminAuthGuard } from '../admin/core/admin-auth.guard';
 import { CategoryService } from '../api/category.service';
 import { AlertService } from '../api/alert.service';
 import { ProductService } from '../api/product.service';
@@ -49,7 +49,7 @@ import { GuidDirective } from '../shared/directives/guid.directive';
     EditUserComponent
   ],
   providers: [
-    AuthGuard,
+    AdminAuthGuard,
     CategoryService, 
     ProductService, 
     AlertService,

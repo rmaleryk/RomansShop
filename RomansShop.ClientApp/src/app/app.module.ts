@@ -23,6 +23,7 @@ import { OrdersHistoryComponent } from './home/orders-history/orders-history.com
 import { UserSettingsComponent } from './home/user-settings/user-settings.component';
 import { AdminModule } from './admin/admin.module';
 import { AppHeader } from './header/header.component';
+import { AuthGuard } from './core/auth.guard';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { AppHeader } from './header/header.component';
     SignUpComponent,
   ],
   providers: [
+    AuthGuard,
     CategoryService, 
     ProductService, 
     AlertService, 
