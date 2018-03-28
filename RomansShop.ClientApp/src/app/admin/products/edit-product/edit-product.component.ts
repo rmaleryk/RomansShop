@@ -77,7 +77,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
             .group({
                 "name": [product.name, [Validators.required, Validators.maxLength(30)]],
                 "categoryId": [product.categoryId],
-                "price": [product.price, [Validators.required]],
+                "price": [product.price, [Validators.required, Validators.pattern(/^[0-9]{1,7}(\.[0-9]{1,2})?$/)]],
                 "description": [product.description, [Validators.maxLength(255)]]
             });
     }
