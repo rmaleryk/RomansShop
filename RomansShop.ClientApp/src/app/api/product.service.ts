@@ -6,6 +6,10 @@ import 'rxjs/add/operator/map';
 
 import { Product } from '../shared/models/product';
 import { AppSettings } from '../shared/constants/app-settings';
+import { SortingMode } from '../shared/enums/sorting-mode';
+import { ISorter } from '../shared/interfaces/sorter';
+import { SorterFactory } from '../core/sorter/sorter-factory';
+import { ISorterSettings } from '../shared/interfaces/sorter-settings';
 
 @Injectable()
 export class ProductService {
@@ -18,6 +22,11 @@ export class ProductService {
 
     getProducts(): Observable<Product[]> {
         return this.products$.asObservable();
+    }
+
+    sort(products: Product[], sorterSettings: ISorterSettings): Product[] {
+        const sorter: ISorter = SorterFactory.getSorter();
+        return sorter.sort(products, sorterSettings);
     }
 
     getById(id: string): Observable<Product> {

@@ -1,10 +1,20 @@
-<h3>{{ categoryName }}</h3>
+<div class="row">
+    <div class="col-9">
+        <h3>{{ categoryName }}</h3>
+    </div>
+    <div class="col-3 d-flex">
+        <label class="mr-2 align-self-center">Sort:</label>
+        <select class="form-control" id="sort" name="sort" [ngModel]="selectedOption" (ngModelChange)="onSortChanged($event)">
+            <option *ngFor="let option of sorterOptions" [ngValue]="option.settings">{{ option.name }}</option>
+        </select>
+    </div>
+</div>
 <div *ngIf="!isLoaded" class="loading-spinner">
     <i class="fa fa-spinner fa-spin"></i>
 </div>
 <div class="mt-3" *ngIf="isLoaded">
     <div class="row">
-        <div class="col-sm-4" *ngFor="let product of productsPage">
+        <div class="col-sm-4" *ngFor="let product of products">
             <div class="card shop-item">
                 <div class="card-body item-body text-center">
                     <img class="card-img-top img-thumbnail item-thumbnail" src="http://seismowave.com/js/vendor/plugnpay/no_product.png" alt="Product image">
