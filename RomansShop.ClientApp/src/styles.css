@@ -40,3 +40,12 @@ a {
     color: #fff;
     background-color: #343a40;
 }
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #333435;
+    outline: 0;
+    -webkit-box-shadow: 0 0 0 0.2rem #33343545;
+    box-shadow: 0 0 0 0.2rem #33343545;
+}

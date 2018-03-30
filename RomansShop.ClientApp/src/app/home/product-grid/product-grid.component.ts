@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, HostListener } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NgbPaginationConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -10,6 +10,9 @@ import { CategoryService } from '../../api/category.service';
 import { Product } from '../../shared/models/product';
 import { Category } from '../../shared/models/category';
 import { ShoppingCartService } from '../../api/shopping-cart.service';
+import { SortingMode } from '../../shared/enums/sorting-mode';
+import { ISorterSettings } from '../../shared/interfaces/sorter-settings';
+import { AppSettings } from '../../shared/constants/app-settings';
 
 @Component({
     templateUrl: './product-grid.component.html',
@@ -23,9 +26,16 @@ export class ProductGridComponent implements OnInit, OnDestroy {
     pageNumber: number = 1;
     isLoaded: boolean = false;
     categoryId: string;
-    destroy$: Subject<boolean> = new Subject<boolean>();
-
-    constructor(private productService: ProductService,
+	destroy$: Subject<boolean> = new Subject<boolean>();
+    sorterOptions = [
+                    	{ name: "A-z", settings: { fieldName: 'name', sortingMode: SortingMode.ASC } },
+                        { name: "Price low to high", settings: { fieldName: 'price', sortingMode: SortingMode.ASC } },
+                        { name: "Price high to low", settings: { fieldName: 'price', sortingMode: SortingMode.DESC } }
+					];
+					
+	selectedOption = this.sorterOptions[0].settings;
+	
+	constructor(private productService: ProductService,
                 private categoryService: CategoryService,
                 private shoppingCartService: ShoppingCartService,
                 private activeRoute: ActivatedRoute,
@@ -34,7 +44,7 @@ export class ProductGridComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.pageConfig.pageSize = 6;
+        this.pageConfig.pageSize = AppSettings.PAGE_SIZE;
         this.categoryId = this.activeRoute.snapshot.params["categoryId"];
 
         this.activeRoute.params
@@ -51,7 +61,11 @@ export class ProductGridComponent implements OnInit, OnDestroy {
                         this.loadByCategoryId(this.categoryId);
                     }
                 }
-            );
+			);
+    }
+
+    onSortChanged(sorterSettings: ISorterSettings) {
+		this.products = this.productService.sort(this.products, sorterSettings);
     }
 
     private loadAllProducts() {
