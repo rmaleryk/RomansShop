@@ -14,8 +14,9 @@ export class MergeSorter implements ISorter {
 
     private mergeSort(array: any[]): any[] {
 
-        if(array.length == 1)
+        if(array.length == 1) {
             return array;
+        }
         
         let middlePoint = Math.round(array.length / 2);
 
