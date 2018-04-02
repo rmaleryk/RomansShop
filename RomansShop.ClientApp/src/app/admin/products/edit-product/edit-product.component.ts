@@ -68,11 +68,11 @@ export class EditProductComponent implements OnInit, OnDestroy {
 
         (product.id == null ? this.productService.create(product) : this.productService.update(product))
             .subscribe(
-                (data: any) => this.router.navigateByUrl("admin/products")
+                (data: Product) => this.router.navigateByUrl("admin/products")
             );
     }
 
-    private buildForm(product: any) {
+    private buildForm(product: Product) {
         this.productForm = this.formBuilder
             .group({
                 "name": [product.name, [Validators.required, Validators.maxLength(30)]],

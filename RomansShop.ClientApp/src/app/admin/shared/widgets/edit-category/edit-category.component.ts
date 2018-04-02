@@ -25,13 +25,13 @@ export class EditCategoryComponent implements OnInit {
         if (this.isNewCategory) {
             this.categoryService.create(this.category)
                 .subscribe(
-                    (data: any) => { },
+                    (data: Category) => { },
                     (error: any) => this.alertService.warning(error.error)
                 );
         } else {
             this.categoryService.update(this.category)
                 .subscribe(
-                    (data: any) => { },
+                    (data: Category) => { },
                     (error: any) => this.alertService.warning(error.error)
                 );
         }

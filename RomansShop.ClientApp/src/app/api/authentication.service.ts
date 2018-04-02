@@ -24,7 +24,7 @@ export class AuthenticationService {
     }
 
     login(email: string, password: string): Observable<User> {
-        return this.http.post<any>(this.url, { email: email, password: password })
+        return this.http.post<User>(this.url, { email: email, password: password })
             .map((user: User) => {
                 if (user != null) {
                     localStorage.setItem('currentUser', JSON.stringify(user));

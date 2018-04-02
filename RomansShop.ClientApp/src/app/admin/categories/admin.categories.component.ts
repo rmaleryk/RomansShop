@@ -58,7 +58,7 @@ export class AdminCategoriesComponent implements OnInit, OnDestroy {
     if (confirm("Are you sure to delete?")) {
       this.categoryService.delete(id)
         .subscribe(
-          (data: any) => { },
+          (data: string) => { },
           (error: any) => this.alertService.warning(error.error)
         );
     }

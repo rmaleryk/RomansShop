@@ -28,7 +28,7 @@ export class EditOrderComponent implements OnInit {
     private save() {
         this.orderService.update(this.order)
             .subscribe(
-                (data: any) => {
+                (data: Order) => {
                     if (this.isNotifiable) {
                         // send Notification
                     }
@@ -42,7 +42,7 @@ export class EditOrderComponent implements OnInit {
     private delete() {
         this.orderService.delete(this.order.id)
             .subscribe(
-                (data: any) => { },
+                (data: string) => { },
                 (error: any) => this.alertService.warning(error.error)
             );
             

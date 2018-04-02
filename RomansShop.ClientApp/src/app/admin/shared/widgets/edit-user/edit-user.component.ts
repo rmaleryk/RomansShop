@@ -26,7 +26,7 @@ export class EditUserComponent implements OnInit {
     private save() {
         this.userService.update(this.user)  
             .subscribe(
-                (data: any) => { },
+                (data: User) => { },
                 (error: any) => this.alertService.warning(error.error)
             );
 
@@ -36,7 +36,7 @@ export class EditUserComponent implements OnInit {
     private delete() {
         this.userService.delete(this.user.id)
             .subscribe(
-                (data: any) => { },
+                (data: string) => { },
                 (error: any) => this.alertService.warning(error.error)
             );
 
