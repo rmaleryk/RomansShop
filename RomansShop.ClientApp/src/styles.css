@@ -16,8 +16,12 @@ a {
     left: calc(50% - 25px);
 }
 
-.dropdown-item:active {
+.dropdown-item.active, .dropdown-item:active {
     background-color: #343a40!important;
+}
+
+ngb-typeahead-window {
+    width: 100%;
 }
 
 .page-item>.page-link {

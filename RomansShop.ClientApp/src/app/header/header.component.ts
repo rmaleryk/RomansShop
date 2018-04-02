@@ -14,82 +14,99 @@ import { SignInComponent } from '../shared/widgets/sign-in/sign-in.component';
 import { AuthenticationService } from '../api/authentication.service';
 import { User } from '../shared/models/user';
 import { UserRights } from '../shared/enums/user-rights';
+import { ProductService } from '../api/product.service';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css'],
-  providers: [NgbModal]
+	selector: 'app-header',
+	templateUrl: './header.component.html',
+	styleUrls: ['./header.component.css'],
+	providers: [NgbModal]
 })
 export class AppHeader implements OnInit, OnDestroy {
-  isCollapsed = false;
-  cartItemsCount: number;
-  categories: Category[];
-  currentUser: User;
-  hasAdminPanel: boolean;
-  destroy$: Subject<boolean> = new Subject<boolean>();
+	isCollapsed = false;
+	cartItemsCount: number;
+	categories: Category[];
+	products: Product[];
+	currentUser: User;
+	hasAdminPanel: boolean;
+	destroy$: Subject<boolean> = new Subject<boolean>();
+	model: any;
 
-  constructor(private categoryService: CategoryService,
-              private shoppingCartService: ShoppingCartService,
-              private authenticationService: AuthenticationService,
-              private modalService: NgbModal,
-              private router: Router) {
-  }
+	constructor(private categoryService: CategoryService,
+				private productService: ProductService,
+				private shoppingCartService: ShoppingCartService,
+				private authenticationService: AuthenticationService,
+				private modalService: NgbModal,
+				private router: Router) {
+	}
 
-  ngOnInit() {
-    this.loadCategories();
-    this.loadCartItemsCount();
-    const userRights = Object.values(UserRights);
+	ngOnInit() {
+		this.loadCategories();
+		this.loadProducts();
+		this.loadCartItemsCount();
+		const userRights = Object.values(UserRights);
 
-    this.authenticationService.getCurrentUser()
-      .takeUntil(this.destroy$)
-      .subscribe(
-        (user: User) => {
-          this.currentUser = user;
-          
-          if(this.currentUser != null) {
-            this.hasAdminPanel = userRights[this.currentUser.rights] == UserRights.ADMINISTRATOR ||
-              userRights[this.currentUser.rights] == UserRights.MODERATOR;
-          }
-        } 
-      );
-  }
+		this.authenticationService.getCurrentUser()
+			.takeUntil(this.destroy$)
+			.subscribe(
+				(user: User) => {
+					this.currentUser = user;
 
-  private logout() {
-    this.authenticationService.logout();
-    this.router.navigateByUrl("/")
-  }
+					if (this.currentUser != null) {
+						this.hasAdminPanel = userRights[this.currentUser.rights] == UserRights.ADMINISTRATOR ||
+							userRights[this.currentUser.rights] == UserRights.MODERATOR;
+					}
+				}
+			);
+	}
 
-  private loadCartItemsCount() {
-    this.shoppingCartService.getCartItems()
-      .takeUntil(this.destroy$)
-      .subscribe(
-        (data: Product[]) => {
-          if (data != null) {
-            this.cartItemsCount = data.length;
-          }
-        }
-      );
-  }
+	private onItemSelected($event) {
+		console.log("item", $event);
+	}
 
-  private loadCategories() {
-    this.categoryService.getCategories()
-      .takeUntil(this.destroy$)
-      .subscribe(
-        (data: Category[]) => this.categories = data
-      );
-  }
+	private logout() {
+		this.authenticationService.logout();
+		this.router.navigateByUrl("/")
+	}
 
-  private openShoppingCart() {
-    this.modalService.open(ShoppingCartComponent);
-  }
+	private loadCartItemsCount() {
+		this.shoppingCartService.getCartItems()
+			.takeUntil(this.destroy$)
+			.subscribe(
+				(data: Product[]) => {
+					if (data != null) {
+						this.cartItemsCount = data.length;
+					}
+				}
+			);
+	}
 
-  private openSignInForm() {
-    this.modalService.open(SignInComponent);
-  }
+	private loadCategories() {
+		this.categoryService.getCategories()
+			.takeUntil(this.destroy$)
+			.subscribe(
+				(data: Category[]) => this.categories = data
+			);
+	}
 
-  ngOnDestroy() {
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
-  }
+	private loadProducts() {
+		this.productService.getProducts()
+			.takeUntil(this.destroy$)
+			.subscribe(
+				(data: Product[]) => this.products = data
+			);
+	}
+
+	private openShoppingCart() {
+		this.modalService.open(ShoppingCartComponent);
+	}
+
+	private openSignInForm() {
+		this.modalService.open(SignInComponent);
+	}
+
+	ngOnDestroy() {
+		this.destroy$.next(true);
+		this.destroy$.unsubscribe();
+	}
 }

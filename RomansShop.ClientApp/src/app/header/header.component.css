@@ -6,6 +6,10 @@ header {
     padding: 10px;
 }
 
+#navbarNavDropdown {
+    flex-grow: unset;
+}
+
 .navbar-brand {
     margin-right: 30px;
     margin-left: 20px;

@@ -1,0 +1,4 @@
+<div class="input-group">
+    <input id="typeahead-basic" type="text" class="form-control" [ngbTypeahead]="search" (selectItem)="onItemSelected($event)"
+        [resultFormatter]="resultFormatter" [inputFormatter]="inputFormatter" placeholder="Search..." />
+</div>
