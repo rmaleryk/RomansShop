@@ -5,6 +5,11 @@ a {
     text-decoration: none;
 }
 
+a:hover {
+    color: #000000;
+    text-decoration: underline;
+}
+
 .text-small {
     font-size: 0.8rem;
 }
