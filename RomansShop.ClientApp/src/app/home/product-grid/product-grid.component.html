@@ -1,24 +1,26 @@
-<div class="row">
-    <div class="col-9">
-        <h3>{{ categoryName }}</h3>
-    </div>
-    <div class="col-3 d-flex">
-        <label class="mr-2 align-self-center">Sort:</label>
-        <select class="form-control" id="sort" name="sort" [ngModel]="selectedOption" (ngModelChange)="onSortChanged($event)">
-            <option *ngFor="let option of sorterOptions" [ngValue]="option.settings">{{ option.name }}</option>
-        </select>
-    </div>
-</div>
 <div *ngIf="!isLoaded" class="loading-spinner">
     <i class="fa fa-spinner fa-spin"></i>
 </div>
-<div class="mt-3" *ngIf="isLoaded">
+<div class="mt-4" *ngIf="isLoaded && categoryName != null">
     <div class="row">
+        <div class="col-9">
+            <h3>{{ categoryName }}</h3>
+        </div>
+        <div class="col-3 d-flex">
+            <label class="mr-2 align-self-center">Sort:</label>
+            <select class="form-control" id="sort" name="sort" [ngModel]="selectedOption" (ngModelChange)="onSortChanged($event)">
+                <option *ngFor="let option of sorterOptions" [ngValue]="option.settings">{{ option.name }}</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mt-4">
         <div class="col-sm-4" *ngFor="let product of products">
             <div class="card shop-item">
                 <div class="card-body item-body text-center">
                     <img class="card-img-top img-thumbnail item-thumbnail" src="http://seismowave.com/js/vendor/plugnpay/no_product.png" alt="Product image">
-                    <h5 class="card-title">{{ product.name }}</h5>
+                    <h5 class="card-title">
+                        <a [routerLink]="['/products', product.id]">{{ product.name }}</a>
+                    </h5>
                     <p class="card-text">Price: ${{ product.price }}</p>
                     <a class="btn btn-dark text-white" (click)="addToCart(product)">
                         <span class="fa fa-shopping-cart"></span> Add to cart
@@ -30,6 +32,9 @@
     <ngb-pagination *ngIf="products.length > pageConfig.pageSize" class="d-flex justify-content-center" [collectionSize]="products.length"
         [(page)]="pageNumber" (pageChange)="pageChange()"></ngb-pagination>
 </div>
-<div class="mt-3" *ngIf="isLoaded && productsPage.length == 0">
+<div class="mt-5" *ngIf="isLoaded && categoryName == null">
+    <h5 class="text-center">Category not found!</h5>
+</div>
+<div class="mt-5" *ngIf="isLoaded && categoryName != null && products.length == 0">
     <h5 class="text-center">There are no products in this category</h5>
 </div>

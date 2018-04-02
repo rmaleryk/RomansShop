@@ -45,8 +45,7 @@ export class ProductGridComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.pageConfig.pageSize = AppSettings.PAGE_SIZE;
-        this.categoryId = this.activeRoute.snapshot.params["categoryId"];
-
+        
         this.activeRoute.params
             .takeUntil(this.destroy$)
             .subscribe(
@@ -97,6 +96,10 @@ export class ProductGridComponent implements OnInit, OnDestroy {
                     this.products = data;
                     this.productsPage = this.products.slice(0, this.pageConfig.pageSize);
                     this.isLoaded = true;
+                },
+                (error: any) => {
+                    this.products = null;
+                    this.isLoaded = true;
                 }
             );
     }
@@ -105,7 +108,7 @@ export class ProductGridComponent implements OnInit, OnDestroy {
         this.categoryService.getById(categoryId)
             .subscribe(
                 (data: Category) => this.categoryName = data.name,
-                (error: any) => this.categoryName = "Category not found!"
+                (error: any) => this.categoryName = null
             );
     }
 
