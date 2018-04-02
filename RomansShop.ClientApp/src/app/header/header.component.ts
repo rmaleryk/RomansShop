@@ -30,7 +30,6 @@ export class AppHeader implements OnInit, OnDestroy {
 	currentUser: User;
 	hasAdminPanel: boolean;
 	destroy$: Subject<boolean> = new Subject<boolean>();
-	model: any;
 
 	constructor(private categoryService: CategoryService,
 				private productService: ProductService,
@@ -61,7 +60,9 @@ export class AppHeader implements OnInit, OnDestroy {
 	}
 
 	private onItemSelected($event) {
-		console.log("item", $event);
+		if($event.id != null) {
+			this.router.navigateByUrl(`/products/${$event.id}`);
+		}
 	}
 
 	private logout() {

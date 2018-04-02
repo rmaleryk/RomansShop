@@ -1,10 +1,13 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 import { NgbTypeaheadConfig } from "@ng-bootstrap/ng-bootstrap";
 import { Observable } from "rxjs/Observable";
+import { of } from 'rxjs/observable/of';
+import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { Product } from "../../shared/models/product";
+import { ProductService } from "../../api/product.service";
 
 @Component({
 	selector: 'search-bar',
@@ -19,7 +22,8 @@ export class SearchBarComponent {
 	private resultFormatter = (value: Product) => value.name;
 	private inputFormatter = (value: Product) => "";
 
-	constructor(config: NgbTypeaheadConfig) {
+	constructor(private config: NgbTypeaheadConfig,
+				private productService: ProductService) {
 		config.placement = "bottom-left";
 	}
 
@@ -27,18 +31,15 @@ export class SearchBarComponent {
 		this.onSelected.emit($event.item);
 	}
 
-	private search = (text$: Observable<string>) =>
+	private search = (text$: Observable<string>) => 
 		text$
 			.debounceTime(300)
 			.distinctUntilChanged()
-			.map((term: string) => {
-				if (term.length >= 2) {
-					return this.searchArray
-						.filter((element: Product) => 
-							element.name
-							.toLowerCase()
-							.startsWith(term.toLocaleLowerCase()))
-						.splice(0, 10);
+			.switchMap(
+				(term: string) => {
+					return (term.length >= 2)
+						? this.productService.searchByName(term.toLocaleLowerCase())
+						: of([]);
 				}
-			});
+			);
 }
