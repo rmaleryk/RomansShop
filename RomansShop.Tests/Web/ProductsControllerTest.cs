@@ -34,6 +34,7 @@ namespace RomansShop.Tests.Web
         const string PostMethodName = nameof(ProductsController.Post) + ". ";
         const string PutMethodName = nameof(ProductsController.Put) + ". ";
         const string DeleteMethodName = nameof(ProductsController.Delete) + ". ";
+        const string SearchByNameMethodName = nameof(ProductsController.SearchByName) + ". ";
 
         public ProductsControllerTest()
         {
@@ -278,6 +279,30 @@ namespace RomansShop.Tests.Web
                 .Returns(productsResponse);
 
             IActionResult actionResult = _controller.GetByCategoryId(_categoryId);
+
+            OkObjectResult actual = (OkObjectResult)actionResult;
+            int actualCount = ((IEnumerable<ProductResponseModel>)actual.Value).Count();
+
+            Assert.Equal(products.Count(), actualCount);
+            Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
+        }
+
+        [Fact(DisplayName = SearchByNameMethodName)]
+        public void SearchByNameTest() {
+            IEnumerable<Product> products = new List<Product> { GetProduct(), GetProduct() };
+
+            IEnumerable<ProductResponseModel> productsResponse =
+                new List<ProductResponseModel> { GetProductResponseModel(), GetProductResponseModel() };
+
+            _mockRepository
+                .Setup(repo => repo.SearchByName(_productName))
+                .Returns(products);
+
+            _mockMapper
+                .Setup(mapper => mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponseModel>>(products))
+                .Returns(productsResponse);
+
+            IActionResult actionResult = _controller.SearchByName(_productName);
 
             OkObjectResult actual = (OkObjectResult)actionResult;
             int actualCount = ((IEnumerable<ProductResponseModel>)actual.Value).Count();

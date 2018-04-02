@@ -22,6 +22,15 @@ namespace RomansShop.DataAccess.Repositories
                 .ToList();
         }
 
+        public IEnumerable<Product> SearchByName(string productName) 
+        {
+            return dbSet
+                .AsNoTracking()
+                .OrderBy(prod => prod.Name)
+                .Where(prod => prod.Name.ToLower().StartsWith(productName))
+                .ToList();
+        }
+
         public IEnumerable<Product> GetByCategoryId(Guid categoryId)
         {
             return dbSet
