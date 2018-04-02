@@ -44,6 +44,11 @@ export class ProductService {
             .map((data: any[]) => this.createProducts(data));
     }
 
+    searchByName(name: string): Observable<Product[]> {
+        return this.http.get(`${this.resourceUrl}/search?name=${name}`)
+            .map((data: any[]) => this.createProducts(data));
+    }
+
     create(product: Product): Observable<Product> {
         return this.http.post(this.resourceUrl, product)
             .map((data: any) => new Product(data))

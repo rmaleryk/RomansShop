@@ -1,0 +1,28 @@
+<div *ngIf="!isLoaded" class="loading-spinner">
+    <i class="fa fa-spinner fa-spin"></i>
+</div>
+<div class="mt-5" *ngIf="isLoaded && product != null">
+    <div class="d-flex row pl-3 pr-3">
+        <div class="col-4">
+            <img class="img-thumbnail" src="http://seismowave.com/js/vendor/plugnpay/no_product.png" alt="Product image" />
+        </div>
+        <div class="details col-8">
+            <h3>{{ product.name }}</h3>
+            <h6 class="mt-4">Price: ${{ product.price }}</h6>
+
+            <h6 class="mt-4">Description:</h6>
+            <div *ngIf="product.description != null; then description else defaultDescription"></div>
+            <ng-template #defaultDescription>No description</ng-template>
+            <ng-template #description>{{ product.description }}</ng-template>
+
+            <div class="mt-5">
+                <a class="btn btn-dark text-white w-25" (click)="addToCart(product)">
+                    <span class="fa fa-shopping-cart"></span> Add to cart
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mt-5" *ngIf="isLoaded && product == null">
+    <h5 class="text-center">Product not found</h5>
+</div>

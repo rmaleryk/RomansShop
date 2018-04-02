@@ -24,6 +24,8 @@ import { UserSettingsComponent } from './home/user-settings/user-settings.compon
 import { AdminModule } from './admin/admin.module';
 import { AppHeader } from './header/header.component';
 import { AuthGuard } from './core/auth.guard';
+import { SearchBarComponent } from './header/search-bar/search-bar.componenet';
+import { ProductDetailsComponent } from './home/product-details/product-details.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import { AuthGuard } from './core/auth.guard';
     SignInComponent,
     SignUpComponent,
     OrdersHistoryComponent,
-    UserSettingsComponent
+    UserSettingsComponent,
+    SearchBarComponent,
+    ProductDetailsComponent
   ],
   imports: [
     BrowserModule,

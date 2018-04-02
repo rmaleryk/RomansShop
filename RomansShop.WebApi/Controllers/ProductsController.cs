@@ -117,6 +117,17 @@ namespace RomansShop.WebApi.Controllers
             return Ok(validationResponse.Message);
         }
 
+        // api/products/search/?name={name}
+        [HttpGet("search")]
+        public IActionResult SearchByName([FromQuery]string name) 
+        {
+            IEnumerable<Product> products = _productRepository.SearchByName(name);
+            IEnumerable<ProductResponseModel> productResponse =
+                _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResponseModel>>(products);
+
+            return Ok(productResponse);
+        }
+
         // api/categories/{categoryId}/products
         [HttpGet("/api/categories/{categoryId}/products")]
         public IActionResult GetByCategoryId(Guid categoryId)
