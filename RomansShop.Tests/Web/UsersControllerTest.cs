@@ -314,6 +314,34 @@ namespace RomansShop.Tests.Web
             Assert.Equal(StatusCodes.Status400BadRequest, actual.StatusCode);
         }
 
+        [Fact(DisplayName = GetByRightsMethodName)]
+        public void GetByRightsTest() 
+        {
+            IEnumerable<User> expectedUsers = new List<User> { GetUser(), GetUser() };
+
+            IEnumerable<UserResponseModel> userResponse = 
+                new List<UserResponseModel> { GetUserResponseModel(), GetUserResponseModel() };
+
+            ValidationResponse<IEnumerable<User>> validationResponse = 
+                new ValidationResponse<IEnumerable<User>>(expectedUsers, ValidationStatus.Ok);
+
+            _mockService
+                .Setup(serv => serv.GetByRights(_userRights))
+                .Returns(validationResponse);
+
+            _mockMapper
+                .Setup(mapper => mapper.Map<IEnumerable<User>, IEnumerable<UserResponseModel>>(validationResponse.ResponseData))
+                .Returns(userResponse);
+
+            IActionResult actionResult = _controller.GetByRights(_userRights);
+
+            OkObjectResult actual = (OkObjectResult)actionResult;
+            int actualCount = ((IEnumerable<UserResponseModel>)actual.Value).Count();
+
+            Assert.Equal(expectedUsers.Count(), actualCount);
+            Assert.Equal(StatusCodes.Status200OK, actual.StatusCode);
+        }
+
         private static User GetUser() =>
             new User
             {
