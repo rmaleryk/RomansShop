@@ -44,7 +44,7 @@
                     {{ order.address }}
                 </p>
             </td>
-            <td class="col-1">${{ order.price }}</td>
+            <td class="col-1">{{ order.price | currency }}</td>
             <td class="col-1">{{ orderStatuses[order.status] }}</td>
             <td class="col-1">
                 <div class="d-flex justify-content-center">

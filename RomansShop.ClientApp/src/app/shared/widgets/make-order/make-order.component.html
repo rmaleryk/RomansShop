@@ -21,7 +21,7 @@
             required>
     </div>
     <div class="d-flex justify-content-center">
-        <h5>Total price: ${{ order.price }}</h5>
+        <h5>Total price: {{ order.price | currency }}</h5>
     </div>
 </div>
 <div class="modal-footer d-flex justify-content-end">
