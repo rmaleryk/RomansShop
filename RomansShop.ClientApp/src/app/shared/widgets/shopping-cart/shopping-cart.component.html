@@ -18,7 +18,7 @@
             <tr class="d-flex" *ngFor="let cartItem of cartItems; index as i">
                 <td class="col-1">{{ i+1 }}</td>
                 <td class="col-7">{{ cartItem.name }}</td>
-                <td class="col-2">{{ cartItem.price }}</td>
+                <td class="col-2">{{ cartItem.price | currency }}</td>
                 <td class="col-2">
                     <div class="d-flex justify-content-end">
                         <button (click)="delete(i)" class="btn btn-sm btn-dark">
@@ -34,7 +34,7 @@
     </div>
 </div>
 <div class="modal-footer d-flex justify-content-between">
-    <div class="justify-content-start">Total price: ${{ totalPrice }}</div>
+    <div class="justify-content-start">Total price: {{ totalPrice | currency }}</div>
     <button type="button justify-content-end" [disabled]="totalPrice == 0" class="btn btn-dark" (click)="openOrderForm()">
         Continue
     </button>

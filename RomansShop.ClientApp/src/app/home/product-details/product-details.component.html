@@ -8,7 +8,7 @@
         </div>
         <div class="details col-8">
             <h3>{{ product.name }}</h3>
-            <h6 class="mt-4">Price: ${{ product.price }}</h6>
+            <h6 class="mt-4">Price: {{ product.price | currency }}</h6>
 
             <h6 class="mt-4">Description:</h6>
             <div *ngIf="product.description != null; then description else defaultDescription"></div>

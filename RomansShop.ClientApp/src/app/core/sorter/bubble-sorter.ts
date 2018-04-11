@@ -3,7 +3,7 @@ import { ISorterSettings } from "../../shared/interfaces/sorter-settings";
 import { SortingMode } from "../../shared/enums/sorting-mode";
 
 export class BubbleSorter implements ISorter {
-    sort(sortable: any[], sorterSettings: ISorterSettings) {
+    sort(sortable: any[], sorterSettings: ISorterSettings): any[] {
         const array: any[] = Object.assign([], sortable);
         let isSwapped: boolean;
 

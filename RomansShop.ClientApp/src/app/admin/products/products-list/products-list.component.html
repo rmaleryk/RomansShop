@@ -22,7 +22,7 @@
     <tbody>
         <tr class="d-flex" *ngFor="let product of products">
             <td class="col-6">{{ product.name }}</td>
-            <td class="col-5">{{ product.price }}</td>
+            <td class="col-5">{{ product.price | currency }}</td>
             <td class="col-1">
                 <button [routerLink]="['/admin/products/edit', product.id]" class="btn btn-sm btn-dark">
                     <span class="fa fa-edit"></span>

@@ -23,7 +23,7 @@
                 </ol>
             </td>
             <td class="col-3">{{ order.address }}</td>
-            <td class="col-1">${{ order.price }}</td>
+            <td class="col-1">{{ order.price | currency }}</td>
             <td class="col-2 pl-5">{{ orderStatuses[order.status] }}</td>
         </tr>
     </tbody>
